@@ -16,7 +16,7 @@ Development Environment Setup
 6)npm install socket.io --save
 
 
-####Start node server (index.js)3####
+####Start node server (index.js)####
 7)nodmon index
 
 
