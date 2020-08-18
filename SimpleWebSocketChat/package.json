@@ -1,0 +1,26 @@
+{
+  "name": "simplewebsocketchat",
+  "version": "1.0.0",
+  "description": "Simple WebSocket express app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TeamHaircut/CAH.git"
+  },
+  "author": "TeamHaircut",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TeamHaircut/CAH/issues"
+  },
+  "homepage": "https://github.com/TeamHaircut/CAH#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
