@@ -2,4 +2,4 @@
 https://github.com/TeamHaircut/CAH/wiki
 
 Contributors:
-TeamHaircut
+TeamHaircut<br>
