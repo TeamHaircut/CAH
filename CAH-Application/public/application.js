@@ -1,5 +1,7 @@
 // Make connection
-var socket = io.connect('http://' + process.env.HOST + ':' + process.env.SECRET);
+var HOST = 'host'
+var PORT = 'port'
+var socket = io.connect('http://' + HOST + ':' + PORT);
 
 
 // Query DOM
