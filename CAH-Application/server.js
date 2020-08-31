@@ -57,8 +57,10 @@ models.sequelize.sync().then(function() {
 var server = app.listen(process.env.PORT, function(err) {
  
     if (!err)
-        console.log("Server is Listening on port"+ process.env.PORT);
-	    console.log("Visit http://teamhaircut.org:"+process.env.PORT+ " to test the application");
+	{
+		console.log("Server is Listening on port"+ process.env.PORT);
+		console.log("Visit http://teamhaircut.org:"+process.env.PORT+ " to test the application");
+	}
     else console.log(err)
  
 });
