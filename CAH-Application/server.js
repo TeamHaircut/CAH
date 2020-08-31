@@ -54,10 +54,10 @@ models.sequelize.sync().then(function() {
 });
  
 //app.listen(5000, function(err) {
-var server = app.listen(5000, function(err) {
+var server = app.listen(process.env.PORT, function(err) {
  
     if (!err)
-        console.log("Server is Listening on port 5000");
+        console.log("Server is Listening on port"+process.env.PORT);
     else console.log(err)
  
 });

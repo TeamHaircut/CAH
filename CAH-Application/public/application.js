@@ -1,5 +1,5 @@
 // Make connection
-var socket = io.connect('http://localhost:5000');
+var socket = io.connect('http://' + process.env.HOST + ':' + process.env.SECRET);
 
 
 // Query DOM
