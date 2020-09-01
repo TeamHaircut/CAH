@@ -1,6 +1,6 @@
 // Make connection
-var HOST = 'host'
-var PORT = 'port'
+var HOST = 'devhost'
+var PORT = 'devport'
 var socket = io.connect('http://' + HOST + ':' + PORT);
 
 
