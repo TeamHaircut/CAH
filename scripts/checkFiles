@@ -1,0 +1,7 @@
+#!/bin/bash
+declare $(awk -F\' 'FNR== 3 {print "devhost="$2}' ~/CAH/CAH-Application/config/env/.env)
+declare $(awk -F\' 'FNR== 4 {print "devport="$2}' ~/CAH/CAH-Application/config/env/.env)
+awk '{gsub(f,"devhost")}1' f="$devhost" ~/CAH/CAH-Application/public/application.js > .tmp.dat && mv .tmp.dat ~/CAH/CAH-Application/public/application.js
+awk '{gsub(f,"devport")}1' f="$devport" ~/CAH/CAH-Application/public/application.js > .tmp.dat && mv .tmp.dat ~/CAH/CAH-Application/public/application.js
+unset devhost
+unset devport
