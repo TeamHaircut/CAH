@@ -17,7 +17,7 @@ h2{
 }
 
 #chat-window{
-    height: 400px;
+    height: auto;
     overflow: auto;
     background: #f9f9f9;
 }
@@ -58,7 +58,7 @@ input{
     font-size: 16px;
 }
 
-button{
+#send{
     background: #575ed8;
     color: #fff;
     font-size: 18px;
