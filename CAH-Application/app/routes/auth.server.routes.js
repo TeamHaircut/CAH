@@ -25,12 +25,22 @@ module.exports = function(app, passport) {
  
  
     app.post('/login', passport.authenticate('local-login', {
-			successRedirect: '/cah',
+			successRedirect: '/option',
+			//successRedirect: '/cah',
  
             failureRedirect: '/login'
         }
  
     ));
+	
+	app.get('/option', isLoggedIn, appController.options);
+	
+	app.get('/createroom', isLoggedIn, appController.createroom);
+	
+	app.post('/createroom', function (req, res) {
+			res.redirect('/createroom');
+		}
+    );
  
  
     function isLoggedIn(req, res, next) {
