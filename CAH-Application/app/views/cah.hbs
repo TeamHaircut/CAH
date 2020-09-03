@@ -2,23 +2,56 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Simple WebSocket Chat</title>
+        <title>CAH</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
         <link type="text/css" href="/css/styles.css" rel="stylesheet" />
     </head>
     <body>
 
+		<div id="cah-view"><!-- cah-view not defined in styles.css -->
+			<div>MyDisplayName</div>
+			<div><button>isCardCzar</button></div>
+			<div>CurrentBlackCard_____________________</div>
+				<p>
+					<button>BC</button>
+				</p>
+			<div>CzarHand_____________________________</div>
+				<p>
+					<button>W(p2)</button>
+					<button>W(p3)</button>
+					<button>W(p4)</button>
+				</p>
+			<div>MyWhiteCards_________________________</div>
+				<p>
+					<button>W1</button>
+					<button>W2</button>
+					<button>W3</button>
+					<button>W4</button>
+					<button>W5</button>
+					<button>W6</button>
+					<button>W7</button>
+					<button>W8</button>
+					<button>W9</button>
+					<button>W10</button>
+				</p>
+			<div>Standings____________________________</div>
+				<p>
+					Player1=X Points</br>
+					Player2=X Points</br>
+					Player3=X Points</br>
+					Player4=X Points</br>
+				</p>
+		</div>
+	
         <div id="cah-chat">
-            <h2>Simple WebSocket Chat</h2>
             <div id="chat-window">
                 <div id="output"></div>
                 <div id="feedback"></div>
             </div>
-            <input id="handle" type="text" placeholder="Handle" />
+            <input id="handle" type="text" value="MyDisplayName"/>
             <input id="message" type="text" placeholder="Message" />
             <button id="send">Send</button>
         </div>
-
 
     </body>
     <script src="/application.js"></script>
