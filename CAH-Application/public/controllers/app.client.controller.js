@@ -12,6 +12,12 @@ exports.createroom = function(req, res) {
  
 }
 
+exports.shareroom = function(req, res) {
+ 
+	res.render('shareroom');
+ 
+}
+
 exports.entercah = function(req, res) {
  
 	res.render('cah');

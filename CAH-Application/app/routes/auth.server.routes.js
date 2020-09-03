@@ -41,6 +41,13 @@ module.exports = function(app, passport) {
 			res.redirect('/createroom');
 		}
     );
+	
+	app.get('/shareroom', isLoggedIn, appController.shareroom);
+	
+	app.post('/create', function (req, res) {
+			res.redirect('/shareroom');
+		}
+    );
  
  
     function isLoggedIn(req, res, next) {
