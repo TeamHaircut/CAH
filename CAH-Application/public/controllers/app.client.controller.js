@@ -12,9 +12,21 @@ exports.createroom = function(req, res) {
  
 }
 
+exports.joinroom = function(req, res) {
+ 
+	res.render('joinroom');
+ 
+}
+
 exports.shareroom = function(req, res) {
  
 	res.render('shareroom');
+ 
+}
+
+exports.displayname = function(req, res) {
+ 
+	res.render('displayname');
  
 }
 

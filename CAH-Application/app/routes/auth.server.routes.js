@@ -42,10 +42,29 @@ module.exports = function(app, passport) {
 		}
     );
 	
+	app.get('/joinroom', isLoggedIn, appController.joinroom);
+	
+	app.post('/joinroom', function (req, res) {
+			res.redirect('/joinroom');
+		}
+    );
+	
 	app.get('/shareroom', isLoggedIn, appController.shareroom);
 	
 	app.post('/create', function (req, res) {
 			res.redirect('/shareroom');
+		}
+    );
+	
+	app.get('/displayname', isLoggedIn, appController.displayname);
+	
+	app.post('/continue', function (req, res) {
+			res.redirect('/displayname');
+		}
+    );
+	
+	app.post('/entercah', function (req, res) {
+			res.redirect('/cah');
 		}
     );
  
