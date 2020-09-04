@@ -24,9 +24,10 @@ exports.shareroom = function(req, res) {
  
 }
 
-exports.displayname = function(req, res) {
- 
-	res.render('displayname');
+exports.displayname = async function(req, res, next) {
+	
+	const user = await res.locals.user.findOne({ where: { username: res.locals.uname } });
+	res.render('displayname', { name: user.displayname });
  
 }
 

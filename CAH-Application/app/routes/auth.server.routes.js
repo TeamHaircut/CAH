@@ -1,8 +1,10 @@
 var authController = require('../controllers/auth.server.controller.js');
 var appController = require('../../public/controllers/app.client.controller.js');
  
-module.exports = function(app, passport) {
+module.exports = function(app, passport, user) {
  
+	var User = user;
+	var uname;
  
     app.get('/register', authController.register);
  
@@ -22,16 +24,12 @@ module.exports = function(app, passport) {
  
  
     app.get('/logout', authController.logout);
- 
- 
-    app.post('/login', passport.authenticate('local-login', {
-			successRedirect: '/option',
-			//successRedirect: '/cah',
- 
-            failureRedirect: '/login'
-        }
- 
-    ));
+	
+    app.post('/login', passport.authenticate('local-login', {failureRedirect: '/login'}), 
+		(req, res, next) => {
+			uname = req.body.username;
+			res.redirect('/option');}
+    );
 	
 	app.get('/option', isLoggedIn, appController.options);
 	
@@ -56,7 +54,11 @@ module.exports = function(app, passport) {
 		}
     );
 	
-	app.get('/displayname', isLoggedIn, appController.displayname);
+	app.get('/displayname', isLoggedIn, function (req, res, next) {
+		res.locals.user = User; 
+		res.locals.uname = uname; 
+		next();}, appController.displayname
+	);
 	
 	app.post('/continue', function (req, res) {
 			res.redirect('/displayname');

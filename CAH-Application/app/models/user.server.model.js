@@ -16,6 +16,12 @@ module.exports = function(sequelize, Sequelize) {
             type: Sequelize.STRING,
             allowNull: false
         },
+		
+		displayname: {
+			type: Sequelize.TEXT,
+			allowNull: false,
+			defaultValue: 'Sour Cream and Fish'
+		},
  
         last_login: {
             type: Sequelize.DATE
