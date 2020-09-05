@@ -34,9 +34,15 @@ exports.displayname = async function(req, res, next) {
 exports.displaynamepost = async function(req, res, next) {
 	console.log(res.locals.user);
 	const user = await res.locals.user.findOne({ username: res.locals.uname });
-	user.displayname = req.body.displayname;
-	await user.save();
-	res.render('cah', { name: user.displayname });
+	//validate displayname here req.body.displayname cannot be empty ("")
+	if(req.body.displayname != "") {
+		user.displayname = req.body.displayname;
+		await user.save();
+		res.render('cah', { name: user.displayname });
+	}else {
+		res.render('displayname');
+	}
+	
  
 }
 
