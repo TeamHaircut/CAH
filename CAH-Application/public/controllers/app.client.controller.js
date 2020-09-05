@@ -34,7 +34,7 @@ exports.displayname = async function(req, res, next) {
 exports.displaynamepost = async function(req, res, next) {
 	console.log(res.locals.user);
 	const user = await res.locals.user.findOne({ username: res.locals.uname });
-	//validate displayname here req.body.displayname cannot be empty ("")
+	//TODO Implement Expess-Validation
 	if(req.body.displayname != "") {
 		user.displayname = req.body.displayname;
 		await user.save();

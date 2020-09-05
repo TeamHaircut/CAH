@@ -71,9 +71,6 @@ module.exports = function(app, passport, user) {
 	app.post('/entercah', function (req, res, next) {
 			res.locals.user = User; 
 			res.locals.uname = uname;
-			console.log(res.locals.uname);
-			console.log(req.body.displayname);
-			console.log("INSIDE entercah POST");
 			next();
 		}, appController.displaynamepost
     );	
