@@ -31,9 +31,19 @@ exports.displayname = async function(req, res, next) {
  
 }
 
-exports.entercah = function(req, res) {
- 
-	res.render('cah');
+exports.displaynamepost = async function(req, res, next) {
+	console.log(res.locals.user);
+	const user = await res.locals.user.findOne({ username: res.locals.uname });
+	user.displayname = req.body.displayname;
+	await user.save();
+	res.render('cah', { name: user.displayname });
  
 }
+
+exports.entercah = async function(req, res) {
+ 	const user = await res.locals.user.findOne({ username: res.locals.uname });
+	res.render('cah', { name: user.displayname } );
+ 
+}
+
 

@@ -19,10 +19,13 @@ module.exports = function(app, passport, user) {
         }
  
     ));
- 
-	app.get('/cah', isLoggedIn, appController.entercah);
- 
- 
+
+	app.get('/cah', isLoggedIn, function (req, res, next) {
+		res.locals.user = User; 
+		res.locals.uname = uname;
+		next();}, appController.entercah
+	);	
+
     app.get('/logout', authController.logout);
 	
     app.post('/login', passport.authenticate('local-login', {failureRedirect: '/login'}), 
@@ -64,13 +67,17 @@ module.exports = function(app, passport, user) {
 			res.redirect('/displayname');
 		}
     );
+
+	app.post('/entercah', function (req, res, next) {
+			res.locals.user = User; 
+			res.locals.uname = uname;
+			console.log(res.locals.uname);
+			console.log(req.body.displayname);
+			console.log("INSIDE entercah POST");
+			next();
+		}, appController.displaynamepost
+    );	
 	
-	app.post('/entercah', function (req, res) {
-			res.redirect('/cah');
-		}
-    );
- 
- 
     function isLoggedIn(req, res, next) {
 		
         if (req.isAuthenticated())
