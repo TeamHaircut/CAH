@@ -25,31 +25,16 @@ exports.shareroom = function(req, res) {
 }
 
 exports.displayname = async function(req, res, next) {
-	
 	const user = await res.locals.user.findOne({ where: { username: res.locals.uname } });
 	res.render('displayname', { name: user.displayname });
  
 }
 
-exports.displaynamepost = async function(req, res, next) {
-	console.log(res.locals.user);
-	const user = await res.locals.user.findOne({ username: res.locals.uname });
-	//TODO Implement Expess-Validation
-	if(req.body.displayname != "") {
-		user.displayname = req.body.displayname;
-		await user.save();
-		res.render('cah', { name: user.displayname });
-	}else {
-		res.render('displayname');
-	}
-	
- 
-}
-
-exports.entercah = async function(req, res) {
- 	const user = await res.locals.user.findOne({ username: res.locals.uname });
-	res.render('cah', { name: user.displayname } );
- 
+exports.entercahpost = async function(req, res, next) {
+	const user = await res.locals.user.findOne({ where: {username: res.locals.uname } });
+	user.displayname = res.locals.displayname;
+	await user.save();
+	res.render('cah', {name: user.displayname, room: res.locals.room});
 }
 
 
