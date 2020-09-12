@@ -28,7 +28,7 @@ const io = socket(server);
 // Set static folder
 app.use(express.static(path.join(__dirname, '/public')));
 
-const botName = 'CAH Bot';
+const botName = 'CAH Admin';
 
 //Run when client connects
 io.on('connection', socket => {
@@ -38,10 +38,10 @@ io.on('connection', socket => {
 		socket.join(user.room);
 		
 		// Welcome current user
-		socket.emit('message', formatMessage(botName, 'Welcome to Chat'));
+		socket.emit('message', formatMessage(`Mr. ${user.room}`, `Welcome to the ${user.room} room.`));
 	
 		// Broadcast when a user connects
-		socket.broadcast.to(user.room).emit('message', formatMessage(botName,`${user.username} has joined the chat`));
+		socket.broadcast.to(user.room).emit('message', formatMessage(`Mr. ${user.room}`,`${user.username} has joined the room.`));
 		
 		// Send users and room info
 		io.to(user.room).emit('roomUsers', {
@@ -63,7 +63,7 @@ io.on('connection', socket => {
     if (user) {
       io.to(user.room).emit(
         'message',
-        formatMessage(botName, `${user.username} has left the chat`)
+        formatMessage(`Mr. ${user.room}`, `${user.username} has left the room.`)
       );
       // Send users and room info
       io.to(user.room).emit('roomUsers', {

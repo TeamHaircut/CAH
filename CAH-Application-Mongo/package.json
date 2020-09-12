@@ -1,7 +1,7 @@
 {
-  "name": "node_passport_login",
+  "name": "CAH",
   "version": "2.0.0",
-  "description": "Node.js authentication with Passport",
+  "description": "CAH",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",

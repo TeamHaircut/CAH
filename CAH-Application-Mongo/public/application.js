@@ -50,9 +50,8 @@ chatForm.addEventListener('submit', e => {
 function outputMessage(message) {
 	const div = document.createElement('div');
 	div.classList.add('message');
-	div.innerHTML = `<p class="meta card border-info mb-3">${message.username} <span>${message.time}</span>
-	<span>${message.text}</span>
-	</p>`;
+	//message.time not used
+	div.innerHTML = `<p style="padding:5px;" class="meta card border-info mb-3"><b>${message.username}:</b> ${message.text}</p>`;
 	document.querySelector('.chat-messages').appendChild(div);
 }
 	
