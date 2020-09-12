@@ -1,10 +1,11 @@
 {
   "name": "CAH",
-  "version": "0.1",
+  "version": "1.0.0",
   "description": "Web-based Cards Against Humanity",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server",
+    "dev": "nodemon server"
   },
   "author": "TeamHaircut",
   "license": "ISC",
@@ -20,6 +21,10 @@
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "sequelize": "^6.3.4",
+    "moment": "^2.24.0",
     "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }

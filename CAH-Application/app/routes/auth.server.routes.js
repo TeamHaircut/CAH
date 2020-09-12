@@ -8,9 +8,7 @@ module.exports = function(app, passport, user) {
  
     app.get('/register', authController.register);
  
- 
     app.get('/login', authController.login);
- 
  
     app.post('/register', passport.authenticate('local-register', {
             successRedirect: '/cah',
@@ -19,11 +17,14 @@ module.exports = function(app, passport, user) {
         }
  
     ));
-
-	app.get('/cah', isLoggedIn, function (req, res, next) {
-		res.locals.user = User; 
+	
+	app.post('/cah', isLoggedIn, function (req, res, next) {
+		res.locals.user = User;
 		res.locals.uname = uname;
-		next();}, appController.entercah
+		res.locals.displayname = req.body.username;
+		res.locals.room = req.body.room;
+		next();
+		}, appController.entercahpost
 	);	
 
     app.get('/logout', authController.logout);
@@ -67,13 +68,6 @@ module.exports = function(app, passport, user) {
 			res.redirect('/displayname');
 		}
     );
-
-	app.post('/entercah', function (req, res, next) {
-			res.locals.user = User; 
-			res.locals.uname = uname;
-			next();
-		}, appController.displaynamepost
-    );	
 	
     function isLoggedIn(req, res, next) {
 		

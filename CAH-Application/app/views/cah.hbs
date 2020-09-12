@@ -4,12 +4,13 @@
         <meta charset="utf-8">
         <title>CAH</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
-        <link type="text/css" href="/css/styles.css" rel="stylesheet" />
+		<link rel="stylesheet" href="/css/style.css" />
     </head>
     <body>
 
-		<div id="cah-view"><!-- cah-view not defined in styles.css -->
-			<div>{{name}}</div>
+	<div class="chat-container">
+	<div id="cah-view"><!-- cah-view not defined in styles.css -->
+			<div id="currentUser">{{name}}</div>
 			<div><button>isCardCzar</button></div>
 			<div>CurrentBlackCard_____________________</div>
 				<p>
@@ -42,17 +43,39 @@
 					Player4=X Points</br>
 				</p>
 		</div>
-	
-        <div id="cah-chat">
-            <div id="chat-window">
-                <div id="output"></div>
-                <div id="feedback"></div>
-            </div>
-            <input id="handle" type="text" value="{{name}}"/>
-            <input id="message" type="text" placeholder="Message" />
-            <button id="send">Send</button>
+      <header class="chat-header">
+        <h1><i class="fas fa-blind"></i> CAH</h1>
+        <a href="index.html" class="btn">Leave Room</a>
+      </header>
+      <main class="chat-main">
+        <div class="chat-sidebar">
+          <h3><i class="fas fa-comments"></i> Room Name:</h3>
+          <h2 id="room-name">{{room}}</h2>
+          <h3><i class="fas fa-users"></i> Users</h3>
+          <ul id="users"></ul>
         </div>
+		<div class="chat-messages"></div>
+      </main>
+      <div class="chat-form-container">
+        <form id="chat-form">
+          <input
+            id="msg"
+            type="text"
+            placeholder="Enter Message"
+            required
+            autocomplete="off"
+          />
+          <button class="btn"><i class="fas fa-paper-plane"></i> Send</button>
+        </form>
+      </div>
+    </div>
 
     </body>
+	<script
+      src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
+      integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4="
+      crossorigin="anonymous"
+    ></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="/application.js"></script>
 </html>

@@ -1,36 +1,91 @@
-// Make connection
-var HOST = 'devhost'
-var PORT = 'devport'
-var socket = io.connect('http://' + HOST + ':' + PORT);
-
-
 // Query DOM
 var message = document.getElementById('message'),
       handle = document.getElementById('handle'),
       btn = document.getElementById('send'),
       output = document.getElementById('output'),
       feedback = document.getElementById('feedback');
+	  
+const currentUser = document.getElementById('currentUser');
+	  
+const chatForm = document.getElementById('chat-form');
+const chatMessages = document.querySelector('.chat-messages');
+const roomName = document.getElementById('room-name');
+const userList = document.getElementById('users');
 
-// Emit events
-btn.addEventListener('click', function(){
-    socket.emit('chat', {
-        message: message.value,
-        handle: handle.value
-    });
-    message.value = "";
+// Get username and room from template
+const username = currentUser.innerHTML;
+const room = roomName.innerHTML;
+
+//outputCurrentUser(username);
+const socket = io();
+
+// Join chatroom
+socket.emit('joinRoom', { username, room });
+
+// Get room and users
+socket.on('roomUsers', ({ room, users }) => {
+  outputRoomName(room);
+  outputUsers(users);
 });
 
-message.addEventListener('keypress', function(){
-    socket.emit('typing', handle.value);
-	
-})
+// Message from server
+socket.on('message', message => {
+  console.log(message);
+  outputMessage(message);
 
-// Listen for events
-socket.on('chat', function(data){
-    feedback.innerHTML = '';
-    output.innerHTML += '<p><strong>' + data.handle + ': </strong>' + data.message + '</p>';
+  // Scroll down
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
-socket.on('typing', function(data){
-    feedback.innerHTML = '<p><em>' + data + ' is typing a message...</em></p>';
+// Message submit
+chatForm.addEventListener('submit', e => {
+  e.preventDefault();
+
+  // Get message text
+  let msg = e.target.elements.msg.value;
+  
+  msg = msg.trim();
+  
+  if (!msg){
+    return false;
+  }
+
+  // Emit message to server
+  socket.emit('chatMessage', msg);
+
+  // Clear input
+  e.target.elements.msg.value = '';
+  e.target.elements.msg.focus();
 });
+
+// Output message to DOM
+function outputMessage(message) {
+  const div = document.createElement('div');
+  div.classList.add('message');
+  const p = document.createElement('p');
+  p.classList.add('meta');
+  p.innerText = message.username;
+  p.innerHTML += `<span>${message.time}</span>`;
+  div.appendChild(p);
+  const para = document.createElement('p');
+  para.classList.add('text');
+  para.innerText = message.text;
+  div.appendChild(para);
+  document.querySelector('.chat-messages').appendChild(div);
+}
+
+// Add room name to DOM
+function outputRoomName(room) {
+  roomName.innerText = room;
+}
+
+// Add users to DOM
+function outputUsers(users) {
+  userList.innerHTML = '';
+  users.forEach(user=>{
+    const li = document.createElement('li');
+    li.innerText = user.username;
+    userList.appendChild(li);
+  });
+ }
+
