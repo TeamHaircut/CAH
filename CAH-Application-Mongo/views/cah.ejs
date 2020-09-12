@@ -1,0 +1,74 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<h1><i class="fas fa-blind"></i>  CAH</h1>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarColor03">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+				<p class="nav-link"></p>
+			</li>
+			<li class="nav-item active">
+				<p class="nav-link"><i class="fas fa-user"></i> <span id="currentUser"><%= user.name %></span></p>
+			</li>
+			<li class="nav-item active">
+				<p class="nav-link"><i class="fas fa-home"></i> The <span id="room-name"><%= user.last_room %></span> room</p>
+			</li>
+		</ul>
+		<form class="form-inline my-2 my-lg-0">
+			<a href="/users/logout" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+		</form>
+	</div>
+</nav>
+<div class="chat-container">
+	<div class="card card-body">
+		<div>CurrentBlackCard_____________________</div>
+			<p>
+				<button  class="btn btn-secondary">BC</button>
+			</p>
+		<div>CzarHand_____________________________</div>
+			<p>
+				<button class="btn btn-secondary">W(p2)</button>
+				<button class="btn btn-secondary">W(p3)</button>
+				<button class="btn btn-secondary">W(p4)</button>
+			</p>
+		<div>MyWhiteCards_________________________</div>
+			<p>
+				<button class="btn btn-secondary">W1</button>
+				<button class="btn btn-secondary">W2</button>
+				<button class="btn btn-secondary">W3</button>
+				<button class="btn btn-secondary">W4</button>
+				<button class="btn btn-secondary">W5</button>
+				<button class="btn btn-secondary">W6</button>
+				<button class="btn btn-secondary">W7</button>
+				<button class="btn btn-secondary">W8</button>
+				<button class="btn btn-secondary">W9</button>
+				<button class="btn btn-secondary">W10</button>
+			</p>
+		<h3><i class="fas fa-users"></i> Users</h3>
+		<ul id="users"></ul>
+		<p><i class="fas fa-gavel"></i></p>
+	</div>
+	<div class="mb-3"></div>
+	<header class="chat-header card card-body">
+		<h3><i class="fas fa-comments"></i> Boner-Chat</h3>
+	</header>
+	<main class="chat-main">
+		<div style="overflow-y:auto; height:185px;" class="chat-messages card card-body"></div>
+	</main>
+	<div class="chat-form-container">
+		<form class="form-group" id="chat-form">
+			<input
+				class="form-control"
+				id="msg"
+				type="text"
+				placeholder="Enter Message"
+				required
+				autocomplete="off"
+			/>
+			<button class="btn btn-primary btn-block mb-2"><i class="fas fa-paper-plane"></i> Send</button>
+		</form>
+	</div>
+</div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/application.js"></script>

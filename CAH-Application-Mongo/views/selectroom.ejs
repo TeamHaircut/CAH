@@ -1,0 +1,30 @@
+<div class="row mt-5">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+      <h1 class="text-center mb-3"><i class="fas fa-blind"></i>  CAH</h1>
+      <% include ./partials/messages %>
+      <form action="/selectroom" method="POST">
+        <div class="form-group">
+          <label for="name">Username</label>
+          <input
+            type="name"
+            id="name"
+            name="name"
+            class="form-control"
+            placeholder="Enter Username"
+			value='<%- user.name %>'
+          />
+        </div>
+        <div class="form-group">
+          <label for="room">Room</label>
+			<select name="room" id="room" class="form-control">
+				<option value="Sausage">Sausage</option>
+				<option value="Broccoli">Broccoli</option>
+			</select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block mb-2">Join Room</button>
+      </form>
+		<a href="/users/logout" class="btn btn-secondary">Logout</a>
+    </div>
+  </div>
+</div>
