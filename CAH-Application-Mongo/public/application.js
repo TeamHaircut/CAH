@@ -3,7 +3,8 @@ const chatMessages = document.querySelector('.chat-messages');
 
 const currentUser = document.getElementById('currentUser');
 const roomName = document.getElementById('room-name');
-const userList = document.getElementById('users');
+
+const userTable = document.querySelector('.users-table');
 
 // Get username and room from template
 const username = currentUser.innerHTML;
@@ -19,7 +20,7 @@ socket.emit('joinRoom', { username, room });
 // Get room and users
 socket.on('roomUsers', ({ room, users }) => {
   outputRoomName(room);
-  outputUsers(users);
+  outputUsersTable(users);
 });
 
 // Message from server
@@ -59,14 +60,34 @@ function outputMessage(message) {
 function outputRoomName(room) {
   roomName.innerText = room;
 }
-
-// Add users to DOM
-function outputUsers(users) {
-  userList.innerHTML = '';
+  
+// Add users-table to DOM
+function outputUsersTable(users) {
+  userTable.innerHTML = '';
   users.forEach(user=>{
-    const li = document.createElement('li');
-    li.innerText = user.username;
-    userList.appendChild(li);
-  });
+    const tr = document.createElement('tr');
+	tr.classList.add('table-light');
+	//
+	const th = document.createElement('th');
+	th.setAttribute("scope","row");//?
+	if(user.username === "Poop Man") {
+		th.innerHTML = `<i class="fas fa-gavel"></i>`;
+	} else {
+		th.innerHTML = ``;
+	}
+	tr.appendChild(th);
+	//
+	const tdName = document.createElement('td');
+	tdName.innerHTML = `${user.username}`;
+	tr.appendChild(tdName);
+	//
+	const tdPoints = document.createElement('td');
+	tdPoints.innerHTML = `10`;
+	tr.appendChild(tdPoints);
+	
+	document.querySelector('.users-table').appendChild(tr);
+
+  });  
+
 }
 
