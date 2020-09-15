@@ -1,13 +1,28 @@
+const User = require('../models/User');
 const users = [];
+var cardCzar = false;
 
 // Join user to chat
 function userJoin(id, username, room) {
-  const user = { id, username, room };
+	
+	const user = { id, username, room};
 
-  users.push(user);
-
-  return user;
+	users.push(user);
+  
+	return user;
 }
+
+// Set the card czar to user
+function setCardCzar(user) {
+	cardCzar = user;
+}
+
+// Get current card czar
+function getCardCzar() {
+
+	return cardCzar;
+}
+
 
 // Get current user
 function getCurrentUser(id) {
@@ -32,5 +47,7 @@ module.exports = {
   userJoin,
   getCurrentUser,
   userLeave,
-  getRoomUsers
+  getRoomUsers,
+  setCardCzar,
+  getCardCzar
 };
