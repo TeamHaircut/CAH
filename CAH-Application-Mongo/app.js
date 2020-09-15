@@ -7,7 +7,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
-const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require('./utils/users');
+const { userJoin, getCurrentUser, userLeave, getRoomUsers, setCardCzar, getCardCzar } = require('./utils/users');
 
 const app = express();
 
@@ -29,6 +29,11 @@ const io = socket(server);
 app.use(express.static(path.join(__dirname, '/public')));
 
 const botName = 'CAH Admin';
+const GameState = {
+	TERMINATE: 1,
+	INITIALIZE: 2
+};
+var gameState = GameState.TERMINATE;
 
 //Run when client connects
 io.on('connection', socket => {
@@ -46,14 +51,40 @@ io.on('connection', socket => {
 		// Send users and room info
 		io.to(user.room).emit('roomUsers', {
 			room: user.room,
-			users: getRoomUsers(user.room)
+			users: getRoomUsers(user.room),
+			czar: getCardCzar()
 		});
+		
+		const czar = getCardCzar();
+		const users = getRoomUsers(user.room);
+		// Send GameState to current user
+		  socket.emit('gamestate', {gameState, users, czar});
+
 	});
 	
 	// Listen for chatMessage
 	socket.on('chatMessage', msg => {
 		const user = getCurrentUser(socket.id);
 		io.to(user.room).emit('message', formatMessage(user.username, msg));
+	});
+	
+	// Listen for game control event
+	socket.on('gameControlState', ({state, username, room}) => {
+		const user = getCurrentUser(socket.id);
+		if(state === `<i class="fas fa-play"></i> Launch Game`) {
+			gameState = GameState.INITIALIZE;
+
+			//set card czar to current user
+			setCardCzar(user);
+			
+			//Send czar and room info
+			io.to(user.room).emit('launch', {users: getRoomUsers(user.room), czar: getCardCzar()});
+			
+		} else {
+			gameState = GameState.TERMINATE;
+			setCardCzar(false);
+			io.to(user.room).emit('terminate', {users: getRoomUsers(user.room), czar: getCardCzar()});
+		}
 	});
 	
   // Runs when client disconnects
@@ -68,7 +99,8 @@ io.on('connection', socket => {
       // Send users and room info
       io.to(user.room).emit('roomUsers', {
         room: user.room,
-        users: getRoomUsers(user.room)
+        users: getRoomUsers(user.room),
+		czar: getCardCzar()
       });
     }
   });
