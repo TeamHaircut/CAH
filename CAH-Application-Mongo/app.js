@@ -109,9 +109,6 @@ io.on('connection', socket => {
 // Passport Config
 require('./config/passport')(passport);
 
-// DB Config
-//const db = require('./config/keys').mongoURI;
-
 // Connect to MongoDB
 mongoose
   .connect('mongodb://127.0.0.1/test', {useNewUrlParser: true, useUnifiedTopology: true})
@@ -152,7 +149,3 @@ app.use(function(req, res, next) {
 // Routes
 app.use('/', require('./routes/index.js'));
 app.use('/users', require('./routes/users.js'));
-
-//const PORT = process.env.PORT || 5000;
-
-//app.listen(PORT, console.log(`Server started on port ${PORT}`));

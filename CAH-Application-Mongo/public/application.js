@@ -18,14 +18,8 @@ socket.emit('joinRoom', { username, room });
 
 // Get room and users from server
 socket.on('roomUsers', ({ room, users, czar }) => {
-  outputRoomName(room);
-  //if( typeof czar !== 'undefined' && czar) {
+	outputRoomName(room);
 	outputUsersTable(users, czar);
-  //} else {
-	  //outputUsersTable(users, false);
-  //}
-  
-  
   
 });
 
@@ -64,16 +58,14 @@ function outputMessage(message) {
 	
 // Add room name to DOM
 function outputRoomName(room) {
-  roomName.innerText = room;
+	roomName.innerText = room;
 }
   
 // Add users-table to DOM
 function outputUsersTable(users, czar) {
-  userTable.innerHTML = '';
-  users.forEach(user=>{
-	  console.log(user.username);
-	  console.log(czar.username);
-    const tr = document.createElement('tr');
+	userTable.innerHTML = '';
+	users.forEach(user=>{
+	const tr = document.createElement('tr');
 	tr.classList.add('table-light');
 	//
 	const th = document.createElement('th');
@@ -92,9 +84,9 @@ function outputUsersTable(users, czar) {
 	const tdPoints = document.createElement('td');
 	tdPoints.innerHTML = `10`;
 	tr.appendChild(tdPoints);
-	
+
 	document.querySelector('.users-table').appendChild(tr);
-  });  
+	});  
 
 }
 

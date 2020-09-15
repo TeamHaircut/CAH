@@ -19,7 +19,6 @@ function setCardCzar(user) {
 
 // Get current card czar
 function getCardCzar() {
-
 	return cardCzar;
 }
 
