@@ -1,27 +1,19 @@
-const User = require('../models/User');
 const users = [];
-var cardCzar = false;
+
+// Reset Points to 0
+function resetPoints() {
+	users.forEach(user =>
+		user.points = 0
+	)
+}
 
 // Join user to chat
 function userJoin(id, username, room) {
-	
-	const user = { id, username, room};
-
+	const points = '-';
+	const user = { id, username, room, points};
 	users.push(user);
-  
 	return user;
 }
-
-// Set the card czar to user
-function setCardCzar(user) {
-	cardCzar = user;
-}
-
-// Get current card czar
-function getCardCzar() {
-	return cardCzar;
-}
-
 
 // Get current user
 function getCurrentUser(id) {
@@ -47,6 +39,5 @@ module.exports = {
   getCurrentUser,
   userLeave,
   getRoomUsers,
-  setCardCzar,
-  getCardCzar
+  resetPoints
 };

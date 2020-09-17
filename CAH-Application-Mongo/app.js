@@ -7,7 +7,8 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
-const { userJoin, getCurrentUser, userLeave, getRoomUsers, setCardCzar, getCardCzar } = require('./utils/users');
+const { userJoin, getCurrentUser, userLeave, getRoomUsers, resetPoints  } = require('./utils/users');
+const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, drawWhiteCards, getWhiteCards} = require('./utils/game');
 
 const app = express();
 
@@ -77,8 +78,18 @@ io.on('connection', socket => {
 			//set card czar to current user
 			setCardCzar(user);
 			
+			//set all points for all users to 0
+			resetPoints();
+			
+			//Draw Black Card
+			drawBlackCard();
+			
+			//Draw White Card 
+			drawWhiteCards(10);
+			
+			console.log("Black Card " + getBlackCard());
 			//Send czar and room info
-			io.to(user.room).emit('launch', {users: getRoomUsers(user.room), czar: getCardCzar()});
+			io.to(user.room).emit('launch', {users: getRoomUsers(user.room), czar: getCardCzar(), blackCard: getBlackCard(), whiteCards: getWhiteCards()});
 			
 		} else {
 			gameState = GameState.TERMINATE;
