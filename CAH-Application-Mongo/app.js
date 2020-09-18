@@ -8,7 +8,7 @@ const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
 const { userJoin, getCurrentUser, userLeave, getRoomUsers, resetPoints, updateRoomUsersWhiteCards  } = require('./utils/users');
-const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, getWhiteCards} = require('./utils/game');
+const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards} = require('./utils/game');
 
 const app = express();
 
@@ -90,7 +90,6 @@ io.on('connection', socket => {
 			//console.log(roomUsers);
 			updateRoomUsersWhiteCards(initializeWhiteCards(roomUsers, 10));
 			
-			console.log(getRoomUsers(user.room));
 			//Send czar and room info
 			io.to(user.room).emit('launch', {users: getRoomUsers(user.room), czar: getCardCzar(), blackCard: getBlackCard()});
 			

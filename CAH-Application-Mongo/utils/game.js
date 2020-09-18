@@ -2,8 +2,6 @@ var cardCzar = false;
 var blackCard = '';
 var blackDeck = [];
 
-//var whiteCards = [];
-
 // Initialize White Cards
 function initializeWhiteCards(roomusers,count) {
 	
@@ -16,11 +14,6 @@ function initializeWhiteCards(roomusers,count) {
 	});
 	return roomusers;
 
-}
-
-// Get white card
-function getWhiteCards() {
-	return whiteCards;
 }
 
 // Draw a black card
@@ -48,6 +41,5 @@ module.exports = {
   getCardCzar,
   drawBlackCard,
   getBlackCard,
-  initializeWhiteCards,
-  getWhiteCards
+  initializeWhiteCards
 };
