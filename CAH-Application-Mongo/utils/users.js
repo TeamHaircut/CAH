@@ -10,7 +10,8 @@ function resetPoints() {
 // Join user to chat
 function userJoin(id, username, room) {
 	const points = '-';
-	const user = { id, username, room, points};
+	const whiteCards = [];
+	const user = { id, username, room, points, whiteCards};
 	users.push(user);
 	return user;
 }
@@ -34,10 +35,25 @@ function getRoomUsers(room) {
   return users.filter(user => user.room === room);
 }
 
+// Update Room Users
+function updateRoomUsersWhiteCards(roomusers) {
+	//console.log(roomusers);
+	users.forEach(user => {
+		roomusers.forEach(roomuser => {
+			if(roomuser.username == user.username) {
+				user.whiteCards = roomuser.whiteCards;
+			}
+		});
+	});
+	//console.log(users);
+	//users = roomusers;
+}
+
 module.exports = {
   userJoin,
   getCurrentUser,
   userLeave,
   getRoomUsers,
-  resetPoints
+  resetPoints,
+  updateRoomUsersWhiteCards
 };

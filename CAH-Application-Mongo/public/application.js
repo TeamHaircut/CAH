@@ -135,8 +135,8 @@ gameControl.addEventListener("click", function(){
 });
 
 // Launch event from server
-socket.on('launch', ({users, czar, blackCard, whiteCards}) => {
-	initializeGame(users,czar, blackCard, whiteCards);
+socket.on('launch', ({users, czar, blackCard}) => {
+	initializeGame(users,czar, blackCard);
 });
 
 // Apply game intialization to DOM
@@ -145,7 +145,7 @@ function initializeGame(users, czar, blackCard, whiteCards) {
 	gameControl.innerHTML = `<i class="fas fa-stop"></i> Terminate Game`;
 	outputUsersTable(users, czar);
 	outputBlackCard(blackCard);
-	outputWhiteCards(whiteCards, czar);
+	outputWhiteCards(users, czar);
 }
 
 // Termination event from server
@@ -178,49 +178,53 @@ socket.on('gamestate', ({gameState, users, czar}) => {
 });
 
 // Add white cards to DOM
-function outputWhiteCards(whiteCards, czar) {
+function outputWhiteCards(users, czar) {
 	whiteCardsDiv.innerHTML = ``;
-	whiteCards.forEach(whiteCard=>{
-		const div1 = document.createElement('div');
-		div1.classList.add("card", "text-black", "border-dark", "mr-3");
-		div1.style.height = "20rem";
-		div1.style.minWidth = "15rem";
-		//
-		const div2 = document.createElement('div');
-		div2.classList.add('card-header');
+	users.forEach(user => {
+		if(user.username == username) {
+			user.whiteCards.forEach(whiteCard=>{
+				const div1 = document.createElement('div');
+				div1.classList.add("card", "text-black", "border-dark", "mr-3");
+				div1.style.height = "20rem";
+				div1.style.minWidth = "15rem";
+				//
+				const div2 = document.createElement('div');
+				div2.classList.add('card-header');
 
-		//
-		const div3 = document.createElement('div');
-		div3.classList.add('card-body');
-		//
-		const h4 = document.createElement('h4');
-		h4.classList.add('card-title');
-		h4.style.fontFamily = "Helvetica, Neue, Bold";
-		h4.innerHTML = `${whiteCard}`;
-		div3.appendChild(h4);
-		//
-		const p = document.createElement('p');
-		p.classList.add('card-text');
-		p.innerHTML = 'example white card';
-		div3.appendChild(p);
-		//
-		div1.appendChild(div3);
-		
-		if(username == czar.username) {//!=
-			const playCard = document.createElement('button');
-			playCard.classList.add("nav-link");
-			playCard.href ="#";
-			playCard.innerHTML = `<i class="fas fa-play"></i> Play Card`;
-			playCard.addEventListener('click', () => {
-				// Send Card to Server
-				console.log("Card Clicked");
-				//socket.emit('sendWhiteCardToServer', { username, index });
+				//
+				const div3 = document.createElement('div');
+				div3.classList.add('card-body');
+				//
+				const h4 = document.createElement('h4');
+				h4.classList.add('card-title');
+				h4.style.fontFamily = "Helvetica, Neue, Bold";
+				h4.innerHTML = `${whiteCard}`;
+				div3.appendChild(h4);
+				//
+				const p = document.createElement('p');
+				p.classList.add('card-text');
+				p.innerHTML = 'example white card';
+				div3.appendChild(p);
+				//
+				div1.appendChild(div3);
+				
+				if(username != czar.username) {//!=
+					const playCard = document.createElement('button');
+					playCard.classList.add("nav-link");
+					playCard.href ="#";
+					playCard.innerHTML = `<i class="fas fa-play"></i> Play Card`;
+					playCard.addEventListener('click', () => {
+						// Send Card to Server
+						console.log("Card Clicked");
+						//socket.emit('sendWhiteCardToServer', { username, index });
+					});
+					div2.appendChild(playCard);
+				}
+				
+				div1.appendChild(div2);
+				document.querySelector('.whiteCardsDiv').appendChild(div1);
 			});
-			div2.appendChild(playCard);
 		}
-		
-		div1.appendChild(div2);
-		document.querySelector('.whiteCardsDiv').appendChild(div1);
 	});
 }
 
