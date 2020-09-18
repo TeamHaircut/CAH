@@ -2,22 +2,18 @@ var cardCzar = false;
 var blackCard = '';
 var blackDeck = [];
 
-var whiteCards = [];
-
-// Draw a white card
-function drawWhiteCards(count) {
-	whiteCards = [];
+// Initialize White Cards
+function initializeWhiteCards(roomusers,count) {
 	
-	var i;
-	for(i = 0; i < count ; i++) {
-		var whiteCard = "White Card #"+ Math.floor((Math.random()* (1000-0) +0));
-		whiteCards.push(whiteCard);
-	}
-}
+	roomusers.forEach(user => {
+		var i;
+		for(i = 0; i < count ; i++) {
+			var whiteCard = "White Card #"+ Math.floor((Math.random()* (1000-0) +0));
+			user.whiteCards.push(whiteCard);
+		}
+	});
+	return roomusers;
 
-// Get white card
-function getWhiteCards() {
-	return whiteCards;
 }
 
 // Draw a black card
@@ -45,6 +41,5 @@ module.exports = {
   getCardCzar,
   drawBlackCard,
   getBlackCard,
-  drawWhiteCards,
-  getWhiteCards
+  initializeWhiteCards
 };
