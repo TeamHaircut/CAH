@@ -7,7 +7,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
-const { userJoin, getCurrentUser, userLeave, getRoomUsers, resetPoints, updateRoomUsersWhiteCards  } = require('./utils/users');
+const { userJoin, getCurrentUser, userLeave, getRoomUsers, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
 const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, appendCzarHand, getCzarHand} = require('./utils/game');
 
 const app = express();
@@ -111,6 +111,21 @@ io.on('connection', socket => {
 		if(getCzarHand().length == (getRoomUsers(user.room).length - 1)) {
 			io.to(user.room).emit('czarHand', {username: user.username, czarHand: getCzarHand(), czar: getCardCzar()});
 		}
+	});
+	
+	// Listen for winner event
+	socket.on('declareWinner', ({card}) => {
+		//extract user from card
+		console.log(card.user.username);
+		var name = card.user.username;
+		//update points for name
+		updatePoints(name);
+		
+		//update card czar
+		
+		//Emit updated score to all users
+		io.to(card.user.room).emit('updatePoints', {users: getRoomUsers(card.user.room), czar: getCardCzar(), winner: name});
+
 	});
 	
   // Runs when client disconnects

@@ -1,5 +1,14 @@
 const users = [];
 
+function updatePoints(name) {
+	users.forEach(user => {
+		if(user.username == name) {
+			user.points = user.points + 1;
+			console.log(user.points);
+		}
+	});
+}
+
 // Reset Points to 0
 function resetPoints() {
 	users.forEach(user =>
@@ -52,5 +61,6 @@ module.exports = {
   userLeave,
   getRoomUsers,
   resetPoints,
-  updateRoomUsersWhiteCards
+  updateRoomUsersWhiteCards,
+  updatePoints
 };

@@ -135,8 +135,14 @@ gameControl.addEventListener("click", function(){
 });
 
 //  Broadcast white cards received by server
+socket.on('updatePoints', ({users,czar, winner}) => {
+	//alert(winner + " is the winner!");
+	console.log(users);
+	outputUsersTable(users, czar);
+});
+
+//  Broadcast white cards received by server
 socket.on('czarHand', ({username, czarHand, czar}) => {
-	console.log("USERNAME " +username + ", " + "czarHand "+ czarHand);
 	outputCzarHand(czarHand, czar);
 });
 
@@ -213,9 +219,10 @@ function outputCzarHand(czarHand, czar) {
 			playCard.href ="#";
 			playCard.innerHTML = `<i class="fas fa-play"></i> Select`;
 			playCard.addEventListener('click', () => {
-				// Send Card to Server
-				console.log("Click");
-				//socket.emit('sendWhiteCardToServer', {whiteCard });
+				// Declare Winner
+				//console.log("Click");
+				//console.log(card);
+				socket.emit('declareWinner', {card});
 				//removePlayButton(user);
 				
 			});
