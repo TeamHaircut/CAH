@@ -4,7 +4,7 @@ var blackDeck = [];
 
 var czarHand = [];
 
-// Push args to czar hand array
+// Push white card info to czarHand Array
 function appendCzarHand(user, whiteCard) {
 	czarHand.push({user, whiteCard});
 }
@@ -23,6 +23,7 @@ function initializeWhiteCards(roomusers,count) {
 
 }
 
+// Return the Card Czar's Hand
 function getCzarHand() {
 	return czarHand;
 }
