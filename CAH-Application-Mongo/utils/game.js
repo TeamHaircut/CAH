@@ -2,6 +2,13 @@ var cardCzar = false;
 var blackCard = '';
 var blackDeck = [];
 
+var czarHand = [];
+
+// Push args to czar hand array
+function appendCzarHand(user, whiteCard) {
+	czarHand.push({user, whiteCard});
+}
+
 // Initialize White Cards
 function initializeWhiteCards(roomusers,count) {
 	
@@ -14,6 +21,10 @@ function initializeWhiteCards(roomusers,count) {
 	});
 	return roomusers;
 
+}
+
+function getCzarHand() {
+	return czarHand;
 }
 
 // Draw a black card
@@ -41,5 +52,7 @@ module.exports = {
   getCardCzar,
   drawBlackCard,
   getBlackCard,
-  initializeWhiteCards
+  initializeWhiteCards, 
+  appendCzarHand,
+  getCzarHand
 };

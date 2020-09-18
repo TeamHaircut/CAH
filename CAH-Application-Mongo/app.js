@@ -8,7 +8,7 @@ const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
 const { userJoin, getCurrentUser, userLeave, getRoomUsers, resetPoints, updateRoomUsersWhiteCards  } = require('./utils/users');
-const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards} = require('./utils/game');
+const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, appendCzarHand, getCzarHand} = require('./utils/game');
 
 const app = express();
 
@@ -97,6 +97,21 @@ io.on('connection', socket => {
 			gameState = GameState.TERMINATE;
 			setCardCzar(false);
 			io.to(user.room).emit('terminate', {users: getRoomUsers(user.room), czar: getCardCzar()});
+		}
+	});
+	
+	// Listen for incoming white cards
+	socket.on('sendWhiteCardToServer', ({whiteCard}) => {
+		const user = getCurrentUser(socket.id);
+		
+		// push white card and sending user to czar's hand
+		appendCzarHand(user, whiteCard);
+		//console.log("USERNAME "+user.username +", WHITECARD " + whiteCard);
+		console.log(getCzarHand());
+		console.log(getRoomUsers(user.room).length - 1);
+		console.log(getCardCzar());
+		if(getCzarHand().length == (getRoomUsers(user.room).length - 1)) {
+			io.to(user.room).emit('czarHand', {username: user.username, czarHand: getCzarHand(), czar: getCardCzar()});
 		}
 	});
 	
