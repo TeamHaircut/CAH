@@ -106,10 +106,8 @@ io.on('connection', socket => {
 		
 		// push white card and sending user to czar's hand
 		appendCzarHand(user, whiteCard);
-		//console.log("USERNAME "+user.username +", WHITECARD " + whiteCard);
-		console.log(getCzarHand());
-		console.log(getRoomUsers(user.room).length - 1);
-		console.log(getCardCzar());
+
+		// Emit when you have received all white cards
 		if(getCzarHand().length == (getRoomUsers(user.room).length - 1)) {
 			io.to(user.room).emit('czarHand', {username: user.username, czarHand: getCzarHand(), czar: getCardCzar()});
 		}

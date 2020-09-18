@@ -133,7 +133,7 @@ gameControl.addEventListener("click", function(){
 	socket.emit('gameControlState', {state, username, room});
 	
 });
-//io.to(user.room).emit('czarHand', {username: user.username, whiteCard: whiteCard});
+
 //  Broadcast white cards received by server
 socket.on('czarHand', ({username, czarHand, czar}) => {
 	console.log("USERNAME " +username + ", " + "czarHand "+ czarHand);
@@ -182,16 +182,7 @@ socket.on('gamestate', ({gameState, users, czar}) => {
 	outputUsersTable(users, czar);
 	console.log("Gamestate EVENT ON CLIENT");
 });
-/*	CZAR CARDS HTML (czarCardsDiv)
-				<div class="card border-dark mr-3" style="min-width: 15rem;">
-					  <div class="card-header">Shared Resource</div>
-					  <div class="card-body">
-						<h4 class="card-title">White Card</h4>
-						<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-					  </div>
-				</div>
-*/
-//czarCardsDiv
+
 function outputCzarHand(czarHand, czar) {
 	czarHand.forEach(card => {
 		const div1 = document.createElement('div');
@@ -274,7 +265,6 @@ function outputWhiteCards(users, czar) {
 					playCard.innerHTML = `<i class="fas fa-play"></i> Play Card`;
 					playCard.addEventListener('click', () => {
 						// Send Card to Server
-						//console.log(whiteCard);
 						socket.emit('sendWhiteCardToServer', {whiteCard });
 						removePlayButton(user);
 						
