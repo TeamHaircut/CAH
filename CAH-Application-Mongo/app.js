@@ -114,8 +114,9 @@ io.on('connection', socket => {
 	});
 	
 	// Listen for winner event
-	socket.on('declareWinner', ({card}) => {
+	socket.on('declareWinner', ({czarHand, card}) => {
 		//extract user from card
+		console.log(card);
 		console.log(card.user.username);
 		var name = card.user.username;
 		//update points for name
@@ -124,7 +125,7 @@ io.on('connection', socket => {
 		//update card czar
 		
 		//Emit updated score to all users
-		io.to(card.user.room).emit('updatePoints', {users: getRoomUsers(card.user.room), czar: getCardCzar(), winner: name});
+		io.to(card.user.room).emit('updatePoints', {users: getRoomUsers(card.user.room), czar: getCardCzar(), winner: card, czarHand: czarHand});
 
 	});
 	
