@@ -3,6 +3,23 @@ var blackCard = '';
 
 var czarHand = [];
 
+function nextCardCzar(currentCzar, roomUserList) { 
+	var czar = false;
+	const czarIndex = roomUserList.findIndex(user => user.username === currentCzar.username);
+	console.log("CzarIndex: "+czarIndex);
+	var roomUserListLength = roomUserList.length;
+	console.log("RoomUserListLength: "+roomUserListLength);
+	var nextCzarIndex = czarIndex+1;
+	console.log("NextCzarIndex: "+nextCzarIndex);
+	if(nextCzarIndex >= roomUserListLength) {
+		nextCzarIndex = 0;
+		console.log("HERE");
+	}
+	czar = roomUserList[nextCzarIndex];
+	console.log("New czar: "+ czar);
+	return czar;
+}
+
 // Push white card info to czarHand Array
 function appendCzarHand(user, whiteCard) {
 	czarHand.push({user, whiteCard});
@@ -59,5 +76,6 @@ module.exports = {
   initializeWhiteCards, 
   appendCzarHand,
   getCzarHand,
-  clearCzarHand
+  clearCzarHand,
+  nextCardCzar
 };
