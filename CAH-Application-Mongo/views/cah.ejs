@@ -9,7 +9,7 @@
 				<p class="nav-link"></p>
 			</li>
 			<li class="nav-item active">
-				<p class="nav-link"><i class="fas fa-user"></i> <span id="currentUser"><%= user.name %></span></p>
+				<p class="nav-link"><i class="fas fa-user"></i> <span id="clientUsername"><%= user.name %></span></p>
 			</li>
 			<li class="nav-item active">
 				<p class="nav-link"><i class="fas fa-home"></i> The <span id="room-name"><%= user.last_room %></span> room</p>
@@ -44,7 +44,7 @@
 			  <th scope="col"><h3>Points</h3></th>
 			</tr>
 		  </thead>
-		  <tbody class="users-table">
+		  <tbody class="userlist-table">
 		  </tbody>
 		</table> 
 	</div>
@@ -69,5 +69,6 @@
 		</form>
 	</div>
 </div>
-    <script src="/socket.io/socket.io.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/DOM/dom.js"></script>
     <script src="/application.js"></script>

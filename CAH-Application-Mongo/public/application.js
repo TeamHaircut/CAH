@@ -1,37 +1,19 @@
-//
+const clientUsername = document.getElementById('clientUsername');
+const gameControl = document.getElementById('gamecontrol');
 const chatForm = document.getElementById('chat-form');
-const chatMessages = document.querySelector('.chat-messages');
-
-const currentUser = document.getElementById('currentUser');
-const roomName = document.getElementById('room-name');
-const userTable = document.querySelector('.users-table');
-
-const blackCardDiv = document.querySelector('.blackCardDiv');
-const czarCardsDiv = document.querySelector('.czarCardsDiv');
-const whiteCardsDiv = document.querySelector('.whiteCardsDiv');
-
 
 // Get username and room from template
-const username = currentUser.innerHTML;
+const username = clientUsername.innerHTML;
 const room = roomName.innerHTML;
-
-const gameControl = document.getElementById('gamecontrol');
 
 const socket = io();
 
-// Join chatroom
+/* Send an object contianing the client's username, 
+and room name as soon as they join the room*/
 socket.emit('joinRoom', { username, room });
-
-// Get room and users from server
-socket.on('roomUsers', ({ room, users, czar }) => {
-	outputRoomName(room);
-	outputUsersTable(users, czar);
-  
-});
 
 // Message from server
 socket.on('message', message => {
-	console.log(message);
 	outputMessage(message);
 	
 	// Scroll down
@@ -53,317 +35,72 @@ chatForm.addEventListener('submit', e => {
 	e.target.elements.msg.focus();
 });
 
-// Output message to DOM
-function outputMessage(message) {
-	const div = document.createElement('div');
-	div.classList.add('message');
-	//message.time not used
-	div.innerHTML = `<p style="padding:5px;" class="meta card border-info mb-3"><b>${message.username}:</b> ${message.text}</p>`;
-	document.querySelector('.chat-messages').appendChild(div);
-}
-	
-// Add room name to DOM
-function outputRoomName(room) {
-	roomName.innerText = room;
-}
-  
-// Add users-table to DOM
-function outputUsersTable(users, czar) {
-	userTable.innerHTML = '';
-	users.forEach(user=>{
-	const tr = document.createElement('tr');
-	tr.classList.add('table-light');
-	//
-	const th = document.createElement('th');
-	th.setAttribute("scope","row");
-	if(user.username == czar.username) {
-		th.innerHTML = `<i class="fas fa-gavel"></i>`;
-	} else {
-		th.innerHTML = ``;
-	}
-	tr.appendChild(th);
-	//
-	const tdName = document.createElement('td');
-	tdName.innerHTML = `${user.username}`;
-	tr.appendChild(tdName);
-	//
-	const tdPoints = document.createElement('td');
-	tdPoints.innerHTML = `${user.points}`;
-	tr.appendChild(tdPoints);
-
-	document.querySelector('.users-table').appendChild(tr);
-	});  
-
-}
-
-// Add black card to DOM
-function outputBlackCard(blackCard) {
-	console.log(blackCard);
-	blackCardDiv.innerHTML = ``;
-	const div1 = document.createElement('div');
-	div1.classList.add("card", "text-white", "bg-dark", "mb-3");
-	div1.style.height = "20rem";
-	//
-	const div2 = document.createElement('div');
-	div2.classList.add('card-header');
-	div2.innerHTML = "Shared Resource";
-	//div1.appendChild(div2);
-	//
-	const div3 = document.createElement('div');
-	div3.classList.add('card-body');
-	//
-	const h4 = document.createElement('h4');
-	h4.classList.add('card-title');
-	h4.style.fontFamily = "Helvetica, Neue, Bold";
-	h4.innerHTML = `${blackCard}`;
-	div3.appendChild(h4);
-	//
-	const p = document.createElement('p');
-	p.classList.add('card-text');
-	p.innerHTML = 'example black card';
-	div3.appendChild(p);
-	//
-	div1.appendChild(div3);
-	div1.appendChild(div2);
-	document.querySelector('.blackCardDiv').appendChild(div1);
-}
-
 gameControl.addEventListener("click", function(){ 
 	//Emit game control state to server
 	const state = gameControl.innerHTML;
-	socket.emit('gameControlState', {state, username, room});
+	socket.emit('gameControlState', {state});
 	
 });
 
-//  Broadcast white cards received by server
-socket.on('updatePoints', ({users,czar, winner, czarHand}) => {
-	//alert(winner + " is the winner!");
-	console.log(users);
-	outputUsersTable(users, czar);
-	removeSelectButton(czarHand, winner);
+function sendWhiteCardToServer(whiteCard) {
+	socket.emit('sendWhiteCardToServer', {whiteCard});
+}
+
+function sendWinnerInfoToServer(czarHand, card) {
+	socket.emit('declareWinner', {czarHand, card});
+}
+
+//  Update points in user table, and braodcast winner to room users
+socket.on('updatePoints', ({roomUserList, cardCzar, winner, czarHand}) => {
+	outputRoomUserTable(roomUserList, cardCzar);
+	outputWinner(czarHand, winner);
 });
 
 //  Broadcast white cards received by server
-socket.on('czarHand', ({username, czarHand, czar}) => {
+socket.on('czarHand', ({czarHand, czar}) => {
 	outputCzarHand(czarHand, czar);
 });
 
 // Launch event from server
-socket.on('launch', ({users, czar, blackCard}) => {
-	initializeGame(users,czar, blackCard);
+socket.on('launch', ({roomUserList, cardCzar, blackCard}) => {
+	initializeGame(roomUserList, cardCzar, blackCard);
 });
 
 // Apply game intialization to DOM
-function initializeGame(users, czar, blackCard, whiteCards) {
+function initializeGame(roomUserList, cardCzar, blackCard) {
 	console.log("GAME INITIALIZED");
 	gameControl.innerHTML = `<i class="fas fa-stop"></i> Terminate Game`;
-	outputUsersTable(users, czar);
+	outputRoomUserTable(roomUserList, cardCzar);
 	outputBlackCard(blackCard);
-	outputWhiteCards(users, czar);
+	outputWhiteCards(roomUserList, cardCzar);
 }
 
 // Termination event from server
-socket.on('terminate', ({users, czar}) => {
-	terminateGame(users,czar);
-
+socket.on('terminate', ({roomUserList, cardCzar}) => {
+	terminateGame(roomUserList, cardCzar);
 });
 
 // Apply game termination to DOM
-function terminateGame(users, czar) {
+function terminateGame(roomUserList, cardCzar) {
 	console.log("GAME TERMINATED");
 	gameControl.innerHTML = `<i class="fas fa-play"></i> Launch Game`;
-	outputUsersTable(users, czar);
+	outputRoomUserTable(roomUserList, cardCzar);
 }
 
 // get gamestate from server
-socket.on('gamestate', ({gameState, users, czar}) => {
+socket.on('gamestate', ({gameState, roomUserList, cardCzar}) => {
 	switch (gameState) {
 		case 1:
-			terminateGame(users, czar);
+			terminateGame(roomUserList, cardCzar);
 			break;
 		case 2:
-			initializeGame(users, czar);
+			initializeGame(roomUserList, cardCzar);
 			break;
 		default:
 			break;
 	}
-	outputUsersTable(users, czar);
+	outputRoomName(room);
+	console.log(roomUserList);
+	outputRoomUserTable(roomUserList, cardCzar);
 	console.log("Gamestate EVENT ON CLIENT");
 });
-
-function outputCzarHand(czarHand, czar) {
-	czarHand.forEach(card => {
-		const div1 = document.createElement('div');
-		div1.classList.add("card", "text-black", "border-dark", "mr-3");
-		div1.style.height = "20rem";
-		div1.style.minWidth = "15rem";
-		//
-		const div2 = document.createElement('div');
-		div2.classList.add('card-header');
-		//
-		const div3 = document.createElement('div');
-		div3.classList.add('card-body');
-		//
-		const h4 = document.createElement('h4');
-		h4.classList.add('card-title');
-		h4.style.fontFamily = "Helvetica, Neue, Bold";
-		h4.innerHTML = `${card.whiteCard}`;
-		div3.appendChild(h4);
-		//
-		const p = document.createElement('p');
-		p.classList.add('card-text');
-		p.innerHTML = 'placeholder';
-		div3.appendChild(p);
-		div1.appendChild(div3);	
-		if(username == czar.username) {//!=
-			const playCard = document.createElement('button');
-			playCard.classList.add("nav-link");
-			playCard.href ="#";
-			playCard.innerHTML = `<i class="fas fa-play"></i> Select`;
-			playCard.addEventListener('click', () => {
-				socket.emit('declareWinner', {czarHand, card});
-				console.log({card});
-				console.log(card);
-				//removeSelectButton(czarHand, card);
-				
-			});
-			div2.appendChild(playCard);
-			
-		}
-		div1.appendChild(div2);
-		document.querySelector('.czarCardsDiv').appendChild(div1);
-	});
-}
-
-// Add white cards to DOM
-function outputWhiteCards(users, czar) {
-	whiteCardsDiv.innerHTML = ``;
-	users.forEach(user => {
-		if(user.username == username) {
-			user.whiteCards.forEach(whiteCard=>{
-				const div1 = document.createElement('div');
-				div1.classList.add("card", "text-black", "border-dark", "mr-3");
-				div1.style.height = "20rem";
-				div1.style.minWidth = "15rem";
-				//
-				const div2 = document.createElement('div');
-				div2.classList.add('card-header');
-
-				//
-				const div3 = document.createElement('div');
-				div3.classList.add('card-body');
-				//
-				const h4 = document.createElement('h4');
-				h4.classList.add('card-title');
-				h4.style.fontFamily = "Helvetica, Neue, Bold";
-				h4.innerHTML = `${whiteCard}`;
-				div3.appendChild(h4);
-				//
-				const p = document.createElement('p');
-				p.classList.add('card-text');
-				p.innerHTML = 'placeholder';
-				div3.appendChild(p);
-				//
-				div1.appendChild(div3);
-				
-				if(username != czar.username) {//!=
-					const playCard = document.createElement('button');
-					playCard.classList.add("nav-link");
-					playCard.href ="#";
-					playCard.innerHTML = `<i class="fas fa-play"></i> Play Card`;
-					playCard.addEventListener('click', () => {
-						// Send Card to Server
-						socket.emit('sendWhiteCardToServer', {whiteCard });
-						removePlayButton(user);
-						
-					});
-					div2.appendChild(playCard);
-					
-				}
-				
-				div1.appendChild(div2);
-				document.querySelector('.whiteCardsDiv').appendChild(div1);
-			});
-		}
-	});
-}
-
-// Remove play button from DOM
-function removePlayButton(user) {
-	whiteCardsDiv.innerHTML = ``;
-	user.whiteCards.forEach(whiteCard=>{
-		const div1 = document.createElement('div');
-		div1.classList.add("card", "text-black", "border-dark", "mr-3");
-		div1.style.height = "20rem";
-		div1.style.minWidth = "15rem";
-		//
-		const div2 = document.createElement('div');
-		div2.classList.add('card-header');
-
-		//
-		const div3 = document.createElement('div');
-		div3.classList.add('card-body');
-		//
-		const h4 = document.createElement('h4');
-		h4.classList.add('card-title');
-		h4.style.fontFamily = "Helvetica, Neue, Bold";
-		h4.innerHTML = `${whiteCard}`;
-		div3.appendChild(h4);
-		//
-		const p = document.createElement('p');
-		p.classList.add('card-text');
-		p.innerHTML = 'placeholder';
-		div3.appendChild(p);
-		//
-		div1.appendChild(div3);
-		
-		div1.appendChild(div2);
-		document.querySelector('.whiteCardsDiv').appendChild(div1);
-	});
-}
-
-// Remove select button from DOM
-function removeSelectButton(czarHand, winner) {
-	console.log(winner.whitCard);
-	czarCardsDiv.innerHTML = ``;
-	czarHand.forEach(card => {
-		console.log(card);
-		const div1 = document.createElement('div');
-		div1.classList.add("card", "text-black", "border-dark", "mr-3");
-		if(card.whiteCard == winner.whiteCard) {
-			div1.classList.add("bg-success");
-		}
-		div1.style.height = "20rem";
-		div1.style.minWidth = "15rem";
-		//
-		const div2 = document.createElement('div');
-		div2.classList.add('card-header');
-		//
-		const div3 = document.createElement('div');
-		div3.classList.add('card-body');
-		//
-		const h4 = document.createElement('h4');
-		h4.classList.add('card-title');
-		h4.style.fontFamily = "Helvetica, Neue, Bold";
-		h4.innerHTML = `${card.whiteCard}`;
-		div3.appendChild(h4);
-		//
-		const p = document.createElement('p');
-		p.classList.add('card-text');
-		if(card.whiteCard == winner.whiteCard) {
-			p.innerHTML = `${winner.user.username} wins!`;
-		} else {
-			p.innerHTML = 'placeholder';
-		}
-		div3.appendChild(p);
-		div1.appendChild(div3);	
-
-		div1.appendChild(div2);
-		document.querySelector('.czarCardsDiv').appendChild(div1);
-	});
-}
-
-
-
-
-
