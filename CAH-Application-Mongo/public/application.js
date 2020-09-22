@@ -50,15 +50,23 @@ function sendWinnerInfoToServer(czarHand, card) {
 	socket.emit('declareWinner', {czarHand, card});
 }
 
+function clearCzarHand() {
+	socket.emit('clearCzarHand');
+}
+
 //  Update points in user table, and braodcast winner to room users
 socket.on('updatePoints', ({roomUserList, cardCzar, winner, czarHand}) => {
 	outputRoomUserTable(roomUserList, cardCzar);
-	outputWinner(czarHand, winner);
+
+	// Update DOM with winner info
+	outputCzarHand(czarHand, false, winner);
 });
 
 //  Broadcast white cards received by server
 socket.on('czarHand', ({czarHand, czar}) => {
-	outputCzarHand(czarHand, czar);
+
+	// Update DOM with czar info
+	outputCzarHand(czarHand, czar, false);
 });
 
 // Launch event from server

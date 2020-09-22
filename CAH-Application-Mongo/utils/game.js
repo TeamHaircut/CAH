@@ -8,6 +8,10 @@ function appendCzarHand(user, whiteCard) {
 	czarHand.push({user, whiteCard});
 }
 
+function clearCzarHand() {
+	czarHand = [];
+}
+
 // Initialize White Cards
 function initializeWhiteCards(roomusers,count) {
 	
@@ -29,7 +33,7 @@ function getCzarHand() {
 
 // Draw a black card
 function drawBlackCard() {
-	blackCard = 'Instead of coal, Santa now gives the bad children ___.';
+	blackCard = "Black Card #"+ Math.floor((Math.random()* (1000-0) +0));
 }
 
 // Get black card
@@ -54,5 +58,6 @@ module.exports = {
   getBlackCard,
   initializeWhiteCards, 
   appendCzarHand,
-  getCzarHand
+  getCzarHand,
+  clearCzarHand
 };

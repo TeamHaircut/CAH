@@ -8,7 +8,7 @@ const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
 const { userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
-const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, appendCzarHand, getCzarHand} = require('./utils/game');
+const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, appendCzarHand, getCzarHand, clearCzarHand} = require('./utils/game');
 
 const app = express();
 
@@ -120,11 +120,18 @@ io.on('connection', socket => {
 		io.to(card.user.room).emit('updatePoints', {roomUserList: getRoomUserList(card.user.room), cardCzar: getCardCzar(), winner: card, czarHand: czarHand});
 
 	});
+
+	// Listen for clear czarHand event
+	socket.on('clearCzarHand', () => {
+		const user = getCurrentUser(socket.id);
+		clearCzarHand();
+		io.to(user.room).emit('czarHand', {czarHand: getCzarHand(), czar: getCardCzar()});
+
+	});
 	
   // Runs when client disconnects
   socket.on('disconnect', () => {
 	const user = userLeave(socket.id);
-	console.log(getRoomUserList(user.room));
 
     if (user) {
       io.to(user.room).emit(
