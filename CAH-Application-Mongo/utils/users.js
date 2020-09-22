@@ -4,7 +4,6 @@ function updatePoints(name) {
 	users.forEach(user => {
 		if(user.username == name) {
 			user.points = user.points + 1;
-			console.log(user.points);
 		}
 	});
 }
@@ -40,7 +39,7 @@ function userLeave(id) {
 }
 
 // Get room users
-function getRoomUsers(room) {
+function getRoomUserList(room) {
   return users.filter(user => user.room === room);
 }
 
@@ -59,7 +58,7 @@ module.exports = {
   userJoin,
   getCurrentUser,
   userLeave,
-  getRoomUsers,
+  getRoomUserList,
   resetPoints,
   updateRoomUsersWhiteCards,
   updatePoints

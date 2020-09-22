@@ -1,6 +1,5 @@
 var cardCzar = false;
 var blackCard = '';
-var blackDeck = [];
 
 var czarHand = [];
 
