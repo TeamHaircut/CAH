@@ -1,3 +1,5 @@
+const blackDeck = require('./blackcards');
+
 var cardCzar = false;
 var blackCard = '';
 
@@ -74,7 +76,8 @@ function getCzarHand() {
 // Draw a black card
 function drawBlackCard(flag) {
 	if (flag) {
-		blackCard = "Black Card #"+ Math.floor((Math.random()* (1000-0) +0));
+		//blackCard = "Black Card #"+ Math.floor((Math.random()* (1000-0) +0));
+		blackCard = blackDeck.getBlackDeck().pop();
 	} else {
 		blackCard = '';
 	}
