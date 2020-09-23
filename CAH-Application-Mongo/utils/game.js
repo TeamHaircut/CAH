@@ -1,4 +1,5 @@
 const blackDeck = require('./blackcards');
+const whiteDeck = require('./whitecards');
 
 var cardCzar = false;
 var blackCard = '';
@@ -38,7 +39,8 @@ function initializeWhiteCards(roomusers,flag) {
 		var i;
 		for(i = 0; i < 10 ; i++) {
 			if(flag) {
-				var whiteCard = "White Card #"+ Math.floor((Math.random()* (1000-0) +0));
+				//var whiteCard = "White Card #"+ Math.floor((Math.random()* (1000-0) +0));
+				var whiteCard = whiteDeck.getWhiteDeck().pop();
 				user.whiteCards.push(whiteCard);
 			}
 		}
@@ -60,7 +62,7 @@ function replaceWhiteCards(roomUserList, czarHand) {
 		//console.log(roomUserList[userIndex].whiteCards);
 		var cardIndex = roomUserList[userIndex].whiteCards.findIndex(whiteCard => whiteCard === card.whiteCard);
 		//console.log(cardIndex);
-		roomUserList[userIndex].whiteCards[cardIndex] = "White Card #"+ Math.floor((Math.random()* (1000-0) +0));
+		roomUserList[userIndex].whiteCards[cardIndex] = whiteDeck.getWhiteDeck().pop();
 
 	});
 	//console.log(roomUserList);
@@ -76,7 +78,6 @@ function getCzarHand() {
 // Draw a black card
 function drawBlackCard(flag) {
 	if (flag) {
-		//blackCard = "Black Card #"+ Math.floor((Math.random()* (1000-0) +0));
 		blackCard = blackDeck.getBlackDeck().pop();
 	} else {
 		blackCard = '';
