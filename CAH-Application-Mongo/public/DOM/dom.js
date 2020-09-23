@@ -23,7 +23,7 @@ function outputBlackCard(blackCard) {
 		//
 		const div2 = document.createElement('div');
 		div2.classList.add('card-header');
-		div2.innerHTML = "Shared Resource";
+		div2.innerHTML = "";
 		//div1.appendChild(div2);
 		//
 		const div3 = document.createElement('div');
@@ -37,7 +37,7 @@ function outputBlackCard(blackCard) {
 		//
 		const p = document.createElement('p');
 		p.classList.add('card-text');
-		p.innerHTML = 'example black card';
+		p.innerHTML = '';
 		div3.appendChild(p);
 		//
 		div1.appendChild(div3);
@@ -57,6 +57,8 @@ function outputCzarHand(czarHand, czar, winner) {
 			}
 			div1.style.height = "20rem";
 			div1.style.minWidth = "15rem";
+			div1.style.maxWidth = "15rem";
+
 			//
 			const div2 = document.createElement('div');
 			div2.classList.add('card-header');
@@ -75,7 +77,7 @@ function outputCzarHand(czarHand, czar, winner) {
 			if(card.whiteCard == winner.whiteCard) {
 				p.innerHTML = `${winner.user.username} wins!`;
 			} else {
-				p.innerHTML = 'placeholder';
+				p.innerHTML = '';
 			}
 			div3.appendChild(p);
 			div1.appendChild(div3);	
@@ -128,7 +130,7 @@ function outputWhiteCards(users, czar, flag) {
 					//
 					const p = document.createElement('p');
 					p.classList.add('card-text');
-					p.innerHTML = 'placeholder';
+					p.innerHTML = '';
 					div3.appendChild(p);
 					//
 					div1.appendChild(div3);
@@ -180,7 +182,7 @@ function removePlayButton(user) {
 		//
 		const p = document.createElement('p');
 		p.classList.add('card-text');
-		p.innerHTML = 'placeholder';
+		p.innerHTML = '';
 		div3.appendChild(p);
 		//
 		div1.appendChild(div3);
