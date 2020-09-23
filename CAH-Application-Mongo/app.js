@@ -9,7 +9,6 @@ const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
 const { userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
 const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, appendCzarHand, getCzarHand, clearCzarHand, nextCardCzar, replaceWhiteCards} = require('./utils/game');
-//const { getBlackDeck  } = require('./utils/blackcards');
 
 const app = express();
 
@@ -80,7 +79,6 @@ io.on('connection', socket => {
 			
 			// Draw a Black Card
 			drawBlackCard(true);
-			//getBlackDeck();
 			
 			//Initialize White Cards for all clients in the room
 			var roomUserList = getRoomUserList(user.room);
