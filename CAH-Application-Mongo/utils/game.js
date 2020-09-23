@@ -30,13 +30,18 @@ function clearCzarHand() {
 }
 
 // Initialize White Cards
-function initializeWhiteCards(roomusers,count) {
-	
+function initializeWhiteCards(roomusers,flag) {
+	console.log(roomusers);
 	roomusers.forEach(user => {
 		var i;
-		for(i = 0; i < count ; i++) {
-			var whiteCard = "White Card #"+ Math.floor((Math.random()* (1000-0) +0));
-			user.whiteCards.push(whiteCard);
+		for(i = 0; i < 10 ; i++) {
+			if(flag) {
+				var whiteCard = "White Card #"+ Math.floor((Math.random()* (1000-0) +0));
+				user.whiteCards.push(whiteCard);
+			}
+		}
+		if(!flag) {
+			user.whiteCards = [];
 		}
 	});
 	return roomusers;
@@ -67,8 +72,12 @@ function getCzarHand() {
 }
 
 // Draw a black card
-function drawBlackCard() {
-	blackCard = "Black Card #"+ Math.floor((Math.random()* (1000-0) +0));
+function drawBlackCard(flag) {
+	if (flag) {
+		blackCard = "Black Card #"+ Math.floor((Math.random()* (1000-0) +0));
+	} else {
+		blackCard = '';
+	}
 }
 
 // Get black card

@@ -71,26 +71,38 @@ io.on('connection', socket => {
 		if(state === `<i class="fas fa-play"></i> Launch Game`) {
 			gameState = GameState.INITIALIZE;
 
-			//set card czar to current user
+			// Set card czar to current user
 			setCardCzar(user);
 			
-			//set points for all users to 0
+			// Set points for all users to 0
 			resetPoints();
 			
-			//Draw a Black Card
-			drawBlackCard();
+			// Draw a Black Card
+			drawBlackCard(true);
 			
 			//Initialize White Cards for all clients in the room
 			var roomUserList = getRoomUserList(user.room);
-			updateRoomUsersWhiteCards(initializeWhiteCards(roomUserList, 10));
+			updateRoomUsersWhiteCards(initializeWhiteCards(roomUserList, true));
 			
 			//Send czar and room info to everybody in the room
 			io.to(user.room).emit('launch', {roomUserList: getRoomUserList(user.room), cardCzar: getCardCzar(), blackCard: getBlackCard()});
 			
 		} else {
+			const user = getCurrentUser(socket.id);
 			gameState = GameState.TERMINATE;
+
+			// Remove card czar
 			setCardCzar(false);
-			io.to(user.room).emit('terminate', {roomUserList: getRoomUserList(user.room), cardCzar: getCardCzar()});
+
+			// Clear black card
+			drawBlackCard(false);
+
+			// Clear white cards
+			var roomUserList = getRoomUserList(user.room);
+			updateRoomUsersWhiteCards(initializeWhiteCards(roomUserList, false));
+
+
+			io.to(user.room).emit('terminate', {roomUserList: getRoomUserList(user.room)});
 		}
 	});
 	
@@ -122,13 +134,13 @@ io.on('connection', socket => {
 		);
 
 		//Draw a Black Card
-		drawBlackCard();
+		drawBlackCard(true);
 
 		// Replace Used White Cards
 		updateRoomUsersWhiteCards(replaceWhiteCards(getRoomUserList(card.user.room), czarHand));
 		
-		//Emit updated score to all users
-		io.to(card.user.room).emit('updatePoints', {roomUserList: getRoomUserList(card.user.room), cardCzar: getCardCzar(), winner: card, czarHand: czarHand, blackCard: getBlackCard()});
+		//Emit updated DOM to all users
+		io.to(card.user.room).emit('updateDOM', {roomUserList: getRoomUserList(card.user.room), cardCzar: getCardCzar(), winner: card, czarHand: czarHand, blackCard: getBlackCard()});
 
 	});
 
