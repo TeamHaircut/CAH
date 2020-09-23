@@ -16,32 +16,34 @@ function outputRoomName(room) {
 // Add black card to DOM
 function outputBlackCard(blackCard) {
 	blackCardDiv.innerHTML = ``;
-	const div1 = document.createElement('div');
-	div1.classList.add("card", "text-white", "bg-dark", "mb-3");
-	div1.style.height = "20rem";
-	//
-	const div2 = document.createElement('div');
-	div2.classList.add('card-header');
-	div2.innerHTML = "Shared Resource";
-	//div1.appendChild(div2);
-	//
-	const div3 = document.createElement('div');
-	div3.classList.add('card-body');
-	//
-	const h4 = document.createElement('h4');
-	h4.classList.add('card-title');
-	h4.style.fontFamily = "Helvetica, Neue, Bold";
-	h4.innerHTML = `${blackCard}`;
-	div3.appendChild(h4);
-	//
-	const p = document.createElement('p');
-	p.classList.add('card-text');
-	p.innerHTML = 'example black card';
-	div3.appendChild(p);
-	//
-	div1.appendChild(div3);
-	div1.appendChild(div2);
-	document.querySelector('.blackCardDiv').appendChild(div1);
+	if(blackCard != false) {
+		const div1 = document.createElement('div');
+		div1.classList.add("card", "text-white", "bg-dark", "mb-3");
+		div1.style.height = "20rem";
+		//
+		const div2 = document.createElement('div');
+		div2.classList.add('card-header');
+		div2.innerHTML = "";
+		//div1.appendChild(div2);
+		//
+		const div3 = document.createElement('div');
+		div3.classList.add('card-body');
+		//
+		const h4 = document.createElement('h4');
+		h4.classList.add('card-title');
+		h4.style.fontFamily = "Helvetica, Neue, Bold";
+		h4.innerHTML = `${blackCard}`;
+		div3.appendChild(h4);
+		//
+		const p = document.createElement('p');
+		p.classList.add('card-text');
+		p.innerHTML = '';
+		div3.appendChild(p);
+		//
+		div1.appendChild(div3);
+		div1.appendChild(div2);
+		document.querySelector('.blackCardDiv').appendChild(div1);
+	}
 }
 
 function outputCzarHand(czarHand, czar, winner) {
@@ -55,6 +57,8 @@ function outputCzarHand(czarHand, czar, winner) {
 			}
 			div1.style.height = "20rem";
 			div1.style.minWidth = "15rem";
+			div1.style.maxWidth = "15rem";
+
 			//
 			const div2 = document.createElement('div');
 			div2.classList.add('card-header');
@@ -73,7 +77,7 @@ function outputCzarHand(czarHand, czar, winner) {
 			if(card.whiteCard == winner.whiteCard) {
 				p.innerHTML = `${winner.user.username} wins!`;
 			} else {
-				p.innerHTML = 'placeholder';
+				p.innerHTML = '';
 			}
 			div3.appendChild(p);
 			div1.appendChild(div3);	
@@ -100,56 +104,58 @@ function outputCzarHand(czarHand, czar, winner) {
 }
 
 // Add white cards to DOM
-function outputWhiteCards(users, czar) {
+function outputWhiteCards(users, czar, flag) {
 	whiteCardsDiv.innerHTML = ``;
-	users.forEach(user => {
-		if(user.username == username) {
-			user.whiteCards.forEach(whiteCard=>{
-				const div1 = document.createElement('div');
-				div1.classList.add("card", "text-black", "border-dark", "mr-3");
-				div1.style.height = "20rem";
-				div1.style.minWidth = "15rem";
-				//
-				const div2 = document.createElement('div');
-				div2.classList.add('card-header');
+	if(flag) {
+		users.forEach(user => {
+			if(user.username == username) {
+				user.whiteCards.forEach(whiteCard=>{
+					const div1 = document.createElement('div');
+					div1.classList.add("card", "text-black", "border-dark", "mr-3");
+					div1.style.height = "20rem";
+					div1.style.minWidth = "15rem";
+					//
+					const div2 = document.createElement('div');
+					div2.classList.add('card-header');
 
-				//
-				const div3 = document.createElement('div');
-				div3.classList.add('card-body');
-				//
-				const h4 = document.createElement('h4');
-				h4.classList.add('card-title');
-				h4.style.fontFamily = "Helvetica, Neue, Bold";
-				h4.innerHTML = `${whiteCard}`;
-				div3.appendChild(h4);
-				//
-				const p = document.createElement('p');
-				p.classList.add('card-text');
-				p.innerHTML = 'placeholder';
-				div3.appendChild(p);
-				//
-				div1.appendChild(div3);
-				
-				if(username != czar.username) {//!=
-					const playCard = document.createElement('button');
-					playCard.classList.add("nav-link");
-					playCard.href ="#";
-					playCard.innerHTML = `<i class="fas fa-play"></i> Play Card`;
-					playCard.addEventListener('click', () => {
-						// Send Card to Server
-						sendWhiteCardToServer(whiteCard);
-						removePlayButton(user);
-						
-					});
-					div2.appendChild(playCard);
+					//
+					const div3 = document.createElement('div');
+					div3.classList.add('card-body');
+					//
+					const h4 = document.createElement('h4');
+					h4.classList.add('card-title');
+					h4.style.fontFamily = "Helvetica, Neue, Bold";
+					h4.innerHTML = `${whiteCard}`;
+					div3.appendChild(h4);
+					//
+					const p = document.createElement('p');
+					p.classList.add('card-text');
+					p.innerHTML = '';
+					div3.appendChild(p);
+					//
+					div1.appendChild(div3);
 					
-				}
-				
-				div1.appendChild(div2);
-				document.querySelector('.whiteCardsDiv').appendChild(div1);
-			});
-		}
-	});
+					if(username != czar.username) {//!=
+						const playCard = document.createElement('button');
+						playCard.classList.add("nav-link");
+						playCard.href ="#";
+						playCard.innerHTML = `<i class="fas fa-play"></i> Play Card`;
+						playCard.addEventListener('click', () => {
+							// Send Card to Server
+							sendWhiteCardToServer(whiteCard);
+							removePlayButton(user);
+							
+						});
+						div2.appendChild(playCard);
+						
+					}
+					
+					div1.appendChild(div2);
+					document.querySelector('.whiteCardsDiv').appendChild(div1);
+				});
+			}
+		});
+	}
 }
 
 // Remove play button from DOM
@@ -176,7 +182,7 @@ function removePlayButton(user) {
 		//
 		const p = document.createElement('p');
 		p.classList.add('card-text');
-		p.innerHTML = 'placeholder';
+		p.innerHTML = '';
 		div3.appendChild(p);
 		//
 		div1.appendChild(div3);

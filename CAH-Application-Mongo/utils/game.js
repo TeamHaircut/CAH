@@ -1,3 +1,6 @@
+const blackDeck = require('./blackcards');
+const whiteDeck = require('./whitecards');
+
 var cardCzar = false;
 var blackCard = '';
 
@@ -6,17 +9,17 @@ var czarHand = [];
 function nextCardCzar(currentCzar, roomUserList) { 
 	var czar = false;
 	const czarIndex = roomUserList.findIndex(user => user.username === currentCzar.username);
-	console.log("CzarIndex: "+czarIndex);
+	//console.log("CzarIndex: "+czarIndex);
 	var roomUserListLength = roomUserList.length;
-	console.log("RoomUserListLength: "+roomUserListLength);
+	//console.log("RoomUserListLength: "+roomUserListLength);
 	var nextCzarIndex = czarIndex+1;
-	console.log("NextCzarIndex: "+nextCzarIndex);
+	//console.log("NextCzarIndex: "+nextCzarIndex);
 	if(nextCzarIndex >= roomUserListLength) {
 		nextCzarIndex = 0;
 		console.log("HERE");
 	}
 	czar = roomUserList[nextCzarIndex];
-	console.log("New czar: "+ czar);
+	//console.log("New czar: "+ czar);
 	return czar;
 }
 
@@ -30,16 +33,40 @@ function clearCzarHand() {
 }
 
 // Initialize White Cards
-function initializeWhiteCards(roomusers,count) {
-	
+function initializeWhiteCards(roomusers,flag) {
+	console.log(roomusers);
 	roomusers.forEach(user => {
 		var i;
-		for(i = 0; i < count ; i++) {
-			var whiteCard = "White Card #"+ Math.floor((Math.random()* (1000-0) +0));
-			user.whiteCards.push(whiteCard);
+		for(i = 0; i < 10 ; i++) {
+			if(flag) {
+				//var whiteCard = "White Card #"+ Math.floor((Math.random()* (1000-0) +0));
+				var whiteCard = whiteDeck.getWhiteDeck().pop();
+				user.whiteCards.push(whiteCard);
+			}
+		}
+		if(!flag) {
+			user.whiteCards = [];
 		}
 	});
 	return roomusers;
+
+}
+
+// Replace White Cards
+function replaceWhiteCards(roomUserList, czarHand) {
+	//console.log(roomUserList);
+	//console.log(czarHand);
+	czarHand.forEach(card => {
+		//console.log(card.user.username);
+		var userIndex = roomUserList.findIndex(user => user.username === card.user.username);
+		//console.log(roomUserList[userIndex].whiteCards);
+		var cardIndex = roomUserList[userIndex].whiteCards.findIndex(whiteCard => whiteCard === card.whiteCard);
+		//console.log(cardIndex);
+		roomUserList[userIndex].whiteCards[cardIndex] = whiteDeck.getWhiteDeck().pop();
+
+	});
+	//console.log(roomUserList);
+	return roomUserList;
 
 }
 
@@ -49,8 +76,12 @@ function getCzarHand() {
 }
 
 // Draw a black card
-function drawBlackCard() {
-	blackCard = "Black Card #"+ Math.floor((Math.random()* (1000-0) +0));
+function drawBlackCard(flag) {
+	if (flag) {
+		blackCard = blackDeck.getBlackDeck().pop();
+	} else {
+		blackCard = '';
+	}
 }
 
 // Get black card
@@ -77,5 +108,6 @@ module.exports = {
   appendCzarHand,
   getCzarHand,
   clearCzarHand,
-  nextCardCzar
+  nextCardCzar,
+  replaceWhiteCards
 };

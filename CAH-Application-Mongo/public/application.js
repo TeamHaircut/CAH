@@ -55,11 +55,19 @@ function clearCzarHand() {
 }
 
 //  Update points in user table, and braodcast winner to room users
-socket.on('updatePoints', ({roomUserList, cardCzar, winner, czarHand}) => {
+socket.on('updateDOM', ({roomUserList, cardCzar, winner, czarHand, blackCard}) => {
+
+	// Update DOM with updated room user table
 	outputRoomUserTable(roomUserList, cardCzar);
+
+	// Update DOM with new black card
+	outputBlackCard(blackCard);
 
 	// Update DOM with winner info
 	outputCzarHand(czarHand, false, winner);
+
+	// Update DOM with new white cards
+	outputWhiteCards(roomUserList, cardCzar, true);
 });
 
 //  Broadcast white cards received by server
@@ -80,19 +88,22 @@ function initializeGame(roomUserList, cardCzar, blackCard) {
 	gameControl.innerHTML = `<i class="fas fa-stop"></i> Terminate Game`;
 	outputRoomUserTable(roomUserList, cardCzar);
 	outputBlackCard(blackCard);
-	outputWhiteCards(roomUserList, cardCzar);
+	outputWhiteCards(roomUserList, cardCzar, true);
 }
 
 // Termination event from server
-socket.on('terminate', ({roomUserList, cardCzar}) => {
-	terminateGame(roomUserList, cardCzar);
+socket.on('terminate', ({roomUserList}) => {
+	terminateGame(roomUserList);
 });
 
 // Apply game termination to DOM
-function terminateGame(roomUserList, cardCzar) {
+function terminateGame(roomUserList) {
 	console.log("GAME TERMINATED");
 	gameControl.innerHTML = `<i class="fas fa-play"></i> Launch Game`;
-	outputRoomUserTable(roomUserList, cardCzar);
+	outputBlackCard(false);
+	socket.emit('clearCzarHand');
+	outputWhiteCards(roomUserList, false, false);
+	outputRoomUserTable(roomUserList, false);
 }
 
 // get gamestate from server
