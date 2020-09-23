@@ -9,17 +9,12 @@ var czarHand = [];
 function nextCardCzar(currentCzar, roomUserList) { 
 	var czar = false;
 	const czarIndex = roomUserList.findIndex(user => user.username === currentCzar.username);
-	//console.log("CzarIndex: "+czarIndex);
 	var roomUserListLength = roomUserList.length;
-	//console.log("RoomUserListLength: "+roomUserListLength);
 	var nextCzarIndex = czarIndex+1;
-	//console.log("NextCzarIndex: "+nextCzarIndex);
 	if(nextCzarIndex >= roomUserListLength) {
 		nextCzarIndex = 0;
-		console.log("HERE");
 	}
 	czar = roomUserList[nextCzarIndex];
-	//console.log("New czar: "+ czar);
 	return czar;
 }
 
@@ -34,12 +29,10 @@ function clearCzarHand() {
 
 // Initialize White Cards
 function initializeWhiteCards(roomusers,flag) {
-	console.log(roomusers);
 	roomusers.forEach(user => {
 		var i;
 		for(i = 0; i < 10 ; i++) {
 			if(flag) {
-				//var whiteCard = "White Card #"+ Math.floor((Math.random()* (1000-0) +0));
 				var whiteCard = whiteDeck.getWhiteDeck().pop();
 				user.whiteCards.push(whiteCard);
 			}
@@ -54,18 +47,12 @@ function initializeWhiteCards(roomusers,flag) {
 
 // Replace White Cards
 function replaceWhiteCards(roomUserList, czarHand) {
-	//console.log(roomUserList);
-	//console.log(czarHand);
 	czarHand.forEach(card => {
-		//console.log(card.user.username);
 		var userIndex = roomUserList.findIndex(user => user.username === card.user.username);
-		//console.log(roomUserList[userIndex].whiteCards);
 		var cardIndex = roomUserList[userIndex].whiteCards.findIndex(whiteCard => whiteCard === card.whiteCard);
-		//console.log(cardIndex);
 		roomUserList[userIndex].whiteCards[cardIndex] = whiteDeck.getWhiteDeck().pop();
 
 	});
-	//console.log(roomUserList);
 	return roomUserList;
 
 }
