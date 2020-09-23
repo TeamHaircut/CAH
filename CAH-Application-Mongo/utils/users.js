@@ -45,6 +45,7 @@ function getRoomUserList(room) {
 
 // Update Room Users
 function updateRoomUsersWhiteCards(roomusers) {
+	//console.log(roomusers);
 	users.forEach(user => {
 		roomusers.forEach(roomuser => {
 			if(roomuser.username == user.username) {
@@ -52,6 +53,7 @@ function updateRoomUsersWhiteCards(roomusers) {
 			}
 		});
 	});
+	//console.log(users);
 }
 
 module.exports = {

@@ -55,11 +55,16 @@ function clearCzarHand() {
 }
 
 //  Update points in user table, and braodcast winner to room users
-socket.on('updatePoints', ({roomUserList, cardCzar, winner, czarHand}) => {
+socket.on('updatePoints', ({roomUserList, cardCzar, winner, czarHand, blackCard}) => {
 	outputRoomUserTable(roomUserList, cardCzar);
+	// Update DOM with new black card
+	outputBlackCard(blackCard);
 
 	// Update DOM with winner info
 	outputCzarHand(czarHand, false, winner);
+
+	// Update DOM with New White Cards
+	outputWhiteCards(roomUserList, cardCzar);
 });
 
 //  Broadcast white cards received by server

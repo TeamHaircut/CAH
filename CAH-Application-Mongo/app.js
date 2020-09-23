@@ -8,7 +8,7 @@ const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
 const { userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
-const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, appendCzarHand, getCzarHand, clearCzarHand, nextCardCzar} = require('./utils/game');
+const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, appendCzarHand, getCzarHand, clearCzarHand, nextCardCzar, replaceWhiteCards} = require('./utils/game');
 
 const app = express();
 
@@ -114,15 +114,21 @@ io.on('connection', socket => {
 		//update points for name
 		updatePoints(name);
 		
-		//update card czar
+		// Update card czar
 		setCardCzar(
 			nextCardCzar(
 				getCardCzar(), getRoomUserList(card.user.room)
 			)
 		);
+
+		//Draw a Black Card
+		drawBlackCard();
+
+		// Replace Used White Cards
+		updateRoomUsersWhiteCards(replaceWhiteCards(getRoomUserList(card.user.room), czarHand));
 		
 		//Emit updated score to all users
-		io.to(card.user.room).emit('updatePoints', {roomUserList: getRoomUserList(card.user.room), cardCzar: getCardCzar(), winner: card, czarHand: czarHand});
+		io.to(card.user.room).emit('updatePoints', {roomUserList: getRoomUserList(card.user.room), cardCzar: getCardCzar(), winner: card, czarHand: czarHand, blackCard: getBlackCard()});
 
 	});
 

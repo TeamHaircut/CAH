@@ -6,17 +6,17 @@ var czarHand = [];
 function nextCardCzar(currentCzar, roomUserList) { 
 	var czar = false;
 	const czarIndex = roomUserList.findIndex(user => user.username === currentCzar.username);
-	console.log("CzarIndex: "+czarIndex);
+	//console.log("CzarIndex: "+czarIndex);
 	var roomUserListLength = roomUserList.length;
-	console.log("RoomUserListLength: "+roomUserListLength);
+	//console.log("RoomUserListLength: "+roomUserListLength);
 	var nextCzarIndex = czarIndex+1;
-	console.log("NextCzarIndex: "+nextCzarIndex);
+	//console.log("NextCzarIndex: "+nextCzarIndex);
 	if(nextCzarIndex >= roomUserListLength) {
 		nextCzarIndex = 0;
 		console.log("HERE");
 	}
 	czar = roomUserList[nextCzarIndex];
-	console.log("New czar: "+ czar);
+	//console.log("New czar: "+ czar);
 	return czar;
 }
 
@@ -40,6 +40,24 @@ function initializeWhiteCards(roomusers,count) {
 		}
 	});
 	return roomusers;
+
+}
+
+// Replace White Cards
+function replaceWhiteCards(roomUserList, czarHand) {
+	//console.log(roomUserList);
+	//console.log(czarHand);
+	czarHand.forEach(card => {
+		//console.log(card.user.username);
+		var userIndex = roomUserList.findIndex(user => user.username === card.user.username);
+		//console.log(roomUserList[userIndex].whiteCards);
+		var cardIndex = roomUserList[userIndex].whiteCards.findIndex(whiteCard => whiteCard === card.whiteCard);
+		//console.log(cardIndex);
+		roomUserList[userIndex].whiteCards[cardIndex] = "White Card #"+ Math.floor((Math.random()* (1000-0) +0));
+
+	});
+	//console.log(roomUserList);
+	return roomUserList;
 
 }
 
@@ -77,5 +95,6 @@ module.exports = {
   appendCzarHand,
   getCzarHand,
   clearCzarHand,
-  nextCardCzar
+  nextCardCzar,
+  replaceWhiteCards
 };
