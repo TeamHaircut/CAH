@@ -8,7 +8,7 @@ const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
 const { userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
-const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, appendCzarHand, getCzarHand, clearCzarHand, nextCardCzar, replaceWhiteCards} = require('./utils/game');
+const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, appendCzarHand, getCzarHand, clearCzarHand, nextCardCzar, replaceWhiteCards, popCzarHand} = require('./utils/game');
 
 const app = express();
 
@@ -113,10 +113,30 @@ io.on('connection', socket => {
 		// push white card and sending user to czar's hand
 		appendCzarHand(user, whiteCard);
 
+		console.log(getRoomUserList(user.room)); 
+		console.log(getCzarHand());
+
 		// Emit when you have received all white cards
-		if(getCzarHand().length == (getRoomUserList(user.room).length - 1)) {
-			io.to(user.room).emit('czarHand', {czarHand: getCzarHand(), czar: getCardCzar()});
-		}
+		//if(getCzarHand().length == (getRoomUserList(user.room).length - 1)) {
+			io.to(user.room).emit('czarHand', {roomUserList: getRoomUserList(user.room), czarHand: getCzarHand(), czar: getCardCzar()});
+		//}
+	});
+
+	// Listen for incoming white cards
+	socket.on('removeCzarCard', ({users, czarHand, czar}) => {
+		const user = getCurrentUser(socket.id);
+		
+		// push white card and sending user to czar's hand
+		popCzarHand();
+		//appendCzarHand(user, whiteCard);
+
+		//console.log(getRoomUserList(user.room)); 
+		//console.log(getCzarHand());
+
+		// Emit when you have received all white cards
+		//if(getCzarHand().length == (getRoomUserList(user.room).length - 1)) {
+			io.to(user.room).emit('drawCzarCards', {roomUserList: getRoomUserList(user.room), czarHand: getCzarHand(), czar: getCardCzar()});
+		//}
 	});
 	
 	// Listen for winner event
@@ -148,7 +168,7 @@ io.on('connection', socket => {
 	socket.on('clearCzarHand', () => {
 		const user = getCurrentUser(socket.id);
 		clearCzarHand();
-		io.to(user.room).emit('czarHand', {czarHand: getCzarHand(), czar: getCardCzar()});
+		//io.to(user.room).emit('czarHand', {roomUserList: getRoomUserList(user.room), czarHand: getCzarHand(), czar: getCardCzar()});
 
 	});
 	

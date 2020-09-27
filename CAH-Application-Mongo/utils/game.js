@@ -23,6 +23,10 @@ function appendCzarHand(user, whiteCard) {
 	czarHand.push({user, whiteCard});
 }
 
+function popCzarHand() {
+	czarHand.pop();
+}
+
 function clearCzarHand() {
 	czarHand = [];
 }
@@ -96,5 +100,6 @@ module.exports = {
   getCzarHand,
   clearCzarHand,
   nextCardCzar,
-  replaceWhiteCards
+  replaceWhiteCards,
+  popCzarHand
 };

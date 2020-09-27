@@ -46,6 +46,10 @@ function sendWhiteCardToServer(whiteCard) {
 	socket.emit('sendWhiteCardToServer', {whiteCard});
 }
 
+function turnCzarCard(users, czarHand, czar) {
+	socket.emit('removeCzarCard', {users, czarHand, czar});
+}
+
 function sendWinnerInfoToServer(czarHand, card) {
 	socket.emit('declareWinner', {czarHand, card});
 }
@@ -64,17 +68,24 @@ socket.on('updateDOM', ({roomUserList, cardCzar, winner, czarHand, blackCard}) =
 	outputBlackCard(blackCard);
 
 	// Update DOM with winner info
-	outputCzarHand(czarHand, false, winner);
+	outputCzarHand(false, czarHand, false);
 
 	// Update DOM with new white cards
 	outputWhiteCards(roomUserList, cardCzar, true);
 });
 
 //  Broadcast white cards received by server
-socket.on('czarHand', ({czarHand, czar}) => {
+socket.on('czarHand', ({roomUserList, czarHand, czar}) => {
 
 	// Update DOM with czar info
-	outputCzarHand(czarHand, czar, false);
+	outputCzarHand(roomUserList, czarHand, czar);
+});
+
+//  Broadcast white cards received by server
+socket.on('drawCzarCards', ({roomUserList, czarHand, czar}) => {
+
+	// Update DOM with czar info
+	drawCzarHand(roomUserList, czarHand, czar);
 });
 
 // Launch event from server
@@ -88,6 +99,8 @@ function initializeGame(roomUserList, cardCzar, blackCard) {
 	gameControl.innerHTML = `<i class="fas fa-stop"></i> Terminate Game`;
 	outputRoomUserTable(roomUserList, cardCzar);
 	outputBlackCard(blackCard);
+	//var czarHand = [];
+	//outputCzarHand(roomUserList, czarHand, cardCzar);
 	outputWhiteCards(roomUserList, cardCzar, true);
 }
 
@@ -103,6 +116,7 @@ function terminateGame(roomUserList) {
 	outputBlackCard(false);
 	socket.emit('clearCzarHand');
 	outputWhiteCards(roomUserList, false, false);
+	
 	outputRoomUserTable(roomUserList, false);
 }
 

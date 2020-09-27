@@ -2,6 +2,7 @@ const roomName = document.getElementById('room-name');
 
 const blackCardDiv = document.querySelector('.blackCardDiv');
 const czarCardsDiv = document.querySelector('.czarCardsDiv');
+const czarCzar = document.querySelector('.czarCzar');
 const whiteCardsDiv = document.querySelector('.whiteCardsDiv');
 
 const roomUserTable = document.querySelector('.userlist-table');
@@ -17,90 +18,183 @@ function outputRoomName(room) {
 function outputBlackCard(blackCard) {
 	blackCardDiv.innerHTML = ``;
 	if(blackCard != false) {
-		const div1 = document.createElement('div');
-		div1.classList.add("card", "text-white", "bg-dark", "mb-3");
-		div1.style.height = "20rem";
-		//
-		const div2 = document.createElement('div');
-		div2.classList.add('card-header');
-		div2.innerHTML = "";
-		//div1.appendChild(div2);
-		//
-		const div3 = document.createElement('div');
-		div3.classList.add('card-body');
-		//
-		const h4 = document.createElement('h4');
-		h4.classList.add('card-title');
-		h4.style.fontFamily = "Helvetica, Neue, Bold";
-		h4.innerHTML = `${blackCard}`;
-		div3.appendChild(h4);
-		//
-		const p = document.createElement('p');
-		p.classList.add('card-text');
-		p.innerHTML = '';
-		div3.appendChild(p);
-		//
-		div1.appendChild(div3);
-		div1.appendChild(div2);
+		const div1 = buildBlackCard(blackCard, false, false);
 		document.querySelector('.blackCardDiv').appendChild(div1);
 	}
 }
 
-function outputCzarHand(czarHand, czar, winner) {
-	czarCardsDiv.innerHTML = ``;
-	czarHand.forEach(card => {
-		if(winner == false || card.whiteCard == winner.whiteCard){
-			const div1 = document.createElement('div');
-			div1.classList.add("card", "text-black", "border-dark", "mr-3");
-			if(card.whiteCard == winner.whiteCard) {
-				div1.classList.add("bg-success");
-			}
-			div1.style.height = "20rem";
-			div1.style.minWidth = "15rem";
-			div1.style.maxWidth = "15rem";
+function buildBlackCard(blackCard, czar, user) {
+	const cardBorder = getCardBorder('dark');
+	const cardHeader = getCardHeader(false, blackCard, false, false, false);
+	const cardBody = getCardBody(blackCard);
+	cardBorder.appendChild(cardBody);
+	cardBorder.appendChild(cardHeader);
+	return cardBorder;
+}
 
-			//
-			const div2 = document.createElement('div');
-			div2.classList.add('card-header');
-			//
-			const div3 = document.createElement('div');
-			div3.classList.add('card-body');
-			//
-			const h4 = document.createElement('h4');
-			h4.classList.add('card-title');
-			h4.style.fontFamily = "Helvetica, Neue, Bold";
-			h4.innerHTML = `${card.whiteCard}`;
-			div3.appendChild(h4);
-			//
-			const p = document.createElement('p');
-			p.classList.add('card-text');
-			if(card.whiteCard == winner.whiteCard) {
-				p.innerHTML = `${winner.user.username} wins!`;
+function outputCzarHand(users, czarHand, czar) {
+	czarCzar.innerHTML =``;
+	console.log(czarHand);
+	czarHand.forEach(card => {
+		const myCard = document.createElement('div');
+		myCard.classList.add(
+			"card");
+			myCard.style.height = "13rem";
+			myCard.style.minWidth = "8rem";
+			myCard.style.maxWidth = "8rem";
+			myCard.style.borderColor = "black";
+			myCard.style.backgroundColor = "border-dark";
+			//myCard.style.padding = "1rem";
+			myCard.style.marginRight ="-7rem";
+			myCard.style.boxShadow = "1px 1px 1px 1px black";
+
+		
+		//const cardBorder = getCardBorder(czarHand.length+1);
+		const cardHeader = document.createElement('div');
+		cardHeader.classList.add('cardHeader');
+
+		roomUserNameArray = [];
+		czarHandNameArray = [];
+		users.forEach(user => {
+			roomUserNameArray.push(user.username);
+		});
+		czarHand.forEach(card => {
+			czarHandNameArray.push(card.user.username);
+		});
+		czarHandNameArray.push(czar.username);
+
+		let difference = roomUserNameArray.filter(x => ! czarHandNameArray.includes(x));
+		console.log(difference);
+
+		const cardBody = document.createElement('div');
+		cardBody.classList.add('card-body');
+
+		const h4 = document.createElement('h4');
+		h4.style.fontFamily = "Helvetica, Neue, Bold";
+		h4.style.fontSize = "large";
+		h4.innerHTML = "Cards<br>Against<br>Humanity<br>";
+		cardBody.appendChild(h4);
+
+		const p0 = document.createElement('p');
+		p0.style.fontFamily = "Helvetica, Neue, Bold";
+		p0.style.fontSize = "small";
+		p0.style.color = "red";
+
+		if(difference.length != 0){
+			p0.innerHTML = "Waiting for...<br>";
+
+			difference.forEach(name => {
+				p0.innerHTML+=`${name} <br>`;  
+			});
+			cardBody.appendChild(p0);
+		} else {
+			if(username != czar.username){
+				p0.innerHTML = "Waiting for...<br>";
+				p0.innerHTML+=`${czar.username} <br>`; 
+				cardBody.appendChild(p0);
 			} else {
-				p.innerHTML = '';
-			}
-			div3.appendChild(p);
-			div1.appendChild(div3);	
-			if(username == czar.username) {
-				const playCard = document.createElement('button');
-				playCard.classList.add("nav-link");
-				playCard.href ="#";
-				playCard.innerHTML = `<i class="fas fa-play"></i> Select`;
-				playCard.addEventListener('click', () => {
-					sendWinnerInfoToServer(czarHand, card);
-					setTimeout(()=>{
-						clearCzarHand();
-					},
-						3000
-					)
+				const cardButton = document.createElement('button');
+				cardButton.classList.add("nav-link");
+				cardButton.href ="#";
+				cardButton.innerHTML = `<i class="fas fa-play"></i>`;
+				cardButton.addEventListener('click', () => {
+					turnCzarCard(users, czarHand, czar);
 				});
-				div2.appendChild(playCard);
-				
+				cardBody.appendChild(cardButton);
 			}
-			div1.appendChild(div2);
-			document.querySelector('.czarCardsDiv').appendChild(div1);
 		}
+		
+		myCard.appendChild(cardBody);
+		myCard.appendChild(cardHeader);
+
+		document.querySelector('.czarCzar').appendChild(myCard);
 	});
+}
+
+function getCardBorder(type) {
+	const cahCardDiv = document.createElement('div');
+	
+	var textColor;
+	var bgColor;
+	var borderWidth = `1px`;
+	if (type === 'light'){
+		textColor = "text-black"; 
+		bgColor = "border-dark";
+	} else if (type === 'dark') {
+		textColor = "text-white"; 
+		bgColor = "bg-dark";
+	} else {
+		textColor = "text-dark"; 
+		bgColor = "border-dark";
+		cahCardDiv.style.borderWidth = `${type}px`;	
+	}
+	cahCardDiv.classList.add(
+		"card", 
+		textColor, 
+		bgColor, 
+		"mr-3");
+	cahCardDiv.style.height = "13rem";
+	cahCardDiv.style.minWidth = "8rem";
+	cahCardDiv.style.maxWidth = "8rem";
+	return cahCardDiv;
+}
+
+function getCardHeader(czar, whiteCard, user, buttonFlag, buttonType) {
+	const cardHeader = document.createElement('div');
+	cardHeader.classList.add('card-header');
+
+	if(buttonFlag) {
+		if(username != czar.username) {//!=
+			const button0 = getCardButton(buttonType);
+			button0.addEventListener('click', () => {
+				//do something for specific button type
+				sendWhiteCardToServer(whiteCard);
+				removePlayButton(czar, user);
+				
+			});
+			cardHeader.appendChild(button0);
+		}
+	}
+	return cardHeader;
+}
+
+function getCardBody(card) {
+	const cardBody = document.createElement('div');
+	cardBody.classList.add('card-body');
+	//
+	const cardText = document.createElement('h4');
+	cardText.classList.add('card-title');
+	cardText.style.fontFamily = "Helvetica, Neue, Bold";
+	cardText.style.fontSize = "small";
+	cardText.innerHTML = `${card}`;
+	cardBody.appendChild(cardText);
+	//
+	const altCardText = document.createElement('p');
+	altCardText.classList.add('card-text');
+	altCardText.innerHTML = '';
+	cardBody.appendChild(altCardText);
+	//
+	return cardBody;
+}
+
+function getCardButton(type) {
+	const cardButton = document.createElement('button');
+	cardButton.classList.add("nav-link");
+	cardButton.href ="#";
+
+	var text;
+	if (type === 'play'){text = 'play'} else {text = 'select'};
+	cardButton.innerHTML = `<i class="fas fa-play"></i> ${text}`;
+	return cardButton;
+}
+
+function buildWhiteCard(whiteCard, czar, user) {
+	const cardBorder = getCardBorder('light');
+	const cardHeader = getCardHeader(czar, whiteCard, user, true, 'play');
+	const cardBody = getCardBody(whiteCard);
+	cardBorder.appendChild(cardBody);
+	cardBorder.appendChild(cardHeader);
+	return cardBorder;
 }
 
 // Add white cards to DOM
@@ -109,49 +203,9 @@ function outputWhiteCards(users, czar, flag) {
 	if(flag) {
 		users.forEach(user => {
 			if(user.username == username) {
+				whiteCardsDiv.style.height = "15rem";
 				user.whiteCards.forEach(whiteCard=>{
-					const div1 = document.createElement('div');
-					div1.classList.add("card", "text-black", "border-dark", "mr-3");
-					div1.style.height = "20rem";
-					div1.style.minWidth = "15rem";
-					//
-					const div2 = document.createElement('div');
-					div2.classList.add('card-header');
-
-					//
-					const div3 = document.createElement('div');
-					div3.classList.add('card-body');
-					//
-					const h4 = document.createElement('h4');
-					h4.classList.add('card-title');
-					h4.style.fontFamily = "Helvetica, Neue, Bold";
-					h4.innerHTML = `${whiteCard}`;
-					div3.appendChild(h4);
-					//
-					const p = document.createElement('p');
-					p.classList.add('card-text');
-					p.innerHTML = '';
-					div3.appendChild(p);
-					//
-					div1.appendChild(div3);
-					
-					if(username != czar.username) {//!=
-						const playCard = document.createElement('button');
-						playCard.classList.add("nav-link");
-						playCard.href ="#";
-						playCard.innerHTML = `<i class="fas fa-play"></i> Play Card`;
-						playCard.addEventListener('click', () => {
-							// Send Card to Server
-							sendWhiteCardToServer(whiteCard);
-							removePlayButton(user);
-							
-						});
-						div2.appendChild(playCard);
-						
-					}
-					
-					div1.appendChild(div2);
-					document.querySelector('.whiteCardsDiv').appendChild(div1);
+					document.querySelector('.whiteCardsDiv').appendChild(buildWhiteCard(whiteCard, czar, user));
 				});
 			}
 		});
@@ -159,36 +213,15 @@ function outputWhiteCards(users, czar, flag) {
 }
 
 // Remove play button from DOM
-function removePlayButton(user) {
+function removePlayButton(czar, user) {
 	whiteCardsDiv.innerHTML = ``;
 	user.whiteCards.forEach(whiteCard=>{
-		const div1 = document.createElement('div');
-		div1.classList.add("card", "text-black", "border-dark", "mr-3");
-		div1.style.height = "20rem";
-		div1.style.minWidth = "15rem";
-		//
-		const div2 = document.createElement('div');
-		div2.classList.add('card-header');
-
-		//
-		const div3 = document.createElement('div');
-		div3.classList.add('card-body');
-		//
-		const h4 = document.createElement('h4');
-		h4.classList.add('card-title');
-		h4.style.fontFamily = "Helvetica, Neue, Bold";
-		h4.innerHTML = `${whiteCard}`;
-		div3.appendChild(h4);
-		//
-		const p = document.createElement('p');
-		p.classList.add('card-text');
-		p.innerHTML = '';
-		div3.appendChild(p);
-		//
-		div1.appendChild(div3);
-		
-		div1.appendChild(div2);
-		document.querySelector('.whiteCardsDiv').appendChild(div1);
+		const cardBorder = getCardBorder('light');
+		const cardHeader = getCardHeader(czar, whiteCard, user, false, false);
+		const cardBody = getCardBody(whiteCard);
+		cardBorder.appendChild(cardBody);
+		cardBorder.appendChild(cardHeader);
+		document.querySelector('.whiteCardsDiv').appendChild(cardBorder);
 	});
 }
 
@@ -232,4 +265,74 @@ function outputMessage(message) {
 	//message.time not used
 	div.innerHTML = `<p style="padding:5px;" class="meta card border-info mb-3"><b>${message.username}:</b> ${message.text}</p>`;
 	document.querySelector('.chat-messages').appendChild(div);
+}
+
+function drawCzarHand(users, czarHand, czar) {
+	czarCzar.innerHTML =``;
+	console.log(czarHand);
+	czarHand.forEach(card => {
+		const myCard = document.createElement('div');
+		myCard.classList.add(
+			"card");
+			myCard.style.height = "13rem";
+			myCard.style.minWidth = "8rem";
+			myCard.style.maxWidth = "8rem";
+			myCard.style.borderColor = "black";
+			myCard.style.backgroundColor = "border-dark";
+			//myCard.style.padding = "1rem";
+			myCard.style.marginRight ="-7rem";
+			myCard.style.boxShadow = "1px 1px 1px 1px black";
+
+		
+		//const cardBorder = getCardBorder(czarHand.length+1);
+		const cardHeader = document.createElement('div');
+		cardHeader.classList.add('cardHeader');
+
+		roomUserNameArray = [];
+		czarHandNameArray = [];
+		users.forEach(user => {
+			roomUserNameArray.push(user.username);
+		});
+		czarHand.forEach(card => {
+			czarHandNameArray.push(card.user.username);
+		});
+		czarHandNameArray.push(czar.username);
+
+		let difference = roomUserNameArray.filter(x => ! czarHandNameArray.includes(x));
+		console.log(difference);
+
+		const cardBody = document.createElement('div');
+		cardBody.classList.add('card-body');
+
+		const h4 = document.createElement('h4');
+		h4.style.fontFamily = "Helvetica, Neue, Bold";
+		h4.style.fontSize = "large";
+		h4.innerHTML = "Cards<br>Against<br>Humanity<br>";
+		cardBody.appendChild(h4);
+
+		const p0 = document.createElement('p');
+		p0.style.fontFamily = "Helvetica, Neue, Bold";
+		p0.style.fontSize = "small";
+		p0.style.color = "red";
+
+			if(username != czar.username){
+				p0.innerHTML = "Waiting for...<br>";
+				p0.innerHTML+=`${czar.username} <br>`; 
+				cardBody.appendChild(p0);
+			} else {
+				const cardButton = document.createElement('button');
+				cardButton.classList.add("nav-link");
+				cardButton.href ="#";
+				cardButton.innerHTML = `<i class="fas fa-play"></i>`;
+				cardButton.addEventListener('click', () => {
+					turnCzarCard(users, czarHand, czar);
+				});
+				cardBody.appendChild(cardButton);
+			}
+		
+		myCard.appendChild(cardBody);
+		myCard.appendChild(cardHeader);
+
+		document.querySelector('.czarCzar').appendChild(myCard);
+	});
 }
