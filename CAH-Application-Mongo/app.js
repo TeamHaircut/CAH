@@ -8,7 +8,7 @@ const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
 const { userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
-const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, appendCzarHand, getCzarHand, clearCzarHand, nextCardCzar, replaceWhiteCards, popCzarHand} = require('./utils/game');
+const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, appendCzarHand, getCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 
 const app = express();
 
@@ -113,8 +113,8 @@ io.on('connection', socket => {
 		// push white card and sending user to czar's hand
 		appendCzarHand(user, whiteCard);
 
-		console.log(getRoomUserList(user.room)); 
-		console.log(getCzarHand());
+		//console.log(getRoomUserList(user.room)); 
+		//console.log(getCzarHand());
 
 		// Emit when you have received all white cards
 		//if(getCzarHand().length == (getRoomUserList(user.room).length - 1)) {
@@ -127,11 +127,12 @@ io.on('connection', socket => {
 		const user = getCurrentUser(socket.id);
 		
 		// push white card and sending user to czar's hand
-		popCzarHand();
+		appendCards(popCzarHand());
 		//appendCzarHand(user, whiteCard);
 
 		//console.log(getRoomUserList(user.room)); 
 		//console.log(getCzarHand());
+			io.to(user.room).emit('displayCards', {roomUserList: getRoomUserList(user.room), judgeHand: getJudgeHand(), czar: getCardCzar()});
 
 		// Emit when you have received all white cards
 		//if(getCzarHand().length == (getRoomUserList(user.room).length - 1)) {
@@ -140,7 +141,7 @@ io.on('connection', socket => {
 	});
 	
 	// Listen for winner event
-	socket.on('declareWinner', ({czarHand, card}) => {
+	socket.on('declareWinner', ({card}) => {
 		//extract user from card
 		var name = card.user.username;
 		//update points for name
@@ -157,18 +158,19 @@ io.on('connection', socket => {
 		drawBlackCard(true);
 
 		// Replace Used White Cards
-		updateRoomUsersWhiteCards(replaceWhiteCards(getRoomUserList(card.user.room), czarHand));
+		updateRoomUsersWhiteCards(replaceWhiteCards(getRoomUserList(card.user.room), getJudgeHand()));
 		
 		//Emit updated DOM to all users
-		io.to(card.user.room).emit('updateDOM', {roomUserList: getRoomUserList(card.user.room), cardCzar: getCardCzar(), winner: card, czarHand: czarHand, blackCard: getBlackCard()});
+		io.to(card.user.room).emit('updateDOM', {roomUserList: getRoomUserList(card.user.room), cardCzar: getCardCzar(), winner: card, blackCard: getBlackCard()});
+		//io.to(card.user.room).emit('updateDOM', {roomUserList: getRoomUserList(card.user.room), cardCzar: getCardCzar(), winner: card, czarHand: czarHand, blackCard: getBlackCard()});
 
 	});
 
 	// Listen for clear czarHand event
-	socket.on('clearCzarHand', () => {
+	socket.on('clearHand', () => {
 		const user = getCurrentUser(socket.id);
-		clearCzarHand();
-		//io.to(user.room).emit('czarHand', {roomUserList: getRoomUserList(user.room), czarHand: getCzarHand(), czar: getCardCzar()});
+		clearHand();
+		io.to(user.room).emit('clear');
 
 	});
 	

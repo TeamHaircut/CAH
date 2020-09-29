@@ -50,16 +50,20 @@ function turnCzarCard(users, czarHand, czar) {
 	socket.emit('removeCzarCard', {users, czarHand, czar});
 }
 
-function sendWinnerInfoToServer(czarHand, card) {
-	socket.emit('declareWinner', {czarHand, card});
+function sendWinnerInfoToServer(card) {
+	socket.emit('declareWinner', {card});
 }
 
-function clearCzarHand() {
-	socket.emit('clearCzarHand');
+function clearHand() {
+	socket.emit('clearHand');
 }
+
+socket.on('clear', () => {
+	czarCardsDiv.innerHTML = ``;
+});
 
 //  Update points in user table, and braodcast winner to room users
-socket.on('updateDOM', ({roomUserList, cardCzar, winner, czarHand, blackCard}) => {
+socket.on('updateDOM', ({roomUserList, cardCzar, winner, blackCard}) => {
 
 	// Update DOM with updated room user table
 	outputRoomUserTable(roomUserList, cardCzar);
@@ -68,7 +72,7 @@ socket.on('updateDOM', ({roomUserList, cardCzar, winner, czarHand, blackCard}) =
 	outputBlackCard(blackCard);
 
 	// Update DOM with winner info
-	outputCzarHand(false, czarHand, false);
+	outputWinner(winner);
 
 	// Update DOM with new white cards
 	outputWhiteCards(roomUserList, cardCzar, true);
@@ -86,6 +90,13 @@ socket.on('drawCzarCards', ({roomUserList, czarHand, czar}) => {
 
 	// Update DOM with czar info
 	drawCzarHand(roomUserList, czarHand, czar);
+});
+
+//  Broadcast white cards received by server
+socket.on('displayCards', ({roomUserList, judgeHand, czar}) => {
+
+	// Update DOM with czar info
+	outputJudgeHand(roomUserList, judgeHand, czar);
 });
 
 // Launch event from server

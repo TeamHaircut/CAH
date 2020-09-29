@@ -34,7 +34,7 @@ function buildBlackCard(blackCard, czar, user) {
 
 function outputCzarHand(users, czarHand, czar) {
 	czarCzar.innerHTML =``;
-	console.log(czarHand);
+	//console.log(czarHand);
 	czarHand.forEach(card => {
 		const myCard = document.createElement('div');
 		myCard.classList.add(
@@ -64,7 +64,7 @@ function outputCzarHand(users, czarHand, czar) {
 		czarHandNameArray.push(czar.username);
 
 		let difference = roomUserNameArray.filter(x => ! czarHandNameArray.includes(x));
-		console.log(difference);
+		//console.log(difference);
 
 		const cardBody = document.createElement('div');
 		cardBody.classList.add('card-body');
@@ -144,18 +144,44 @@ function getCardHeader(czar, whiteCard, user, buttonFlag, buttonType) {
 	cardHeader.classList.add('card-header');
 
 	if(buttonFlag) {
-		if(username != czar.username) {//!=
-			const button0 = getCardButton(buttonType);
-			button0.addEventListener('click', () => {
-				//do something for specific button type
-				sendWhiteCardToServer(whiteCard);
-				removePlayButton(czar, user);
-				
-			});
-			cardHeader.appendChild(button0);
+		if(buttonType == 'play') {
+			if(username != czar.username) {//!=
+				const button0 = getCardButton(buttonType);
+				button0.addEventListener('click', () => {
+					//do something for specific button type
+					sendWhiteCardToServer(whiteCard);
+					removePlayButton(czar, user);
+					
+				});
+				cardHeader.appendChild(button0);
+			}
+		} else {
+			if(username == czar.username) {//!=
+				const button0 = getCardButton(buttonType);
+				button0.addEventListener('click', () => {
+					sendWinnerInfoToServer(whiteCard);//HERE
+					setTimeout(() => {
+						clearHand();
+					},
+						3000
+					)
+				});
+				cardHeader.appendChild(button0);
+			}
 		}
 	}
 	return cardHeader;
+}
+
+function getCardButton(type) {
+	const cardButton = document.createElement('button');
+	cardButton.classList.add("nav-link");
+	cardButton.href ="#";
+
+	var text;
+	if (type === 'play'){text = 'play'} else {text = ''};
+	cardButton.innerHTML = `<i class="fas fa-play"></i> ${text}`;
+	return cardButton;
 }
 
 function getCardBody(card) {
@@ -166,6 +192,9 @@ function getCardBody(card) {
 	cardText.classList.add('card-title');
 	cardText.style.fontFamily = "Helvetica, Neue, Bold";
 	cardText.style.fontSize = "small";
+	if(typeof card === 'object') {
+		card = card.whiteCard;
+	}
 	cardText.innerHTML = `${card}`;
 	cardBody.appendChild(cardText);
 	//
@@ -177,20 +206,9 @@ function getCardBody(card) {
 	return cardBody;
 }
 
-function getCardButton(type) {
-	const cardButton = document.createElement('button');
-	cardButton.classList.add("nav-link");
-	cardButton.href ="#";
-
-	var text;
-	if (type === 'play'){text = 'play'} else {text = 'select'};
-	cardButton.innerHTML = `<i class="fas fa-play"></i> ${text}`;
-	return cardButton;
-}
-
-function buildWhiteCard(whiteCard, czar, user) {
+function buildWhiteCard(whiteCard, czar, user, buttonFlag, buttonType) {
 	const cardBorder = getCardBorder('light');
-	const cardHeader = getCardHeader(czar, whiteCard, user, true, 'play');
+	const cardHeader = getCardHeader(czar, whiteCard, user, buttonFlag, buttonType);
 	const cardBody = getCardBody(whiteCard);
 	cardBorder.appendChild(cardBody);
 	cardBorder.appendChild(cardHeader);
@@ -205,7 +223,7 @@ function outputWhiteCards(users, czar, flag) {
 			if(user.username == username) {
 				whiteCardsDiv.style.height = "15rem";
 				user.whiteCards.forEach(whiteCard=>{
-					document.querySelector('.whiteCardsDiv').appendChild(buildWhiteCard(whiteCard, czar, user));
+					document.querySelector('.whiteCardsDiv').appendChild(buildWhiteCard(whiteCard, czar, user, true, 'play'));
 				});
 			}
 		});
@@ -269,7 +287,7 @@ function outputMessage(message) {
 
 function drawCzarHand(users, czarHand, czar) {
 	czarCzar.innerHTML =``;
-	console.log(czarHand);
+	//console.log(czarHand);
 	czarHand.forEach(card => {
 		const myCard = document.createElement('div');
 		myCard.classList.add(
@@ -299,7 +317,7 @@ function drawCzarHand(users, czarHand, czar) {
 		czarHandNameArray.push(czar.username);
 
 		let difference = roomUserNameArray.filter(x => ! czarHandNameArray.includes(x));
-		console.log(difference);
+		//console.log(difference);
 
 		const cardBody = document.createElement('div');
 		cardBody.classList.add('card-body');
@@ -315,6 +333,14 @@ function drawCzarHand(users, czarHand, czar) {
 		p0.style.fontSize = "small";
 		p0.style.color = "red";
 
+		if(difference.length == 0){
+			p0.innerHTML = "Waiting for...<br>";
+
+			difference.forEach(name => {
+				p0.innerHTML+=`${name} <br>`;  
+			});
+			cardBody.appendChild(p0);
+		} else {
 			if(username != czar.username){
 				p0.innerHTML = "Waiting for...<br>";
 				p0.innerHTML+=`${czar.username} <br>`; 
@@ -329,10 +355,59 @@ function drawCzarHand(users, czarHand, czar) {
 				});
 				cardBody.appendChild(cardButton);
 			}
+		}
 		
 		myCard.appendChild(cardBody);
 		myCard.appendChild(cardHeader);
 
 		document.querySelector('.czarCzar').appendChild(myCard);
 	});
+}
+
+function outputJudgeHand(users, czarHand, czar) {
+	czarCardsDiv.innerHTML =``;
+	var count = 0;
+	czarHand.slice().reverse().forEach(card => {
+		count++;
+		var scrollSize = 9*count;
+		czarCardsDiv.style.maxWidth = `${scrollSize}rem`;
+		console.log(card);
+		const myCard = buildWhiteCard(card, czar, false, true, 'select');
+		document.querySelector('.czarCardsDiv').appendChild(myCard);
+	});
+}
+
+function outputWinner(winner) {
+	czarCardsDiv.innerHTML = ``;
+
+			const div1 = document.createElement('div');
+			div1.classList.add("card", "text-black", "border-dark", "mr-3");
+			div1.classList.add("bg-success");
+			div1.style.height = "13rem";
+			div1.style.minWidth = "8rem";
+			div1.style.maxWidth = "8rem";
+			//
+			const div2 = document.createElement('div');
+			div2.classList.add('card-header');
+			//
+			const div3 = document.createElement('div');
+			div3.classList.add('card-body');
+			//
+			const h4 = document.createElement('h4');
+			h4.classList.add('card-title');
+			h4.style.fontFamily = "Helvetica, Neue, Bold";
+			h4.style.fontSize = "small";
+			h4.innerHTML = `${winner.whiteCard}`;
+			div3.appendChild(h4);
+			//
+			const p = document.createElement('p');
+			p.classList.add('card-text');
+			p.innerHTML = `${winner.user.username} wins!`;
+
+			div3.appendChild(p);
+			div1.appendChild(div3);	
+
+			div1.appendChild(div2);
+			document.querySelector('.czarCardsDiv').appendChild(div1);
+
 }
