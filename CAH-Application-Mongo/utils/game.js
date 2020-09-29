@@ -34,8 +34,19 @@ function getJudgeHand() {
 	return judgeHand;
 }
 
+function shuffleCards(cards) {
+	var i = cards.length, k, temp;
+	while(--i > 0) {
+		k = Math.floor(Math.random() * (i+1));
+		temp = cards[k];
+		cards[k] = cards[i];
+		cards[i] = temp;
+	}
+	return cards;
+}
+
 function popCzarHand() {
-	//TODO randomize
+	czarHand = shuffleCards(getCzarHand());
 	return czarHand.pop();
 }
 
