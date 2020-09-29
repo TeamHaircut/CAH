@@ -5,6 +5,7 @@ var cardCzar = false;
 var blackCard = '';
 
 var czarHand = [];
+var judgeHand =[];
 
 function nextCardCzar(currentCzar, roomUserList) { 
 	var czar = false;
@@ -23,8 +24,24 @@ function appendCzarHand(user, whiteCard) {
 	czarHand.push({user, whiteCard});
 }
 
-function clearCzarHand() {
-	czarHand = [];
+// Push white card info to judge set
+function appendCards(card) {
+	judgeHand.push(card);
+}
+
+// Return the display cards
+function getJudgeHand() {
+	return judgeHand;
+}
+
+function popCzarHand() {
+	//TODO randomize
+	return czarHand.pop();
+}
+
+function clearHand() {
+	//czarHand = [];
+	judgeHand = [];
 }
 
 // Initialize White Cards
@@ -94,7 +111,10 @@ module.exports = {
   initializeWhiteCards, 
   appendCzarHand,
   getCzarHand,
-  clearCzarHand,
+  clearHand,
   nextCardCzar,
-  replaceWhiteCards
+  replaceWhiteCards,
+  popCzarHand,
+  appendCards,
+  getJudgeHand
 };
