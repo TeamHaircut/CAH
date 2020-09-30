@@ -364,15 +364,21 @@ function drawCzarHand(users, czarHand, czar) {
 	});
 }
 
-function outputJudgeHand(users, czarHand, czar) {
+function outputJudgeHand(roomUserList, czarHand, czar) {
 	czarCardsDiv.innerHTML =``;
 	var count = 0;
 	czarHand.slice().reverse().forEach(card => {
 		count++;
 		var scrollSize = 9*count;
 		czarCardsDiv.style.maxWidth = `${scrollSize}rem`;
-		console.log(card);
-		const myCard = buildWhiteCard(card, czar, false, true, 'select');
+		var myCard;
+		
+		if(czarHand.length === (roomUserList.length-1))  {
+			myCard = buildWhiteCard(card, czar, false, true, 'select');
+		} else {
+			myCard = buildWhiteCard(card, czar, false, false, false);
+		}
+
 		document.querySelector('.czarCardsDiv').appendChild(myCard);
 	});
 }
