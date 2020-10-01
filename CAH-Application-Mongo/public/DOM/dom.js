@@ -75,7 +75,7 @@ function outputCzarHand(users, czarHand, czar) {
 		p0.style.color = "red";
 
 		if(difference.length != 0){
-			p0.innerHTML = "Waiting for...<br>";
+			p0.innerHTML = `Waiting for...<br>`;
 
 			difference.forEach(name => {
 				p0.innerHTML+=`${name} <br>`;  
@@ -83,8 +83,8 @@ function outputCzarHand(users, czarHand, czar) {
 			cardBody.appendChild(p0);
 		} else {
 			if(username != czar.username){
-				p0.innerHTML = "Waiting for...<br>";
-				p0.innerHTML+=`${czar.username} <br>`; 
+				p0.innerHTML = `Waiting for...<br><i class="fas fa-gavel"></i>`;
+				p0.innerHTML+=` ${czar.username} <br>`; 
 				cardBody.appendChild(p0);
 			} else {
 				const cardButton = document.createElement('button');
@@ -281,7 +281,7 @@ function outputMessage(message) {
 }
 
 function drawCzarHand(users, czarHand, czar) {
-	czarDeck.innerHTML =``;
+		czarDeck.innerHTML =``;
 	//console.log(czarHand);
 	czarHand.forEach(card => {
 		const myCard = document.createElement('div');
@@ -328,7 +328,7 @@ function drawCzarHand(users, czarHand, czar) {
 		p0.style.color = "red";
 
 		if(difference.length == 0){
-			p0.innerHTML = "Waiting for...<br>";
+			p0.innerHTML = `Waiting for...<br>`;
 
 			difference.forEach(name => {
 				p0.innerHTML+=`${name} <br>`;  
@@ -336,8 +336,8 @@ function drawCzarHand(users, czarHand, czar) {
 			cardBody.appendChild(p0);
 		} else {
 			if(username != czar.username){
-				p0.innerHTML = "Waiting for...<br>";
-				p0.innerHTML+=`${czar.username} <br>`; 
+				p0.innerHTML = `Waiting for...<br><i class="fas fa-gavel"></i>`;
+				p0.innerHTML+=` ${czar.username} <br>`; 
 				cardBody.appendChild(p0);
 			} else {
 				const cardButton = document.createElement('button');
