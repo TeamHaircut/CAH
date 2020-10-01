@@ -34,6 +34,7 @@ function getJudgeHand() {
 	return judgeHand;
 }
 
+// Fisher-Yates Randomize In Place
 function shuffleCards(cards) {
 	var i = cards.length, k, temp;
 	while(--i > 0) {
@@ -45,13 +46,13 @@ function shuffleCards(cards) {
 	return cards;
 }
 
+//Grab a top card from czar hand
 function popCzarHand() {
 	czarHand = shuffleCards(getCzarHand());
 	return czarHand.pop();
 }
 
 function clearHand() {
-	//czarHand = [];
 	judgeHand = [];
 }
 

@@ -110,8 +110,6 @@ function initializeGame(roomUserList, cardCzar, blackCard) {
 	gameControl.innerHTML = `<i class="fas fa-stop"></i> Terminate Game`;
 	outputRoomUserTable(roomUserList, cardCzar);
 	outputBlackCard(blackCard);
-	//var czarHand = [];
-	//outputCzarHand(roomUserList, czarHand, cardCzar);
 	outputWhiteCards(roomUserList, cardCzar, true);
 }
 

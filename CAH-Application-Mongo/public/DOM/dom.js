@@ -2,7 +2,7 @@ const roomName = document.getElementById('room-name');
 
 const blackCardDiv = document.querySelector('.blackCardDiv');
 const czarCardsDiv = document.querySelector('.czarCardsDiv');
-const czarCzar = document.querySelector('.czarCzar');
+const czarDeck = document.querySelector('.czarDeck');
 const whiteCardsDiv = document.querySelector('.whiteCardsDiv');
 
 const roomUserTable = document.querySelector('.userlist-table');
@@ -18,12 +18,12 @@ function outputRoomName(room) {
 function outputBlackCard(blackCard) {
 	blackCardDiv.innerHTML = ``;
 	if(blackCard != false) {
-		const div1 = buildBlackCard(blackCard, false, false);
+		const div1 = buildBlackCard(blackCard);
 		document.querySelector('.blackCardDiv').appendChild(div1);
 	}
 }
 
-function buildBlackCard(blackCard, czar, user) {
+function buildBlackCard(blackCard) {
 	const cardBorder = getCardBorder('dark');
 	const cardHeader = getCardHeader(false, blackCard, false, false, false);
 	const cardBody = getCardBody(blackCard);
@@ -33,23 +33,18 @@ function buildBlackCard(blackCard, czar, user) {
 }
 
 function outputCzarHand(users, czarHand, czar) {
-	czarCzar.innerHTML =``;
-	//console.log(czarHand);
+	czarDeck.innerHTML =``;
 	czarHand.forEach(card => {
 		const myCard = document.createElement('div');
-		myCard.classList.add(
-			"card");
-			myCard.style.height = "13rem";
-			myCard.style.minWidth = "8rem";
-			myCard.style.maxWidth = "8rem";
-			myCard.style.borderColor = "black";
-			myCard.style.backgroundColor = "border-dark";
-			//myCard.style.padding = "1rem";
-			myCard.style.marginRight ="-7rem";
-			myCard.style.boxShadow = "1px 1px 1px 1px black";
+		myCard.classList.add("card");
+		myCard.style.height = "13rem";
+		myCard.style.minWidth = "8rem";
+		myCard.style.maxWidth = "8rem";
+		myCard.style.borderColor = "black";
+		myCard.style.backgroundColor = "border-dark";
+		myCard.style.marginRight ="-7rem";
+		myCard.style.boxShadow = "1px 1px 1px 1px black";
 
-		
-		//const cardBorder = getCardBorder(czarHand.length+1);
 		const cardHeader = document.createElement('div');
 		cardHeader.classList.add('cardHeader');
 
@@ -64,7 +59,6 @@ function outputCzarHand(users, czarHand, czar) {
 		czarHandNameArray.push(czar.username);
 
 		let difference = roomUserNameArray.filter(x => ! czarHandNameArray.includes(x));
-		//console.log(difference);
 
 		const cardBody = document.createElement('div');
 		cardBody.classList.add('card-body');
@@ -107,7 +101,7 @@ function outputCzarHand(users, czarHand, czar) {
 		myCard.appendChild(cardBody);
 		myCard.appendChild(cardHeader);
 
-		document.querySelector('.czarCzar').appendChild(myCard);
+		document.querySelector('.czarDeck').appendChild(myCard);
 	});
 }
 
@@ -116,7 +110,6 @@ function getCardBorder(type) {
 	
 	var textColor;
 	var bgColor;
-	var borderWidth = `1px`;
 	if (type === 'light'){
 		textColor = "text-black"; 
 		bgColor = "border-dark";
@@ -145,21 +138,20 @@ function getCardHeader(czar, whiteCard, user, buttonFlag, buttonType) {
 
 	if(buttonFlag) {
 		if(buttonType == 'play') {
-			if(username != czar.username) {//!=
+			if(username != czar.username) {
 				const button0 = getCardButton(buttonType);
 				button0.addEventListener('click', () => {
-					//do something for specific button type
 					sendWhiteCardToServer(whiteCard);
 					removePlayButton(czar, user);
 					
 				});
 				cardHeader.appendChild(button0);
 			}
-		} else {
-			if(username == czar.username) {//!=
+		} else {// select button
+			if(username == czar.username) {
 				const button0 = getCardButton(buttonType);
 				button0.addEventListener('click', () => {
-					sendWinnerInfoToServer(whiteCard);//HERE
+					sendWinnerInfoToServer(whiteCard);
 					setTimeout(() => {
 						clearHand();
 					},
@@ -218,6 +210,7 @@ function buildWhiteCard(whiteCard, czar, user, buttonFlag, buttonType) {
 // Add white cards to DOM
 function outputWhiteCards(users, czar, flag) {
 	whiteCardsDiv.innerHTML = ``;
+	whiteCardsDiv.style.overflowX = "scroll";
 	if(flag) {
 		users.forEach(user => {
 			if(user.username == username) {
@@ -233,6 +226,7 @@ function outputWhiteCards(users, czar, flag) {
 // Remove play button from DOM
 function removePlayButton(czar, user) {
 	whiteCardsDiv.innerHTML = ``;
+	whiteCardsDiv.style.overflowX = "scroll";
 	user.whiteCards.forEach(whiteCard=>{
 		const cardBorder = getCardBorder('light');
 		const cardHeader = getCardHeader(czar, whiteCard, user, false, false);
@@ -286,7 +280,7 @@ function outputMessage(message) {
 }
 
 function drawCzarHand(users, czarHand, czar) {
-	czarCzar.innerHTML =``;
+	czarDeck.innerHTML =``;
 	//console.log(czarHand);
 	czarHand.forEach(card => {
 		const myCard = document.createElement('div');
@@ -317,7 +311,6 @@ function drawCzarHand(users, czarHand, czar) {
 		czarHandNameArray.push(czar.username);
 
 		let difference = roomUserNameArray.filter(x => ! czarHandNameArray.includes(x));
-		//console.log(difference);
 
 		const cardBody = document.createElement('div');
 		cardBody.classList.add('card-body');
@@ -360,12 +353,13 @@ function drawCzarHand(users, czarHand, czar) {
 		myCard.appendChild(cardBody);
 		myCard.appendChild(cardHeader);
 
-		document.querySelector('.czarCzar').appendChild(myCard);
+		document.querySelector('.czarDeck').appendChild(myCard);
 	});
 }
 
 function outputJudgeHand(roomUserList, czarHand, czar) {
 	czarCardsDiv.innerHTML =``;
+	czarCardsDiv.style.overflowX = "scroll";
 	var count = 0;
 	czarHand.slice().reverse().forEach(card => {
 		count++;
@@ -385,6 +379,7 @@ function outputJudgeHand(roomUserList, czarHand, czar) {
 
 function outputWinner(winner) {
 	czarCardsDiv.innerHTML = ``;
+	czarCardsDiv.style.overflowX = "scroll";
 
 			const div1 = document.createElement('div');
 			div1.classList.add("card", "text-black", "border-dark", "mr-3");
@@ -415,5 +410,4 @@ function outputWinner(winner) {
 
 			div1.appendChild(div2);
 			document.querySelector('.czarCardsDiv').appendChild(div1);
-
 }
