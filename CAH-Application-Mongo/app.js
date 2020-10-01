@@ -100,6 +100,7 @@ io.on('connection', socket => {
 			var roomUserList = getRoomUserList(user.room);
 			updateRoomUsersWhiteCards(initializeWhiteCards(roomUserList, false));
 
+			clearHand();
 
 			io.to(user.room).emit('terminate', {roomUserList: getRoomUserList(user.room)});
 		}

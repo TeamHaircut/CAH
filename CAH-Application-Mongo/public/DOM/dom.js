@@ -210,7 +210,8 @@ function buildWhiteCard(whiteCard, czar, user, buttonFlag, buttonType) {
 // Add white cards to DOM
 function outputWhiteCards(users, czar, flag) {
 	whiteCardsDiv.innerHTML = ``;
-	whiteCardsDiv.style.overflowX = "scroll";
+	whiteCardsDiv.style.overflowX = "auto";
+	whiteCardsDiv.style.height = "0rem";
 	if(flag) {
 		users.forEach(user => {
 			if(user.username == username) {
@@ -226,7 +227,7 @@ function outputWhiteCards(users, czar, flag) {
 // Remove play button from DOM
 function removePlayButton(czar, user) {
 	whiteCardsDiv.innerHTML = ``;
-	whiteCardsDiv.style.overflowX = "scroll";
+	whiteCardsDiv.style.overflowX = "auto";
 	user.whiteCards.forEach(whiteCard=>{
 		const cardBorder = getCardBorder('light');
 		const cardHeader = getCardHeader(czar, whiteCard, user, false, false);
@@ -359,7 +360,7 @@ function drawCzarHand(users, czarHand, czar) {
 
 function outputJudgeHand(roomUserList, czarHand, czar) {
 	czarCardsDiv.innerHTML =``;
-	czarCardsDiv.style.overflowX = "scroll";
+	czarCardsDiv.style.overflowX = "auto";
 	var count = 0;
 	czarHand.slice().reverse().forEach(card => {
 		count++;
@@ -379,7 +380,7 @@ function outputJudgeHand(roomUserList, czarHand, czar) {
 
 function outputWinner(winner) {
 	czarCardsDiv.innerHTML = ``;
-	czarCardsDiv.style.overflowX = "scroll";
+	czarCardsDiv.style.overflowX = "auto";
 
 			const div1 = document.createElement('div');
 			div1.classList.add("card", "text-black", "border-dark", "mr-3");

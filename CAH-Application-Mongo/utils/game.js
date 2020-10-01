@@ -53,6 +53,7 @@ function popCzarHand() {
 }
 
 function clearHand() {
+	czarHand = [];
 	judgeHand = [];
 }
 
