@@ -110,8 +110,6 @@ function initializeGame(roomUserList, cardCzar, blackCard) {
 	gameControl.innerHTML = `<i class="fas fa-stop"></i> Terminate Game`;
 	outputRoomUserTable(roomUserList, cardCzar);
 	outputBlackCard(blackCard);
-	//var czarHand = [];
-	//outputCzarHand(roomUserList, czarHand, cardCzar);
 	outputWhiteCards(roomUserList, cardCzar, true);
 }
 
@@ -125,9 +123,10 @@ function terminateGame(roomUserList) {
 	console.log("GAME TERMINATED");
 	gameControl.innerHTML = `<i class="fas fa-play"></i> Launch Game`;
 	outputBlackCard(false);
-	socket.emit('clearCzarHand');
+	//socket.emit('clearCzarHand');
 	outputWhiteCards(roomUserList, false, false);
-	
+	czarDeck.innerHTML =``;
+	czarCardsDiv.innerHTML = ``;
 	outputRoomUserTable(roomUserList, false);
 }
 

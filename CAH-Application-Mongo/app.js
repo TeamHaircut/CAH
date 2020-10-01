@@ -29,7 +29,6 @@ const io = socket(server);
 // Set static folder
 app.use(express.static(path.join(__dirname, '/public')));
 
-const botName = 'CAH Admin';
 const GameState = {
 	TERMINATE: 1,
 	INITIALIZE: 2
@@ -101,6 +100,7 @@ io.on('connection', socket => {
 			var roomUserList = getRoomUserList(user.room);
 			updateRoomUsersWhiteCards(initializeWhiteCards(roomUserList, false));
 
+			clearHand();
 
 			io.to(user.room).emit('terminate', {roomUserList: getRoomUserList(user.room)});
 		}
@@ -113,13 +113,8 @@ io.on('connection', socket => {
 		// push white card and sending user to czar's hand
 		appendCzarHand(user, whiteCard);
 
-		//console.log(getRoomUserList(user.room)); 
-		//console.log(getCzarHand());
-
-		// Emit when you have received all white cards
-		//if(getCzarHand().length == (getRoomUserList(user.room).length - 1)) {
+		// Emit czar hand to clients
 			io.to(user.room).emit('czarHand', {roomUserList: getRoomUserList(user.room), czarHand: getCzarHand(), czar: getCardCzar()});
-		//}
 	});
 
 	// Listen for incoming white cards
@@ -130,20 +125,19 @@ io.on('connection', socket => {
 		appendCards(popCzarHand());
 		//appendCzarHand(user, whiteCard);
 
-		//console.log(getRoomUserList(user.room)); 
-		//console.log(getCzarHand());
+		// Emit judge hand to clients
 			io.to(user.room).emit('displayCards', {roomUserList: getRoomUserList(user.room), judgeHand: getJudgeHand(), czar: getCardCzar()});
 
-		// Emit when you have received all white cards
-		//if(getCzarHand().length == (getRoomUserList(user.room).length - 1)) {
+		// Emit czar hand to clients
 			io.to(user.room).emit('drawCzarCards', {roomUserList: getRoomUserList(user.room), czarHand: getCzarHand(), czar: getCardCzar()});
-		//}
 	});
 	
 	// Listen for winner event
 	socket.on('declareWinner', ({card}) => {
+
 		//extract user from card
 		var name = card.user.username;
+
 		//update points for name
 		updatePoints(name);
 		
@@ -162,8 +156,6 @@ io.on('connection', socket => {
 		
 		//Emit updated DOM to all users
 		io.to(card.user.room).emit('updateDOM', {roomUserList: getRoomUserList(card.user.room), cardCzar: getCardCzar(), winner: card, blackCard: getBlackCard()});
-		//io.to(card.user.room).emit('updateDOM', {roomUserList: getRoomUserList(card.user.room), cardCzar: getCardCzar(), winner: card, czarHand: czarHand, blackCard: getBlackCard()});
-
 	});
 
 	// Listen for clear czarHand event
