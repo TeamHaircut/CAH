@@ -11,23 +11,25 @@ const roomUserTable = document.querySelector('.userlist-table');
 
 const chatMessages = document.querySelector('.chat-messages');
 
+var myBlackCard;
+
 // Add room name to DOM
 function outputRoomName(room) {
 	roomName.innerText = room;
 }
 
 // Add black card to DOM
-function outputBlackCard(blackCard) {
+function outputBlackCard(czar, blackCard) {
 	blackCardDiv.innerHTML = ``;
 	if(blackCard != false) {
-		const div1 = buildBlackCard(blackCard);
+		const div1 = buildBlackCard(czar, blackCard);
 		document.querySelector('.blackCardDiv').appendChild(div1);
 	}
 }
 
-function buildBlackCard(blackCard) {
+function buildBlackCard(czar, blackCard) {
 	const cardBorder = getCardBorder('dark');
-	const cardHeader = getCardHeader(false, blackCard, false, false, false);
+	const cardHeader = getCardHeader(czar, blackCard, false, true, 'next');
 	const cardBody = getCardBody(blackCard);
 	cardBorder.appendChild(cardBody);
 	cardBorder.appendChild(cardHeader);
@@ -35,6 +37,7 @@ function buildBlackCard(blackCard) {
 }
 
 function outputCzarHand(users, czarHand, czar) {
+	outputBlackCard(false, myBlackCard);
 	czarDeck.innerHTML =``;
 	czarHand.forEach(card => {
 		const myCard = document.createElement('div');
@@ -142,8 +145,9 @@ function getCardHeader(czar, whiteCard, user, buttonFlag, buttonType) {
 				});
 				cardHeader.appendChild(button0);
 			}
-		} else {// select button
+		} else if (buttonType == 'select') {// select button
 			if(username == czar.username) {
+				//console.log(username);
 				const button0 = getCardButton(buttonType);
 				button0.addEventListener('click', () => {
 					sendWinnerInfoToServer(whiteCard);
@@ -155,8 +159,23 @@ function getCardHeader(czar, whiteCard, user, buttonFlag, buttonType) {
 				});
 				cardHeader.appendChild(button0);
 			}
-		}
+		} else if (buttonType == 'next') {
+			if(username == czar.username) {
+				const button0 = getCardButton(buttonType);
+				button0.addEventListener('click', () => {
+					drawBlackCard();
+				});
+				cardHeader.appendChild(button0);
+			} 
+		} 
 	}
+
+	if (buttonType == 'client') {
+		const p0 = document.createElement('p');
+		p0.innerHTML = `<i class="fas fa-gavel"></i>`;
+		cardHeader.appendChild(p0);
+	}
+
 	return cardHeader;
 }
 
@@ -167,7 +186,16 @@ function getCardButton(type) {
 
 	var text;
 	var icon;
-	if (type === 'play'){text = 'play'; icon =`<i class="fas fa-play"></i>`;} else {text = ''; icon = `<i class="fas fa-gavel"></i>`;}
+	if (type === 'play'){
+		text = ''; 
+		icon =`<i class="fas fa-play"></i>`;
+	} else if (type === 'select'){
+		text = ''; 
+		icon = `<i class="fas fa-gavel"></i>`;
+	} else if (type === 'next'){
+		text = ''; 
+		icon = `<i class="fas fa-forward"></i>`;
+	}
 	cardButton.innerHTML = `${icon} ${text}`;
 	return cardButton;
 }
@@ -180,6 +208,7 @@ function getCardBody(card) {
 	cardText.classList.add('card-title');
 	cardText.style.fontFamily = "Helvetica, Neue, Bold";
 	cardText.style.fontSize = "small";
+	//console.log(card);
 	if(typeof card === 'object') {
 		card = card.whiteCard;
 	}
@@ -356,10 +385,20 @@ function outputJudgeHand(roomUserList, czarHand, czar) {
 		czarCardsDiv.style.maxWidth = `${scrollSize}rem`;
 		var myCard;
 		
-		if(czarHand.length === (roomUserList.length-1))  {
+//		if(czarHand.length === (roomUserList.length-1) )  {
+//			myCard = buildWhiteCard(card, czar, false, true, 'select');
+//		} else {
+//			myCard = buildWhiteCard(card, czar, false, true, 'client');
+//		}
+
+		if(czarHand.length === (roomUserList.length-1)  && (username == czar.username) )  {
 			myCard = buildWhiteCard(card, czar, false, true, 'select');
 		} else {
-			myCard = buildWhiteCard(card, czar, false, false, false);
+			myCard = buildWhiteCard(card, czar, false, false, 'client');
+		}
+
+		if(username != czar.username) {
+			myCard = buildWhiteCard(card, czar, false, false, 'client');
 		}
 
 		document.querySelector('.czarCardsDiv').appendChild(myCard);

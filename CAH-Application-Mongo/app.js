@@ -158,6 +158,12 @@ io.on('connection', socket => {
 		io.to(card.user.room).emit('updateDOM', {roomUserList: getRoomUserList(card.user.room), cardCzar: getCardCzar(), winner: card, blackCard: getBlackCard()});
 	});
 
+	socket.on('drawBlackCard', () => {
+		const user = getCurrentUser(socket.id);
+		drawBlackCard(true);
+		io.to(user.room).emit('drawBlackCard', {czar: getCardCzar(), blackCard: getBlackCard()});
+	});
+
 	// Listen for clear czarHand event
 	socket.on('clearHand', () => {
 		const user = getCurrentUser(socket.id);
