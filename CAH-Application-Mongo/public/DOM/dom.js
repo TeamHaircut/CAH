@@ -71,27 +71,16 @@ function outputCzarHand(users, czarHand, czar) {
 		h4.innerHTML = "Cards<br>Against<br>Humanity<br>";
 		cardBody.appendChild(h4);
 
-		const p0 = document.createElement('p');
-		p0.style.fontFamily = "Helvetica, Neue, Bold";
-		p0.style.fontSize = "small";
-		p0.style.color = "red";
-
 		if(difference.length != 0){
 			infoPrompt.innerHTML = "Waiting for";
-			p0.innerHTML = `Waiting for...<br>`;
 
 			difference.forEach(name => {
-				infoPrompt.innerHTML+=` ...${name} `;
-				p0.innerHTML+=`${name} <br>`;  
+				infoPrompt.innerHTML+=` ... ${name} `; 
 			});
-			cardBody.appendChild(p0);
 		} else {
 			infoPrompt.innerHTML = ``;
 			if(username != czar.username){
-				infoPrompt.innerHTML = `Waiting for ...<i class="fas fa-gavel"></i> ${czar.username}`;
-				p0.innerHTML = `Waiting for...<br><i class="fas fa-gavel"></i>`;
-				p0.innerHTML+=` ${czar.username} <br>`; 
-				cardBody.appendChild(p0);
+				infoPrompt.innerHTML = `Waiting for ... ${czar.username}<i class="fas fa-gavel"></i> `;
 			} else {
 				const cardButton = document.createElement('button');
 				cardButton.classList.add("nav-link");
@@ -177,8 +166,9 @@ function getCardButton(type) {
 	cardButton.href ="#";
 
 	var text;
-	if (type === 'play'){text = 'play'} else {text = ''};
-	cardButton.innerHTML = `<i class="fas fa-play"></i> ${text}`;
+	var icon;
+	if (type === 'play'){text = 'play'; icon =`<i class="fas fa-play"></i>`;} else {text = ''; icon = `<i class="fas fa-gavel"></i>`;}
+	cardButton.innerHTML = `${icon} ${text}`;
 	return cardButton;
 }
 
@@ -328,26 +318,15 @@ function drawCzarHand(users, czarHand, czar) {
 		h4.innerHTML = "Cards<br>Against<br>Humanity<br>";
 		cardBody.appendChild(h4);
 
-		const p0 = document.createElement('p');
-		p0.style.fontFamily = "Helvetica, Neue, Bold";
-		p0.style.fontSize = "small";
-		p0.style.color = "red";
-
 		if(difference.length == 0){
-			infoPrompt.innerHTML = "Waiting for"
-			p0.innerHTML = `Waiting for...<br>`;
+			infoPrompt.innerHTML = "Waiting for";
 
 			difference.forEach(name => {
-				infoPrompt.innerHTML+=` ...${name} `;
-				p0.innerHTML+=`${name} <br>`;  
+				infoPrompt.innerHTML+=` ... ${name} `;
 			});
-			cardBody.appendChild(p0);
 		} else {
 			if(username != czar.username){
-				infoPrompt.innerHTML = `Waiting for ...<i class="fas fa-gavel"></i> ${czar.username}`;
-				p0.innerHTML = `Waiting for...<br><i class="fas fa-gavel"></i>`;
-				p0.innerHTML+=` ${czar.username} <br>`; 
-				cardBody.appendChild(p0);
+				infoPrompt.innerHTML = `Waiting for ... ${czar.username}<i class="fas fa-gavel"></i>`;
 			} else {
 				const cardButton = document.createElement('button');
 				cardButton.classList.add("nav-link");
