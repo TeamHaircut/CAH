@@ -42,6 +42,16 @@ gameControl.addEventListener("click", function(){
 	
 });
 
+function drawBlackCard() {
+	socket.emit('drawBlackCard');
+}
+
+socket.on('drawBlackCard', ({czar, blackCard})=> {
+	// Update DOM with new black card
+	myBlackCard = blackCard;
+	outputBlackCard(czar, blackCard);
+});
+
 function sendWhiteCardToServer(whiteCard) {
 	socket.emit('sendWhiteCardToServer', {whiteCard});
 }
@@ -70,7 +80,7 @@ socket.on('updateDOM', ({roomUserList, cardCzar, winner, blackCard}) => {
 	outputRoomUserTable(roomUserList, cardCzar);
 
 	// Update DOM with new black card
-	outputBlackCard(blackCard);
+	outputBlackCard(cardCzar, blackCard);
 
 	// Update DOM with winner info
 	outputWinner(winner);
@@ -110,7 +120,7 @@ function initializeGame(roomUserList, cardCzar, blackCard) {
 	console.log("GAME INITIALIZED");
 	gameControl.innerHTML = `<i class="fas fa-stop"></i> Terminate Game`;
 	outputRoomUserTable(roomUserList, cardCzar);
-	outputBlackCard(blackCard);
+	outputBlackCard(cardCzar, blackCard);
 	outputWhiteCards(roomUserList, cardCzar, true);
 }
 
@@ -123,7 +133,7 @@ socket.on('terminate', ({roomUserList}) => {
 function terminateGame(roomUserList) {
 	console.log("GAME TERMINATED");
 	gameControl.innerHTML = `<i class="fas fa-play"></i> Launch Game`;
-	outputBlackCard(false);
+	outputBlackCard(false, false);
 	//socket.emit('clearCzarHand');
 	outputWhiteCards(roomUserList, false, false);
 	czarDeck.innerHTML =``;
@@ -144,7 +154,7 @@ socket.on('gamestate', ({gameState, roomUserList, cardCzar}) => {
 			break;
 	}
 	outputRoomName(room);
-	console.log(roomUserList);
+	//console.log(roomUserList);
 	outputRoomUserTable(roomUserList, cardCzar);
 	console.log("Gamestate EVENT ON CLIENT");
 });
