@@ -60,6 +60,7 @@ function clearHand() {
 
 socket.on('clear', () => {
 	czarCardsDiv.innerHTML = ``;
+	infoPrompt.innerHTML = ``;
 });
 
 //  Update points in user table, and braodcast winner to room users

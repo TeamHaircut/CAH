@@ -1,5 +1,7 @@
 const roomName = document.getElementById('room-name');
 
+const infoPrompt = document.querySelector('.infoPrompt');
+
 const blackCardDiv = document.querySelector('.blackCardDiv');
 const czarCardsDiv = document.querySelector('.czarCardsDiv');
 const czarDeck = document.querySelector('.czarDeck');
@@ -75,14 +77,18 @@ function outputCzarHand(users, czarHand, czar) {
 		p0.style.color = "red";
 
 		if(difference.length != 0){
+			infoPrompt.innerHTML = "Waiting for";
 			p0.innerHTML = `Waiting for...<br>`;
 
 			difference.forEach(name => {
+				infoPrompt.innerHTML+=` ...${name} `;
 				p0.innerHTML+=`${name} <br>`;  
 			});
 			cardBody.appendChild(p0);
 		} else {
+			infoPrompt.innerHTML = ``;
 			if(username != czar.username){
+				infoPrompt.innerHTML = `Waiting for ...<i class="fas fa-gavel"></i> ${czar.username}`;
 				p0.innerHTML = `Waiting for...<br><i class="fas fa-gavel"></i>`;
 				p0.innerHTML+=` ${czar.username} <br>`; 
 				cardBody.appendChild(p0);
@@ -328,14 +334,17 @@ function drawCzarHand(users, czarHand, czar) {
 		p0.style.color = "red";
 
 		if(difference.length == 0){
+			infoPrompt.innerHTML = "Waiting for"
 			p0.innerHTML = `Waiting for...<br>`;
 
 			difference.forEach(name => {
+				infoPrompt.innerHTML+=` ...${name} `;
 				p0.innerHTML+=`${name} <br>`;  
 			});
 			cardBody.appendChild(p0);
 		} else {
 			if(username != czar.username){
+				infoPrompt.innerHTML = `Waiting for ...<i class="fas fa-gavel"></i> ${czar.username}`;
 				p0.innerHTML = `Waiting for...<br><i class="fas fa-gavel"></i>`;
 				p0.innerHTML+=` ${czar.username} <br>`; 
 				cardBody.appendChild(p0);
@@ -379,6 +388,7 @@ function outputJudgeHand(roomUserList, czarHand, czar) {
 }
 
 function outputWinner(winner) {
+	infoPrompt.innerHTML = ``;
 	czarCardsDiv.innerHTML = ``;
 	czarCardsDiv.style.overflowX = "auto";
 
