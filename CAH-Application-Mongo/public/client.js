@@ -1,10 +1,12 @@
 const clientUsername = document.getElementById('client-username');
+const clientRoom = document.getElementById('client-room');
+
 const gameControl = document.getElementById('gamecontrol');
 const chatForm = document.getElementById('chat-form');
 
 // Get username and room from template
 const username = clientUsername.innerHTML;
-const room = roomName.innerHTML;
+const room = clientRoom.innerHTML;
 
 const socket = io();
 
@@ -152,7 +154,7 @@ socket.on('gamestate', ({gameState, roomUserList, cardCzar}) => {
 		default:
 			break;
 	}
-	outputRoomName(room);
+	setClientRoom(room);
 	//console.log(roomUserList);
 	outputRoomUserTable(roomUserList, cardCzar);
 	console.log("Gamestate EVENT ON CLIENT");

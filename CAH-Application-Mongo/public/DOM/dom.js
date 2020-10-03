@@ -1,5 +1,3 @@
-const roomName = document.getElementById('room-name');
-
 const infoDiv = document.querySelector('.info-div');
 
 const blackCardDiv = document.querySelector('.blackcard-div');
@@ -12,11 +10,6 @@ const roomUserTable = document.querySelector('.userlist-table');
 const chatMessages = document.querySelector('.chat-messages');
 
 var myBlackCard;
-
-// Add room name to DOM
-function outputRoomName(room) {
-	roomName.innerText = room;
-}
 
 // Add black card to DOM
 function outputBlackCard(czar, blackCard) {
