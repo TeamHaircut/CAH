@@ -9,10 +9,10 @@
 				<p class="nav-link"></p>
 			</li>
 			<li class="nav-item active">
-				<p class="nav-link"><i class="fas fa-user"></i> <span id="clientUsername"><%= user.name %></span></p>
+				<p class="nav-link"><i class="fas fa-user"></i> <span id="client-username"><%= user.name %></span></p>
 			</li>
 			<li class="nav-item active">
-				<p class="nav-link"><i class="fas fa-home"></i> The <span id="room-name"><%= user.last_room %></span> room</p>
+				<p class="nav-link"><i class="fas fa-home"></i> The <span id="client-room"><%= user.last_room %></span> room</p>
 			</li>
 			<li class="nav-item active">
 				<a id="gamecontrol" href="#" class="nav-link"><i class="fas fa-play"></i> Launch Game</a>
@@ -25,22 +25,22 @@
 </nav>
 <div class="chat-container">
 	<div class="card card-body">
-		<div class="infoPrompt mb-1" style="font-size: small; color: red;"></div>
+		<div class="info-div mb-1" style="font-size: small; color: red;"></div>
 		<div style="max-width:5rem; display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;" >
-			<div class="blackCardDiv" style="max-width: 20rem; display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;" >
+			<div class="blackcard-div" style="max-width: 20rem; display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;" >
 			</div>
 
 			<div style="display: grid; place-items: end;">
-				<div class="czarDeck"  style="display: flex;">
+				<div class="czardeck-div"  style="display: flex;">
 				</div>
 			</div>
 
 		</div>
 
-			<div class="czarCardsDiv mt-3" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">	
+			<div class="judgehand-div mt-3" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">	
 			</div>
 
-			<div class="whiteCardsDiv mt-3" style="max-width:210rem; display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;" >
+			<div class="whitecards-div mt-3" style="max-width:210rem; display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;" >
 			</div>
 			
 	</div>
@@ -80,4 +80,5 @@
 </div>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/DOM/dom.js"></script>
-    <script src="/application.js"></script>
+	<script src="/DOM/utils.js"></script>
+    <script src="/client.js"></script>
