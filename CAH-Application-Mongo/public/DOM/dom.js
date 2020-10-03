@@ -1,6 +1,6 @@
 const roomName = document.getElementById('room-name');
 
-const infoPrompt = document.querySelector('.infoPrompt');
+const infoDiv = document.querySelector('.info-div');
 
 const blackCardDiv = document.querySelector('.blackCardDiv');
 const czarCardsDiv = document.querySelector('.czarCardsDiv');
@@ -76,15 +76,15 @@ function outputCzarHand(users, czarHand, czar) {
 		cardBody.appendChild(h4);
 
 		if(difference.length != 0){
-			infoPrompt.innerHTML = "Waiting for";
+			infoDiv.innerHTML = "Waiting for";
 
 			difference.forEach(name => {
-				infoPrompt.innerHTML+=` ... ${name} `; 
+				infoDiv.innerHTML+=` ... ${name} `; 
 			});
 		} else {
-			infoPrompt.innerHTML = ``;
+			infoDiv.innerHTML = ``;
 			if(username != czar.username){
-				infoPrompt.innerHTML = `Waiting for ... ${czar.username}<i class="fas fa-gavel"></i> `;
+				infoDiv.innerHTML = `Waiting for ... ${czar.username}<i class="fas fa-gavel"></i> `;
 			} else {
 				const cardButton = document.createElement('button');
 				cardButton.classList.add("nav-link");
@@ -349,14 +349,14 @@ function drawCzarHand(users, czarHand, czar) {
 		cardBody.appendChild(h4);
 
 		if(difference.length == 0){
-			infoPrompt.innerHTML = "Waiting for";
+			infoDiv.innerHTML = "Waiting for";
 
 			difference.forEach(name => {
-				infoPrompt.innerHTML+=` ... ${name} `;
+				infoDiv.innerHTML+=` ... ${name} `;
 			});
 		} else {
 			if(username != czar.username){
-				infoPrompt.innerHTML = `Waiting for ... ${czar.username}<i class="fas fa-gavel"></i>`;
+				infoDiv.innerHTML = `Waiting for ... ${czar.username}<i class="fas fa-gavel"></i>`;
 			} else {
 				const cardButton = document.createElement('button');
 				cardButton.classList.add("nav-link");
@@ -407,7 +407,7 @@ function outputJudgeHand(roomUserList, czarHand, czar) {
 }
 
 function outputWinner(winner) {
-	infoPrompt.innerHTML = ``;
+	infoDiv.innerHTML = ``;
 	czarCardsDiv.innerHTML = ``;
 	czarCardsDiv.style.overflowX = "auto";
 
