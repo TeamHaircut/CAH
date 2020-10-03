@@ -20,6 +20,7 @@ function outputRoomName(room) {
 
 // Add black card to DOM
 function outputBlackCard(czar, blackCard) {
+	myBlackCard = blackCard;
 	blackCardDiv.innerHTML = ``;
 	if(blackCard != false) {
 		const div1 = buildBlackCard(czar, blackCard);

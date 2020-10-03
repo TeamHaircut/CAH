@@ -48,7 +48,6 @@ function drawBlackCard() {
 
 socket.on('drawBlackCard', ({czar, blackCard})=> {
 	// Update DOM with new black card
-	myBlackCard = blackCard;
 	outputBlackCard(czar, blackCard);
 });
 
