@@ -2,7 +2,7 @@ const roomName = document.getElementById('room-name');
 
 const infoDiv = document.querySelector('.info-div');
 
-const blackCardDiv = document.querySelector('.blackCardDiv');
+const blackCardDiv = document.querySelector('.blackcard-div');
 const czarCardsDiv = document.querySelector('.czarCardsDiv');
 const czarDeck = document.querySelector('.czarDeck');
 const whiteCardsDiv = document.querySelector('.whiteCardsDiv');
@@ -24,7 +24,7 @@ function outputBlackCard(czar, blackCard) {
 	blackCardDiv.innerHTML = ``;
 	if(blackCard != false) {
 		const div1 = buildBlackCard(czar, blackCard);
-		document.querySelector('.blackCardDiv').appendChild(div1);
+		document.querySelector('.blackcard-div').appendChild(div1);
 	}
 }
 
