@@ -1,12 +1,10 @@
 const clientUsername = document.getElementById('client-username');
-const clientRoom = document.getElementById('client-room');
 
 const gameControl = document.getElementById('gamecontrol');
 const chatForm = document.getElementById('chat-form');
 
 // Get username and room from template
 const username = clientUsername.innerHTML;
-const room = clientRoom.innerHTML;
 
 const socket = io();
 
