@@ -1,4 +1,4 @@
-const clientUsername = document.getElementById('clientUsername');
+const clientUsername = document.getElementById('client-username');
 const gameControl = document.getElementById('gamecontrol');
 const chatForm = document.getElementById('chat-form');
 

@@ -3,9 +3,9 @@ const roomName = document.getElementById('room-name');
 const infoDiv = document.querySelector('.info-div');
 
 const blackCardDiv = document.querySelector('.blackcard-div');
-const judgeHandDiv = document.querySelector('.judgehand-div');
 const czarDeckDiv = document.querySelector('.czardeck-div');
-const whiteCardsDiv = document.querySelector('.whiteCardsDiv');
+const judgeHandDiv = document.querySelector('.judgehand-div');
+const whiteCardsDiv = document.querySelector('.whitecards-div');
 
 const roomUserTable = document.querySelector('.userlist-table');
 
@@ -243,7 +243,7 @@ function outputWhiteCards(users, czar, flag) {
 			if(user.username == username) {
 				whiteCardsDiv.style.height = "15rem";
 				user.whiteCards.forEach(whiteCard=>{
-					document.querySelector('.whiteCardsDiv').appendChild(buildWhiteCard(whiteCard, czar, user, true, 'play'));
+					document.querySelector('.whitecards-div').appendChild(buildWhiteCard(whiteCard, czar, user, true, 'play'));
 				});
 			}
 		});
