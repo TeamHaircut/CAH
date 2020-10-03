@@ -114,11 +114,9 @@ function buildWhiteCard(whiteCard, czar, user, buttonFlag, buttonType) {
 function outputWhiteCards(users, czar, flag) {
 	whiteCardsDiv.innerHTML = ``;
 	whiteCardsDiv.style.overflowX = "auto";
-	whiteCardsDiv.style.height = "0rem";
 	if(flag) {
 		users.forEach(user => {
 			if(getClientUsername() == user.username) {
-				whiteCardsDiv.style.height = "15rem";
 				user.whiteCards.forEach(whiteCard=>{
 					document.querySelector('.whitecards-div').appendChild(buildWhiteCard(whiteCard, czar, user, true, 'play'));
 				});

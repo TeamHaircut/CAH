@@ -59,15 +59,15 @@ function getCardButton(czar, card, user, buttonFlag, buttonType) {
     if(buttonFlag) {
 		if(buttonType == 'play') {
 			if(getClientUsername() != czar.username) {
-				button0 = getButton(buttonType);
+				button0 = getButtonText(buttonType);
 				button0.addEventListener('click', () => {
 					sendWhiteCardToServer(card);
 					removePlayButton(czar, user);	
 				});
 			}
-		} else if (buttonType == 'select') {// select button
+		} else if (buttonType == 'select') {
 			if(getClientUsername() == czar.username) {
-				button0 = getButton(buttonType);
+				button0 = getButtonText(buttonType);
 				button0.addEventListener('click', () => {
 					sendWinnerInfoToServer(card);
 					setTimeout(() => {
@@ -79,7 +79,7 @@ function getCardButton(czar, card, user, buttonFlag, buttonType) {
 			}
 		} else if (buttonType == 'next') {
 			if(getClientUsername() == czar.username) {
-				button0 = getButton(buttonType);
+				button0 = getButtonText(buttonType);
 				button0.addEventListener('click', () => {
 					drawBlackCard();
 				});
@@ -95,23 +95,27 @@ function getCardButton(czar, card, user, buttonFlag, buttonType) {
     return button0;
 }
 
-function getButton(type) {
+function getButtonText(type) {
     const button = document.createElement('button');
     button.classList.add("nav-link");
     button.href ="#";
 
-    var text;
+    var text = '';
     var icon;
-    if (type === 'play'){
-        text = ''; 
-        icon =`<i class="fas fa-play"></i>`;
-    } else if (type === 'select'){
-        text = ''; 
-        icon = `<i class="fas fa-gavel"></i>`;
-    } else if (type === 'next'){
-        text = ''; 
-        icon = `<i class="fas fa-forward"></i>`;
+
+    switch(type) {
+        case 'play':
+            icon =`<i class="fas fa-play"></i>`;
+            break;
+        case 'select':
+            icon = `<i class="fas fa-gavel"></i>`;
+            break;
+        case 'next':
+            icon = `<i class="fas fa-forward"></i>`;
+            break;
+        default:
     }
+
     button.innerHTML = `${icon} ${text}`;
     return button;
 }
