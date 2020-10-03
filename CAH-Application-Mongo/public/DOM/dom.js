@@ -76,7 +76,7 @@ function outputCzarHand(users, czarHand, czar) {
 			});
 		} else {
 			infoDiv.innerHTML = ``;
-			if(username != czar.username){
+			if(getClientUsername() != czar.username){
 				infoDiv.innerHTML = `Waiting for ... ${czar.username}<i class="fas fa-gavel"></i> `;
 			} else {
 				const cardButton = document.createElement('button');
@@ -130,7 +130,7 @@ function getCardHeader(czar, whiteCard, user, buttonFlag, buttonType) {
 
 	if(buttonFlag) {
 		if(buttonType == 'play') {
-			if(username != czar.username) {
+			if(getClientUsername() != czar.username) {
 				const button0 = getCardButton(buttonType);
 				button0.addEventListener('click', () => {
 					sendWhiteCardToServer(whiteCard);
@@ -140,7 +140,7 @@ function getCardHeader(czar, whiteCard, user, buttonFlag, buttonType) {
 				cardHeader.appendChild(button0);
 			}
 		} else if (buttonType == 'select') {// select button
-			if(username == czar.username) {
+			if(getClientUsername() == czar.username) {
 				//console.log(username);
 				const button0 = getCardButton(buttonType);
 				button0.addEventListener('click', () => {
@@ -154,7 +154,7 @@ function getCardHeader(czar, whiteCard, user, buttonFlag, buttonType) {
 				cardHeader.appendChild(button0);
 			}
 		} else if (buttonType == 'next') {
-			if(username == czar.username) {
+			if(getClientUsername() == czar.username) {
 				const button0 = getCardButton(buttonType);
 				button0.addEventListener('click', () => {
 					drawBlackCard();
@@ -233,7 +233,7 @@ function outputWhiteCards(users, czar, flag) {
 	whiteCardsDiv.style.height = "0rem";
 	if(flag) {
 		users.forEach(user => {
-			if(user.username == username) {
+			if(getClientUsername() == user.username) {
 				whiteCardsDiv.style.height = "15rem";
 				user.whiteCards.forEach(whiteCard=>{
 					document.querySelector('.whitecards-div').appendChild(buildWhiteCard(whiteCard, czar, user, true, 'play'));
@@ -248,12 +248,7 @@ function removePlayButton(czar, user) {
 	whiteCardsDiv.innerHTML = ``;
 	whiteCardsDiv.style.overflowX = "auto";
 	user.whiteCards.forEach(whiteCard=>{
-		const cardBorder = getCardBorder('light');
-		const cardHeader = getCardHeader(czar, whiteCard, user, false, false);
-		const cardBody = getCardBody(whiteCard);
-		cardBorder.appendChild(cardBody);
-		cardBorder.appendChild(cardHeader);
-		document.querySelector('.whiteCardsDiv').appendChild(cardBorder);
+		document.querySelector('.whitecards-div').appendChild(buildWhiteCard(whiteCard, czar, user, false, false));
 	});
 }
 
@@ -348,7 +343,7 @@ function drawCzarHand(users, czarHand, czar) {
 				infoDiv.innerHTML+=` ... ${name} `;
 			});
 		} else {
-			if(username != czar.username){
+			if(getClientUsername() != czar.username){
 				infoDiv.innerHTML = `Waiting for ... ${czar.username}<i class="fas fa-gavel"></i>`;
 			} else {
 				const cardButton = document.createElement('button');
@@ -385,13 +380,13 @@ function outputJudgeHand(roomUserList, czarHand, czar) {
 //			myCard = buildWhiteCard(card, czar, false, true, 'client');
 //		}
 
-		if(czarHand.length === (roomUserList.length-1)  && (username == czar.username) )  {
+		if(czarHand.length === (roomUserList.length-1)  && (getClientUsername() == czar.username) )  {
 			myCard = buildWhiteCard(card, czar, false, true, 'select');
 		} else {
 			myCard = buildWhiteCard(card, czar, false, false, 'client');
 		}
 
-		if(username != czar.username) {
+		if(getClientUsername() != czar.username) {
 			myCard = buildWhiteCard(card, czar, false, false, 'client');
 		}
 

@@ -1,16 +1,11 @@
-const clientUsername = document.getElementById('client-username');
-
 const gameControl = document.getElementById('gamecontrol');
 const chatForm = document.getElementById('chat-form');
-
-// Get username and room from template
-const username = clientUsername.innerHTML;
 
 const socket = io();
 
 /* Send an object contianing the client's username, 
 and room name as soon as they join the room*/
-socket.emit('joinRoom', { username, room });
+socket.emit('joinRoom', { username: getClientUsername(), room: getClientRoom() });
 
 // Message from server
 socket.on('message', message => {
