@@ -68,7 +68,7 @@ function clearHand() {
 }
 
 socket.on('clear', () => {
-	czarCardsDiv.innerHTML = ``;
+	judgeHandDiv.innerHTML = ``;
 	infoDiv.innerHTML = ``;
 });
 
@@ -135,8 +135,8 @@ function terminateGame(roomUserList) {
 	outputBlackCard(false, false);
 	//socket.emit('clearCzarHand');
 	outputWhiteCards(roomUserList, false, false);
-	czarDeck.innerHTML =``;
-	czarCardsDiv.innerHTML = ``;
+	czarDeckDiv.innerHTML =``;
+	judgeHandDiv.innerHTML = ``;
 	outputRoomUserTable(roomUserList, false);
 }
 

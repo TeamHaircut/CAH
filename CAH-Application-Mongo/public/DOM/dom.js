@@ -3,8 +3,8 @@ const roomName = document.getElementById('room-name');
 const infoDiv = document.querySelector('.info-div');
 
 const blackCardDiv = document.querySelector('.blackcard-div');
-const czarCardsDiv = document.querySelector('.czarCardsDiv');
-const czarDeck = document.querySelector('.czarDeck');
+const judgeHandDiv = document.querySelector('.judgehand-div');
+const czarDeckDiv = document.querySelector('.czardeck-div');
 const whiteCardsDiv = document.querySelector('.whiteCardsDiv');
 
 const roomUserTable = document.querySelector('.userlist-table');
@@ -39,7 +39,7 @@ function buildBlackCard(czar, blackCard) {
 
 function outputCzarHand(users, czarHand, czar) {
 	outputBlackCard(false, myBlackCard);
-	czarDeck.innerHTML =``;
+	czarDeckDiv.innerHTML =``;
 	czarHand.forEach(card => {
 		const myCard = document.createElement('div');
 		myCard.classList.add("card");
@@ -100,7 +100,7 @@ function outputCzarHand(users, czarHand, czar) {
 		myCard.appendChild(cardBody);
 		myCard.appendChild(cardHeader);
 
-		document.querySelector('.czarDeck').appendChild(myCard);
+		document.querySelector('.czardeck-div').appendChild(myCard);
 	});
 }
 
@@ -307,7 +307,7 @@ function outputMessage(message) {
 }
 
 function drawCzarHand(users, czarHand, czar) {
-		czarDeck.innerHTML =``;
+		czarDeckDiv.innerHTML =``;
 	//console.log(czarHand);
 	czarHand.forEach(card => {
 		const myCard = document.createElement('div');
@@ -372,18 +372,18 @@ function drawCzarHand(users, czarHand, czar) {
 		myCard.appendChild(cardBody);
 		myCard.appendChild(cardHeader);
 
-		document.querySelector('.czarDeck').appendChild(myCard);
+		document.querySelector('.czardeck-div').appendChild(myCard);
 	});
 }
 
 function outputJudgeHand(roomUserList, czarHand, czar) {
-	czarCardsDiv.innerHTML =``;
-	czarCardsDiv.style.overflowX = "auto";
+	judgeHandDiv.innerHTML =``;
+	judgeHandDiv.style.overflowX = "auto";
 	var count = 0;
 	czarHand.slice().reverse().forEach(card => {
 		count++;
 		var scrollSize = 9*count;
-		czarCardsDiv.style.maxWidth = `${scrollSize}rem`;
+		judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
 		var myCard;
 		
 //		if(czarHand.length === (roomUserList.length-1) )  {
@@ -402,14 +402,14 @@ function outputJudgeHand(roomUserList, czarHand, czar) {
 			myCard = buildWhiteCard(card, czar, false, false, 'client');
 		}
 
-		document.querySelector('.czarCardsDiv').appendChild(myCard);
+		document.querySelector('.judgehand-div').appendChild(myCard);
 	});
 }
 
 function outputWinner(winner) {
 	infoDiv.innerHTML = ``;
-	czarCardsDiv.innerHTML = ``;
-	czarCardsDiv.style.overflowX = "auto";
+	judgeHandDiv.innerHTML = ``;
+	judgeHandDiv.style.overflowX = "auto";
 
 			const div1 = document.createElement('div');
 			div1.classList.add("card", "text-black", "border-dark", "mr-3");
@@ -439,5 +439,5 @@ function outputWinner(winner) {
 			div1.appendChild(div3);	
 
 			div1.appendChild(div2);
-			document.querySelector('.czarCardsDiv').appendChild(div1);
+			document.querySelector('.judgehand-div').appendChild(div1);
 }
