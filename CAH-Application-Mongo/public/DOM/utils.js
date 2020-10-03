@@ -1,3 +1,5 @@
+
+// Get room from template
 const clientRoom = document.getElementById('client-room');
 const room = clientRoom.innerHTML;
 
