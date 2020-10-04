@@ -129,6 +129,42 @@ function getButtonText(type) {
     return button;
 }
 
+function updateCardButton(list, czar, czarHand, users, cardB, flag) {
+	if(flag) {
+		if(list.length != 0){
+			getInfoDivText(list);
+		} else {
+			infoDiv.innerHTML = ``;
+			cardB = getFlipButton(false,czar,cardB,czarHand, users);
+		}
+	} else {
+		if(list.length != 0){
+			cardB = getFlipButton(true,czar,cardB, czarHand, users);
+		} else {
+			getInfoDivText(list);
+		}		
+	}
+	return cardB;
+}
+
+function getFlipButton(flag,czar,cardB, czarHand, users) {
+	if(getClientUsername() != czar.username){
+		infoDiv.innerHTML = `Waiting for ... ${czar.username}<i class="fas fa-gavel"></i> `;
+	} else {
+		if(flag) {infoDiv.innerHTML = ``;}
+		const cardButton = getCardButton(czar, czarHand, users, 'flip');//
+		cardB.appendChild(cardButton);
+	}
+	return cardB;
+}
+
+function getInfoDivText(list) {
+	infoDiv.innerHTML = "Waiting for";
+	list.forEach(name => {
+		infoDiv.innerHTML+=` ... ${name} `;
+	});
+}
+
 function buildCard(bgColor, czar, card, user, buttonType) {
 	const cardBorder = getCardBorder(bgColor);
 	const cardHeader = getCardHeader();

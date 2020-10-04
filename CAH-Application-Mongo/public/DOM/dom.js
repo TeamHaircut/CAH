@@ -59,42 +59,6 @@ function outputCzarHand(users, czarHand, czar, flag) {
 	});
 }
 
-function updateCardButton(list, czar, czarHand, users, cardB, flag) {
-	if(flag) {
-		if(list.length != 0){
-			getInfoDivText(list);
-		} else {
-			infoDiv.innerHTML = ``;
-			cardB = getFlipButton(false,czar,cardB,czarHand, users);
-		}
-	} else {
-		if(list.length != 0){
-			cardB = getFlipButton(true,czar,cardB, czarHand, users);
-		} else {
-			getInfoDivText(list);
-		}		
-	}
-	return cardB;
-}
-
-function getFlipButton(flag,czar,cardB, czarHand, users) {
-	if(username != czar.username){
-		infoDiv.innerHTML = `Waiting for ... ${czar.username}<i class="fas fa-gavel"></i> `;
-	} else {
-		if(flag) {infoDiv.innerHTML = ``;}
-		const cardButton = getCardButton(czar, czarHand, users, 'flip');//
-		cardB.appendChild(cardButton);
-	}
-	return cardB;
-}
-
-function getInfoDivText(list) {
-	infoDiv.innerHTML = "Waiting for";
-	list.forEach(name => {
-		infoDiv.innerHTML+=` ... ${name} `;
-	});
-}
-
 // Add white cards to DOM
 function outputWhiteCards(users, czar, flag) {
 	whiteCardsDiv.innerHTML = ``;
@@ -189,34 +153,9 @@ function outputWinner(winner) {
 	infoDiv.innerHTML = ``;
 	judgeHandDiv.innerHTML = ``;
 	judgeHandDiv.style.overflowX = "auto";
+	//////
+	const div1 = buildCard('light', false, winner, false, false);
+	div1.classList.add("bg-success");
+	document.querySelector('.judgehand-div').appendChild(div1);
 
-			const div1 = document.createElement('div');
-			div1.classList.add("card", "text-black", "border-dark", "mr-3");
-			div1.classList.add("bg-success");
-			div1.style.height = "13rem";
-			div1.style.minWidth = "8rem";
-			div1.style.maxWidth = "8rem";
-			//
-			const div2 = document.createElement('div');
-			div2.classList.add('card-header');
-			//
-			const div3 = document.createElement('div');
-			div3.classList.add('card-body');
-			//
-			const h4 = document.createElement('h4');
-			h4.classList.add('card-title');
-			h4.style.fontFamily = "Helvetica, Neue, Bold";
-			h4.style.fontSize = "small";
-			h4.innerHTML = `${winner.whiteCard}`;
-			div3.appendChild(h4);
-			//
-			const p = document.createElement('p');
-			p.classList.add('card-text');
-			p.innerHTML = `${winner.user.username} wins!`;
-
-			div3.appendChild(p);
-			div1.appendChild(div3);	
-
-			div1.appendChild(div2);
-			document.querySelector('.judgehand-div').appendChild(div1);
 }
