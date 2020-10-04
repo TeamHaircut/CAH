@@ -16,98 +16,83 @@ function outputBlackCard(czar, blackCard) {
 	myBlackCard = blackCard;
 	blackCardDiv.innerHTML = ``;
 	if(blackCard != false) {
-		const div1 = buildBlackCard(czar, blackCard);
+		const div1 = buildCard('dark', czar, blackCard, false, 'next');
 		document.querySelector('.blackcard-div').appendChild(div1);
 	}
 }
 
-function buildBlackCard(czar, blackCard) {
-	const cardBorder = getCardBorder('dark');
-	const cardHeader = getCardHeader();
-	const cardButton = getCardButton(czar, blackCard, false, true, 'next');
-	const cardBody = getCardBody(blackCard);
-	cardHeader.appendChild(cardButton);
-	cardBorder.appendChild(cardBody);
-	cardBorder.appendChild(cardHeader);
-	return cardBorder;
-}
-
-function outputCzarHand(users, czarHand, czar) {
+function outputCzarHand(users, czarHand, czar, flag) {
 	outputBlackCard(false, myBlackCard);
 	czarDeckDiv.innerHTML =``;
+
 	czarHand.forEach(card => {
-		const myCard = document.createElement('div');
-		myCard.classList.add("card");
-		myCard.style.height = "13rem";
-		myCard.style.minWidth = "8rem";
-		myCard.style.maxWidth = "8rem";
-		myCard.style.borderColor = "black";
-		myCard.style.backgroundColor = "border-dark";
-		myCard.style.marginRight ="-7rem";
-		myCard.style.boxShadow = "1px 1px 1px 1px black";
+		const cardBorder = document.createElement('div');
+		cardBorder.classList.add("card");
+		cardBorder.style.height = "13rem";
+		cardBorder.style.minWidth = "8rem";
+		cardBorder.style.maxWidth = "8rem";
+		cardBorder.style.borderColor = "black";
+		cardBorder.style.backgroundColor = "border-dark";
+		cardBorder.style.marginRight ="-7rem";
+		cardBorder.style.boxShadow = "1px 1px 1px 1px black";
 
-		const cardHeader = document.createElement('div');
-		cardHeader.classList.add('cardHeader');
+		const cardHead = getCardHeader();
 
-		roomUserNameArray = [];
-		czarHandNameArray = [];
-		users.forEach(user => {
-			roomUserNameArray.push(user.username);
-		});
-		czarHand.forEach(card => {
-			czarHandNameArray.push(card.user.username);
-		});
-		czarHandNameArray.push(czar.username);
+		const cardB = getCardBody(card);
+		cardB.querySelector('.card-title').style.fontSize = "large";
+		cardB.querySelector('.card-title').innerHTML = "Cards<br>Against<br>Humanity<br>";
 
-		let difference = roomUserNameArray.filter(x => ! czarHandNameArray.includes(x));
+		setUserWaitList(users, czarHand, czar);
 
-		const cardBody = document.createElement('div');
-		cardBody.classList.add('card-body');
-
-		const h4 = document.createElement('h4');
-		h4.style.fontFamily = "Helvetica, Neue, Bold";
-		h4.style.fontSize = "large";
-		h4.innerHTML = "Cards<br>Against<br>Humanity<br>";
-		cardBody.appendChild(h4);
-
-		if(difference.length != 0){
 			infoDiv.innerHTML = "Waiting for";
 
-			difference.forEach(name => {
+			getUserWaitList().forEach(name => {
 				infoDiv.innerHTML+=` ... ${name} `; 
 			});
-		} else {
-			infoDiv.innerHTML = ``;
-			if(getClientUsername() != czar.username){
-				infoDiv.innerHTML = `Waiting for ... ${czar.username}<i class="fas fa-gavel"></i> `;
-			} else {
-				const cardButton = document.createElement('button');
-				cardButton.classList.add("nav-link");
-				cardButton.href ="#";
-				cardButton.innerHTML = `<i class="fas fa-play"></i>`;
-				cardButton.addEventListener('click', () => {
-					turnCzarCard(users, czarHand, czar);
-				});
-				cardBody.appendChild(cardButton);
-			}
-		}
-		
-		myCard.appendChild(cardBody);
-		myCard.appendChild(cardHeader);
 
-		document.querySelector('.czardeck-div').appendChild(myCard);
+		const inter = updateCardButton(getUserWaitList(), czar, czarHand, users, cardB, flag);
+		
+		cardBorder.appendChild(inter);
+		cardBorder.appendChild(cardHead);
+
+		document.querySelector('.czardeck-div').appendChild(cardBorder);
 	});
 }
 
-function buildWhiteCard(whiteCard, czar, user, buttonFlag, buttonType) {
-	const cardBorder = getCardBorder('light');
-	const cardHeader = getCardHeader();
-	const cardButton = getCardButton(czar, whiteCard, user, buttonFlag, buttonType);
-	const cardBody = getCardBody(whiteCard);
-	cardHeader.appendChild(cardButton);
-	cardBorder.appendChild(cardBody);
-	cardBorder.appendChild(cardHeader);
-	return cardBorder;
+function updateCardButton(list, czar, czarHand, users, cardB, flag) {
+	if(flag) {
+		if(list.length != 0){
+			getInfoDivText(list);
+		} else {
+			infoDiv.innerHTML = ``;
+			cardB = getFlipButton(false,czar,cardB,czarHand, users);
+		}
+	} else {
+		if(list.length != 0){
+			cardB = getFlipButton(true,czar,cardB, czarHand, users);
+		} else {
+			getInfoDivText(list);
+		}		
+	}
+	return cardB;
+}
+
+function getFlipButton(flag,czar,cardB, czarHand, users) {
+	if(username != czar.username){
+		infoDiv.innerHTML = `Waiting for ... ${czar.username}<i class="fas fa-gavel"></i> `;
+	} else {
+		if(flag) {infoDiv.innerHTML = ``;}
+		const cardButton = getCardButton(czar, czarHand, users, 'flip');//
+		cardB.appendChild(cardButton);
+	}
+	return cardB;
+}
+
+function getInfoDivText(list) {
+	infoDiv.innerHTML = "Waiting for";
+	list.forEach(name => {
+		infoDiv.innerHTML+=` ... ${name} `;
+	});
 }
 
 // Add white cards to DOM
@@ -118,7 +103,7 @@ function outputWhiteCards(users, czar, flag) {
 		users.forEach(user => {
 			if(getClientUsername() == user.username) {
 				user.whiteCards.forEach(whiteCard=>{
-					document.querySelector('.whitecards-div').appendChild(buildWhiteCard(whiteCard, czar, user, true, 'play'));
+					document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, 'play'));
 				});
 			}
 		});
@@ -130,7 +115,7 @@ function removePlayButton(czar, user) {
 	whiteCardsDiv.innerHTML = ``;
 	whiteCardsDiv.style.overflowX = "auto";
 	user.whiteCards.forEach(whiteCard=>{
-		document.querySelector('.whitecards-div').appendChild(buildWhiteCard(whiteCard, czar, user, false, false));
+		document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, false));
 	});
 }
 
@@ -176,76 +161,6 @@ function outputMessage(message) {
 	document.querySelector('.chat-messages').appendChild(div);
 }
 
-function drawCzarHand(users, czarHand, czar) {
-		czarDeckDiv.innerHTML =``;
-	//console.log(czarHand);
-	czarHand.forEach(card => {
-		const myCard = document.createElement('div');
-		myCard.classList.add(
-			"card");
-			myCard.style.height = "13rem";
-			myCard.style.minWidth = "8rem";
-			myCard.style.maxWidth = "8rem";
-			myCard.style.borderColor = "black";
-			myCard.style.backgroundColor = "border-dark";
-			//myCard.style.padding = "1rem";
-			myCard.style.marginRight ="-7rem";
-			myCard.style.boxShadow = "1px 1px 1px 1px black";
-
-		
-		//const cardBorder = getCardBorder(czarHand.length+1);
-		const cardHeader = document.createElement('div');
-		cardHeader.classList.add('cardHeader');
-
-		roomUserNameArray = [];
-		czarHandNameArray = [];
-		users.forEach(user => {
-			roomUserNameArray.push(user.username);
-		});
-		czarHand.forEach(card => {
-			czarHandNameArray.push(card.user.username);
-		});
-		czarHandNameArray.push(czar.username);
-
-		let difference = roomUserNameArray.filter(x => ! czarHandNameArray.includes(x));
-
-		const cardBody = document.createElement('div');
-		cardBody.classList.add('card-body');
-
-		const h4 = document.createElement('h4');
-		h4.style.fontFamily = "Helvetica, Neue, Bold";
-		h4.style.fontSize = "large";
-		h4.innerHTML = "Cards<br>Against<br>Humanity<br>";
-		cardBody.appendChild(h4);
-
-		if(difference.length == 0){
-			infoDiv.innerHTML = "Waiting for";
-
-			difference.forEach(name => {
-				infoDiv.innerHTML+=` ... ${name} `;
-			});
-		} else {
-			if(getClientUsername() != czar.username){
-				infoDiv.innerHTML = `Waiting for ... ${czar.username}<i class="fas fa-gavel"></i>`;
-			} else {
-				const cardButton = document.createElement('button');
-				cardButton.classList.add("nav-link");
-				cardButton.href ="#";
-				cardButton.innerHTML = `<i class="fas fa-play"></i>`;
-				cardButton.addEventListener('click', () => {
-					turnCzarCard(users, czarHand, czar);
-				});
-				cardBody.appendChild(cardButton);
-			}
-		}
-		
-		myCard.appendChild(cardBody);
-		myCard.appendChild(cardHeader);
-
-		document.querySelector('.czardeck-div').appendChild(myCard);
-	});
-}
-
 function outputJudgeHand(roomUserList, czarHand, czar) {
 	judgeHandDiv.innerHTML =``;
 	judgeHandDiv.style.overflowX = "auto";
@@ -256,20 +171,14 @@ function outputJudgeHand(roomUserList, czarHand, czar) {
 		judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
 		var myCard;
 		
-//		if(czarHand.length === (roomUserList.length-1) )  {
-//			myCard = buildWhiteCard(card, czar, false, true, 'select');
-//		} else {
-//			myCard = buildWhiteCard(card, czar, false, true, 'client');
-//		}
-
 		if(czarHand.length === (roomUserList.length-1)  && (getClientUsername() == czar.username) )  {
-			myCard = buildWhiteCard(card, czar, false, true, 'select');
+			myCard = buildCard('light', czar, card, false, 'select');
 		} else {
-			myCard = buildWhiteCard(card, czar, false, false, 'client');
+			myCard = buildCard('light', czar, card, false, 'client');
 		}
 
 		if(getClientUsername() != czar.username) {
-			myCard = buildWhiteCard(card, czar, false, false, 'client');
+			myCard = buildCard('light', czar, card, false, 'client');
 		}
 
 		document.querySelector('.judgehand-div').appendChild(myCard);

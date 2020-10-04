@@ -25,3 +25,22 @@ function setClientUsername(username) {
 function getClientUsername() {
     return username;
 }
+
+var userWaitList;
+function setUserWaitList(users, czarHand, czar) {
+    roomUserNameArray = [];
+    czarHandNameArray = [];
+    users.forEach(user => {
+        roomUserNameArray.push(user.username);
+    });
+    czarHand.forEach(card => {
+        czarHandNameArray.push(card.user.username);
+    });
+    czarHandNameArray.push(czar.username);
+
+    userWaitList = roomUserNameArray.filter(x => ! czarHandNameArray.includes(x));
+}
+
+function getUserWaitList() {
+    return userWaitList;
+}

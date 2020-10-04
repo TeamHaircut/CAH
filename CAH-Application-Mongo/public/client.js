@@ -87,14 +87,15 @@ socket.on('updateDOM', ({roomUserList, cardCzar, winner, blackCard}) => {
 socket.on('czarHand', ({roomUserList, czarHand, czar}) => {
 
 	// Update DOM with czar info
-	outputCzarHand(roomUserList, czarHand, czar);
+	outputCzarHand(roomUserList, czarHand, czar, true);
+	//drawCzarHand(roomUserList, czarHand, czar);
 });
 
 //  Broadcast white cards received by server
 socket.on('drawCzarCards', ({roomUserList, czarHand, czar}) => {
 
 	// Update DOM with czar info
-	drawCzarHand(roomUserList, czarHand, czar);
+	outputCzarHand(roomUserList, czarHand, czar, false);
 });
 
 //  Broadcast white cards received by server
@@ -130,6 +131,7 @@ function terminateGame(roomUserList) {
 	outputBlackCard(false, false);
 	//socket.emit('clearCzarHand');
 	outputWhiteCards(roomUserList, false, false);
+	infoDiv.innerHTML = ``;
 	czarDeckDiv.innerHTML =``;
 	judgeHandDiv.innerHTML = ``;
 	outputRoomUserTable(roomUserList, false);

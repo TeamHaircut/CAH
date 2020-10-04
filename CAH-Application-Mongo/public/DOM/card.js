@@ -21,7 +21,7 @@ function getCardBorder(type) {
 		"mr-3");
 	cardBorderDiv.style.height = "13rem";
 	cardBorderDiv.style.minWidth = "8rem";
-	cardBorderDiv.style.maxWidth = "8rem";
+    cardBorderDiv.style.maxWidth = "8rem";
 	return cardBorderDiv;
 }
 
@@ -54,43 +54,49 @@ function getCardHeader() {
 	return cardHeader;
 }
 
-function getCardButton(czar, card, user, buttonFlag, buttonType) {
+function getCardButton(czar, card, user, buttonType) {
     var button0 = document.createElement('p');
-    if(buttonFlag) {
-		if(buttonType == 'play') {
-			if(getClientUsername() != czar.username) {
-				button0 = getButtonText(buttonType);
-				button0.addEventListener('click', () => {
-					sendWhiteCardToServer(card);
-					removePlayButton(czar, user);	
-				});
-			}
-		} else if (buttonType == 'select') {
-			if(getClientUsername() == czar.username) {
-				button0 = getButtonText(buttonType);
-				button0.addEventListener('click', () => {
-					sendWinnerInfoToServer(card);
-					setTimeout(() => {
-						clearHand();
-					},
-						3000
-					)
-				});
-			}
-		} else if (buttonType == 'next') {
-			if(getClientUsername() == czar.username) {
-				button0 = getButtonText(buttonType);
-				button0.addEventListener('click', () => {
-					drawBlackCard();
-				});
-			} 
-		} 
+    switch(buttonType) {
+        case 'play':
+            if(getClientUsername() != czar.username) {
+                button0 = getButtonText(buttonType);
+                button0.addEventListener('click', () => {
+                    sendWhiteCardToServer(card);
+                    removePlayButton(czar, user);	
+                });
+            }
+            break;
+        case 'select':
+            if(getClientUsername() == czar.username) {
+                button0 = getButtonText(buttonType);
+                button0.addEventListener('click', () => {
+                    sendWinnerInfoToServer(card);
+                    setTimeout(() => {
+                        clearHand();
+                    },
+                        3000
+                    )
+                });
+            }
+            break;
+        case 'next':
+            if(getClientUsername() == czar.username) {
+                button0 = getButtonText(buttonType);
+                button0.addEventListener('click', () => {
+                    drawBlackCard();
+                });
+            } 
+            break;
+        case 'client':
+            button0 = document.createElement('p');
+            button0.innerHTML = `<i class="fas fa-gavel"></i>`;
+            break;
+        case 'flip':
+            button0 = getButtonText(buttonType);
+            button0.addEventListener('click', () => {
+                turnCzarCard(user, card, czar);
+            });
 	}
-
-	if (buttonType == 'client') {
-		button0 = document.createElement('p');
-		button0.innerHTML = `<i class="fas fa-gavel"></i>`;
-    }
     
     return button0;
 }
@@ -113,9 +119,23 @@ function getButtonText(type) {
         case 'next':
             icon = `<i class="fas fa-forward"></i>`;
             break;
+        case 'flip':
+            icon = `<i class="fas fa-play"></i>`;
+            break;
         default:
     }
 
     button.innerHTML = `${icon} ${text}`;
     return button;
+}
+
+function buildCard(bgColor, czar, card, user, buttonType) {
+	const cardBorder = getCardBorder(bgColor);
+	const cardHeader = getCardHeader();
+	const cardButton = getCardButton(czar, card, user, buttonType);
+	const cardBody = getCardBody(card);
+	cardHeader.appendChild(cardButton);
+	cardBorder.appendChild(cardBody);
+	cardBorder.appendChild(cardHeader);
+	return cardBorder;
 }
