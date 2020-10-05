@@ -8,7 +8,7 @@ const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
 const { userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
-const { setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, appendCzarHand, getCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
+const { getGameState, setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, appendCzarHand, getCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 
 const app = express();
 
@@ -38,6 +38,7 @@ var gameState = GameState.TERMINATE;
 //Run when client connects
 io.on('connection', socket => {
 	socket.on('joinRoom', ({ username, room }) => {
+		
 		const user = userJoin(socket.id, username, room);
 
 		//Add the connecting socket to the defined room
@@ -51,9 +52,9 @@ io.on('connection', socket => {
 		
 		/* Send GameState, room user list, and czar to
 		all the room's clients*/
-		io.to(user.room).emit('gamestate', {gameState, 
-			roomUserList: getRoomUserList(user.room), 
-			cardCzar: getCardCzar()
+		io.to(user.room).emit('gamestate', {
+			gameState,
+			GameState: getGameState(user, getRoomUserList(user.room))
 		});
 
 	});
@@ -82,9 +83,11 @@ io.on('connection', socket => {
 			//Initialize White Cards for all clients in the room
 			var roomUserList = getRoomUserList(user.room);
 			updateRoomUsersWhiteCards(initializeWhiteCards(roomUserList, true));
-			
+
 			//Send czar and room info to everybody in the room
-			io.to(user.room).emit('launch', {roomUserList: getRoomUserList(user.room), cardCzar: getCardCzar(), blackCard: getBlackCard()});
+			io.to(user.room).emit('launch', {
+				GameState: getGameState(user, getRoomUserList(user.room))
+			});
 			
 		} else {
 			const user = getCurrentUser(socket.id);
@@ -102,7 +105,9 @@ io.on('connection', socket => {
 
 			clearHand();
 
-			io.to(user.room).emit('terminate', {roomUserList: getRoomUserList(user.room)});
+			io.to(user.room).emit('terminate', {
+				GameState: getGameState(user, getRoomUserList(user.room))
+			});
 		}
 	});
 	
@@ -114,7 +119,9 @@ io.on('connection', socket => {
 		appendCzarHand(user, whiteCard);
 
 		// Emit czar hand to clients
-			io.to(user.room).emit('czarHand', {roomUserList: getRoomUserList(user.room), czarHand: getCzarHand(), czar: getCardCzar()});
+			io.to(user.room).emit('czarHand', {
+				GameState: getGameState(user, getRoomUserList(user.room))
+			});
 	});
 
 	// Listen for incoming white cards
@@ -123,18 +130,22 @@ io.on('connection', socket => {
 		
 		// push white card and sending user to czar's hand
 		appendCards(popCzarHand());
-		//appendCzarHand(user, whiteCard);
 
 		// Emit judge hand to clients
-			io.to(user.room).emit('displayCards', {roomUserList: getRoomUserList(user.room), judgeHand: getJudgeHand(), czar: getCardCzar()});
+			io.to(user.room).emit('displayCards', {
+				GameState: getGameState(user, getRoomUserList(user.room))
+			});
 
 		// Emit czar hand to clients
-			io.to(user.room).emit('drawCzarCards', {roomUserList: getRoomUserList(user.room), czarHand: getCzarHand(), czar: getCardCzar()});
+			io.to(user.room).emit('drawCzarCards', {
+				GameState: getGameState(user, getRoomUserList(user.room))
+			});
 	});
 	
 	// Listen for winner event
 	socket.on('declareWinner', ({card}) => {
 
+		const user = getCurrentUser(socket.id);
 		//extract user from card
 		var name = card.user.username;
 
@@ -155,19 +166,26 @@ io.on('connection', socket => {
 		updateRoomUsersWhiteCards(replaceWhiteCards(getRoomUserList(card.user.room), getJudgeHand()));
 		
 		//Emit updated DOM to all users
-		io.to(card.user.room).emit('updateDOM', {roomUserList: getRoomUserList(card.user.room), cardCzar: getCardCzar(), winner: card, blackCard: getBlackCard()});
+		io.to(card.user.room).emit('updateDOM', {
+			winner: card, 
+			GameState: getGameState(user, getRoomUserList(user.room))
+		});
 	});
 
 	socket.on('drawBlackCard', () => {
 		const user = getCurrentUser(socket.id);
 		drawBlackCard(true);
-		io.to(user.room).emit('drawBlackCard', {czar: getCardCzar(), blackCard: getBlackCard()});
+
+		io.to(user.room).emit('drawBlackCard', {
+			GameState: getGameState(user, getRoomUserList(user.room))
+		});
 	});
 
 	// Listen for clear czarHand event
 	socket.on('clearHand', () => {
 		const user = getCurrentUser(socket.id);
 		clearHand();
+
 		io.to(user.room).emit('clear');
 
 	});
@@ -180,11 +198,12 @@ io.on('connection', socket => {
       io.to(user.room).emit(
         'message',
         formatMessage(`Mr. ${user.room}`, `${user.username} has left the room.`)
-      );
+	  );
+	  
       // Send users and room info
-	  io.to(user.room).emit('gamestate', {gameState: "default", 
-		roomUserList: getRoomUserList(user.room), 
-		cardCzar: getCardCzar()
+	  io.to(user.room).emit('gamestate', {
+		gameState: "default",
+		GameState: getGameState(user, getRoomUserList(user.room))
 		});
     }
   });
