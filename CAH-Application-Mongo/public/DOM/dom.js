@@ -12,20 +12,20 @@ const chatMessages = document.querySelector('.chat-messages');
 var myBlackCard;
 
 // Add black card to DOM
-function outputBlackCard(czar, blackCard) {
-	myBlackCard = blackCard;
+function outputBlackCard(GameState) {
+	myBlackCard = GameState.blackCard;
 	blackCardDiv.innerHTML = ``;
-	if(blackCard != false) {
-		const div1 = buildCard('dark', czar, blackCard, false, 'next');
+	if(GameState.blackCard != false) {
+		const div1 = buildCard('dark', GameState.cardCzar, GameState.blackCard, false, 'next');
 		document.querySelector('.blackcard-div').appendChild(div1);
 	}
 }
 
-function outputCzarHand(users, czarHand, czar, flag) {
-	outputBlackCard(false, myBlackCard);
+function outputCzarHand(GameState, flag) {
+	outputBlackCard({cardCzar: false, blackCard: myBlackCard});
 	czarDeckDiv.innerHTML =``;
 
-	czarHand.forEach(card => {
+	GameState.czarHand.forEach(card => {
 		const cardBorder = document.createElement('div');
 		cardBorder.classList.add("card");
 		cardBorder.style.height = "13rem";
@@ -42,7 +42,7 @@ function outputCzarHand(users, czarHand, czar, flag) {
 		cardB.querySelector('.card-title').style.fontSize = "large";
 		cardB.querySelector('.card-title').innerHTML = "Cards<br>Against<br>Humanity<br>";
 
-		setUserWaitList(users, czarHand, czar);
+		setUserWaitList(GameState.users, GameState.czarHand, GameState.cardCzar);
 
 			infoDiv.innerHTML = "Waiting for";
 
@@ -50,7 +50,7 @@ function outputCzarHand(users, czarHand, czar, flag) {
 				infoDiv.innerHTML+=` ... ${name} `; 
 			});
 
-		const inter = updateCardButton(getUserWaitList(), czar, czarHand, users, cardB, flag);
+		const inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.users, cardB, flag);
 		
 		cardBorder.appendChild(inter);
 		cardBorder.appendChild(cardHead);
@@ -60,14 +60,14 @@ function outputCzarHand(users, czarHand, czar, flag) {
 }
 
 // Add white cards to DOM
-function outputWhiteCards(users, czar, flag) {
+function outputWhiteCards(GameState, flag) {
 	whiteCardsDiv.innerHTML = ``;
 	whiteCardsDiv.style.overflowX = "auto";
 	if(flag) {
-		users.forEach(user => {
+		GameState.users.forEach(user => {
 			if(getClientUsername() == user.username) {
 				user.whiteCards.forEach(whiteCard=>{
-					document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, 'play'));
+					document.querySelector('.whitecards-div').appendChild(buildCard('light', GameState.cardCzar, whiteCard, user, 'play'));
 				});
 			}
 		});
@@ -84,19 +84,19 @@ function removePlayButton(czar, user) {
 }
 
 // Show each room user in the room user table
-function outputRoomUserTable(roomUserList, czar) {
+function outputRoomUserTable(GameState) {
     // Clear the outdated table
     roomUserTable.innerHTML = '';
     
     // Build a table row for each user in the room
-	roomUserList.forEach(user=>{
+	GameState.users.forEach(user=>{
 	const tr = document.createElement('tr');
 	tr.classList.add('table-light');
     
     // Indicate who is the current card czar
 	const th = document.createElement('th');
 	th.setAttribute("scope","row");
-	if(user.username == czar.username) {
+	if(user.username == GameState.cardCzar.username) {
 		th.innerHTML = `<i class="fas fa-gavel"></i>`;
 	} else {
 		th.innerHTML = ``;
@@ -125,24 +125,24 @@ function outputMessage(message) {
 	document.querySelector('.chat-messages').appendChild(div);
 }
 
-function outputJudgeHand(roomUserList, czarHand, czar) {
+function outputJudgeHand(GameState) {
 	judgeHandDiv.innerHTML =``;
 	judgeHandDiv.style.overflowX = "auto";
 	var count = 0;
-	czarHand.slice().reverse().forEach(card => {
+	GameState.judgeHand.slice().reverse().forEach(card => {
 		count++;
 		var scrollSize = 9*count;
 		judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
 		var myCard;
 		
-		if(czarHand.length === (roomUserList.length-1)  && (getClientUsername() == czar.username) )  {
-			myCard = buildCard('light', czar, card, false, 'select');
+		if(GameState.judgeHand.length === (GameState.users.length-1)  && (getClientUsername() == GameState.cardCzar.username) )  {
+			myCard = buildCard('light', GameState.cardCzar, card, false, 'select');
 		} else {
-			myCard = buildCard('light', czar, card, false, 'client');
+			myCard = buildCard('light', GameState.cardCzar, card, false, 'client');
 		}
 
-		if(getClientUsername() != czar.username) {
-			myCard = buildCard('light', czar, card, false, 'client');
+		if(getClientUsername() != GameState.cardCzar.username) {
+			myCard = buildCard('light', GameState.cardCzar, card, false, 'client');
 		}
 
 		document.querySelector('.judgehand-div').appendChild(myCard);

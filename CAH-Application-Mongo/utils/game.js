@@ -7,6 +7,11 @@ var blackCard = '';
 var czarHand = [];
 var judgeHand =[];
 
+function getGameState(user, users) {
+	const gamestate = {cardCzar, blackCard, czarHand, judgeHand, user, users};
+	return gamestate;
+}
+
 function nextCardCzar(currentCzar, roomUserList) { 
 	var czar = false;
 	const czarIndex = roomUserList.findIndex(user => user.username === currentCzar.username);
@@ -129,5 +134,6 @@ module.exports = {
   replaceWhiteCards,
   popCzarHand,
   appendCards,
-  getJudgeHand
+  getJudgeHand,
+  getGameState
 };
