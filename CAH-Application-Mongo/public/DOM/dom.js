@@ -157,5 +157,4 @@ function outputWinner(winner) {
 	const div1 = buildCard('light', false, winner, false, false);
 	div1.classList.add("bg-success");
 	document.querySelector('.judgehand-div').appendChild(div1);
-
 }
