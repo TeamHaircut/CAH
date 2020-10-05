@@ -1,16 +1,11 @@
-const clientUsername = document.getElementById('clientUsername');
 const gameControl = document.getElementById('gamecontrol');
 const chatForm = document.getElementById('chat-form');
-
-// Get username and room from template
-const username = clientUsername.innerHTML;
-const room = roomName.innerHTML;
 
 const socket = io();
 
 /* Send an object contianing the client's username, 
 and room name as soon as they join the room*/
-socket.emit('joinRoom', { username, room });
+socket.emit('joinRoom', { username: getClientUsername(), room: getClientRoom() });
 
 // Message from server
 socket.on('message', message => {
@@ -68,8 +63,8 @@ function clearHand() {
 }
 
 socket.on('clear', () => {
-	czarCardsDiv.innerHTML = ``;
-	infoPrompt.innerHTML = ``;
+	judgeHandDiv.innerHTML = ``;
+	infoDiv.innerHTML = ``;
 });
 
 //  Update points in user table, and braodcast winner to room users
@@ -92,14 +87,15 @@ socket.on('updateDOM', ({roomUserList, cardCzar, winner, blackCard}) => {
 socket.on('czarHand', ({roomUserList, czarHand, czar}) => {
 
 	// Update DOM with czar info
-	outputCzarHand(roomUserList, czarHand, czar);
+	outputCzarHand(roomUserList, czarHand, czar, true);
+	//drawCzarHand(roomUserList, czarHand, czar);
 });
 
 //  Broadcast white cards received by server
 socket.on('drawCzarCards', ({roomUserList, czarHand, czar}) => {
 
 	// Update DOM with czar info
-	drawCzarHand(roomUserList, czarHand, czar);
+	outputCzarHand(roomUserList, czarHand, czar, false);
 });
 
 //  Broadcast white cards received by server
@@ -135,8 +131,9 @@ function terminateGame(roomUserList) {
 	outputBlackCard(false, false);
 	//socket.emit('clearCzarHand');
 	outputWhiteCards(roomUserList, false, false);
-	czarDeck.innerHTML =``;
-	czarCardsDiv.innerHTML = ``;
+	infoDiv.innerHTML = ``;
+	czarDeckDiv.innerHTML =``;
+	judgeHandDiv.innerHTML = ``;
 	outputRoomUserTable(roomUserList, false);
 }
 
@@ -152,7 +149,7 @@ socket.on('gamestate', ({gameState, roomUserList, cardCzar}) => {
 		default:
 			break;
 	}
-	outputRoomName(room);
+	setClientRoom(room);
 	//console.log(roomUserList);
 	outputRoomUserTable(roomUserList, cardCzar);
 	console.log("Gamestate EVENT ON CLIENT");
