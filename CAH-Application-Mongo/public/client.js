@@ -1,7 +1,17 @@
 const gameControl = document.getElementById('gamecontrol');
 const chatForm = document.getElementById('chat-form');
 
-const socket = io();
+//const socket = io();
+const socket = io('http://teamhaircut.org:5000', {
+	'reconnection': true,
+	'reconnectionDelay': 50,
+	'maxReconnectionAttempts': Infinity
+});
+
+socket.on('reconnecting', function() {
+	console.log('reconnecting'); 
+	socket.emit('rejoinRoom');
+});
 
 /* Send an object contianing the client's username, 
 and room name as soon as they join the room*/

@@ -7,7 +7,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
-const { userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
+const { setIdleUser, getIdleUser, userRejoin, userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
 const { getGameState, setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, appendCzarHand, getCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 
 const app = express();
@@ -38,12 +38,12 @@ var gameState = GameState.TERMINATE;
 //Run when client connects
 io.on('connection', socket => {
 	socket.on('joinRoom', ({ username, room }) => {
-		
+		console.log(socket.id);
 		const user = userJoin(socket.id, username, room);
 
 		//Add the connecting socket to the defined room
 		socket.join(user.room);
-		
+
 		// Welcome current user to the room
 		socket.emit('message', formatMessage(`Mr. ${user.room}`, `Welcome to the ${user.room} room.`));
 	
@@ -58,7 +58,7 @@ io.on('connection', socket => {
 		});
 
 	});
-	
+
 	// Listen for chatMessage
 	socket.on('chatMessage', msg => {
 		const user = getCurrentUser(socket.id);
@@ -190,11 +190,27 @@ io.on('connection', socket => {
 
 	});
 	
+	// Listen for rejoin event
+	socket.on('rejoinRoom', () => {
+		const user = getIdleUser();
+		if(user) {
+			userRejoin(socket.id, user);
+			socket.join(user.room);
+
+			io.to(user.room).emit('gamestate', {
+				gameState,
+				GameState: getGameState(user, getRoomUserList(user.room))
+			});
+		}
+	});
+
   // Runs when client disconnects
   socket.on('disconnect', () => {
 	const user = userLeave(socket.id);
 
     if (user) {
+		setIdleUser(user);
+
       io.to(user.room).emit(
         'message',
         formatMessage(`Mr. ${user.room}`, `${user.username} has left the room.`)

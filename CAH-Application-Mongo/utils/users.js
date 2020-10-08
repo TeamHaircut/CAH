@@ -1,5 +1,15 @@
 const users = [];
 
+var idleUser;
+
+function setIdleUser(user) {
+	idleUser = user;
+}
+
+function getIdleUser() {
+	return idleUser;
+}
+
 function updatePoints(name) {
 	users.forEach(user => {
 		if(user.username == name) {
@@ -27,6 +37,12 @@ function userJoin(id, username, room) {
 // Get current user
 function getCurrentUser(id) {
   return users.find(user => user.id === id);
+}
+
+// Rejoin user to room
+function userRejoin(id, user) {
+	user.id = id;
+	users.push(user);
 }
 
 // User leaves chat
@@ -61,5 +77,8 @@ module.exports = {
   getRoomUserList,
   resetPoints,
   updateRoomUsersWhiteCards,
-  updatePoints
+  updatePoints,
+  userRejoin,
+  setIdleUser,
+  getIdleUser
 };
