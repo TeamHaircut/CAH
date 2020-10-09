@@ -2,12 +2,18 @@ const users = [];
 
 var idleUser;
 
-function setIdleUser(user) {
-	idleUser = user;
+function setIdleUser(currentUser) {
+	users.forEach(user => {
+		if(user.username == currentUser.username) {
+			user.status = 'idle';
+		}
+	});
+	idleUser = currentUser;
+
 }
 
-function getIdleUser() {
-	return idleUser;
+function getCurrentUserByUsername(username) {
+	return users.find(user => user.username === username);
 }
 
 function updatePoints(name) {
@@ -29,7 +35,8 @@ function resetPoints() {
 function userJoin(id, username, room) {
 	const points = '-';
 	const whiteCards = [];
-	const user = { id, username, room, points, whiteCards};
+	const status = 'active';
+	const user = { id, username, room, points, whiteCards, status};
 	users.push(user);
 	return user;
 }
@@ -42,7 +49,8 @@ function getCurrentUser(id) {
 // Rejoin user to room
 function userRejoin(id, user) {
 	user.id = id;
-	users.push(user);
+	user.status = 'active';
+	//users.push(user);
 }
 
 // User leaves chat
@@ -80,5 +88,5 @@ module.exports = {
   updatePoints,
   userRejoin,
   setIdleUser,
-  getIdleUser
+  getCurrentUserByUsername
 };

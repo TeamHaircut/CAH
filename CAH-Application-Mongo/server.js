@@ -7,7 +7,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
-const { setIdleUser, getIdleUser, userRejoin, userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
+const { setIdleUser, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
 const { getGameState, setCardCzar, getCardCzar, drawBlackCard, getBlackCard, initializeWhiteCards, appendCzarHand, getCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 
 const app = express();
@@ -160,7 +160,7 @@ io.on('connection', socket => {
 		);
 
 		//Draw a Black Card
-		drawBlackCard(true);
+		//drawBlackCard(true);
 
 		// Replace Used White Cards
 		updateRoomUsersWhiteCards(replaceWhiteCards(getRoomUserList(card.user.room), getJudgeHand()));
@@ -191,11 +191,18 @@ io.on('connection', socket => {
 	});
 	
 	// Listen for rejoin event
-	socket.on('rejoinRoom', () => {
-		const user = getIdleUser();
+	socket.on('rejoinRoom', ({ username }) => {
+		var user = getCurrentUserByUsername(username);
 		if(user) {
+			// set current user to active in user.js
 			userRejoin(socket.id, user);
 			socket.join(user.room);
+			user = getCurrentUser(socket.id);
+			// get updated current user and sent it to gamestate
+
+			socket.emit('refreshDOM', { 
+				GameState: getGameState(user, getRoomUserList(user.room))
+			});
 
 			io.to(user.room).emit('gamestate', {
 				gameState,
@@ -206,15 +213,21 @@ io.on('connection', socket => {
 
   // Runs when client disconnects
   socket.on('disconnect', () => {
-	const user = userLeave(socket.id);
+	 var user = getCurrentUser(socket.id);
+	//const user = userLeave(socket.id);
 
     if (user) {
+		// set current user to idle in user.js
 		setIdleUser(user);
+		user = getCurrentUser(socket.id);
+		// get updated current user and send it to gamestate
 
+	/*
       io.to(user.room).emit(
         'message',
-        formatMessage(`Mr. ${user.room}`, `${user.username} has left the room.`)
+		formatMessage(`Mr. ${user.room}`, `${user.username} has left the room.`)
 	  );
+	*/
 	  
       // Send users and room info
 	  io.to(user.room).emit('gamestate', {

@@ -16,13 +16,20 @@ function outputBlackCard(GameState) {
 	myBlackCard = GameState.blackCard;
 	blackCardDiv.innerHTML = ``;
 	if(GameState.blackCard != false) {
-		const div1 = buildCard('dark', GameState.cardCzar, GameState.blackCard, false, 'next');
+		var div1;
+		console.log(GameState.czarHand.length);
+		console.log(GameState.judgeHand.length);
+		if(GameState.czarHand.length == 0 && (GameState.judgeHand.length <= 1 || GameState.judgeHand.length == 0 )  ) {
+			div1 = buildCard('dark', GameState.cardCzar, GameState.blackCard, false, 'next');
+		} else {
+			div1 = buildCard('dark', GameState.cardCzar, GameState.blackCard, false, '');
+		}
 		document.querySelector('.blackcard-div').appendChild(div1);
 	}
 }
 
 function outputCzarHand(GameState, flag) {
-	outputBlackCard({cardCzar: false, blackCard: myBlackCard});
+	outputBlackCard(GameState);
 	czarDeckDiv.innerHTML =``;
 
 	GameState.czarHand.forEach(card => {
@@ -105,7 +112,13 @@ function outputRoomUserTable(GameState) {
     
 	//  Append username and point data to the table row
 	const tdName = document.createElement('td');
-	tdName.innerHTML = `${user.username}`;
+	if(user.status == 'active') {
+		tdName.style.color = "black";
+		tdName.innerHTML = `${user.username}`;
+	} else {
+		tdName.style.color = "red";
+		tdName.innerHTML = `${user.username} (busy)`;
+	}
 	tr.appendChild(tdName);
 	const tdPoints = document.createElement('td');
 	tdPoints.innerHTML = `${user.points}`;

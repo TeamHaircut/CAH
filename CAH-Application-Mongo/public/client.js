@@ -8,9 +8,9 @@ const socket = io('http://teamhaircut.org:5000', {
 	'maxReconnectionAttempts': Infinity
 });
 
-socket.on('reconnecting', function() {
+socket.on('reconnecting', () => {
 	console.log('reconnecting'); 
-	socket.emit('rejoinRoom');
+	socket.emit('rejoinRoom', { username: getClientUsername() });
 });
 
 /* Send an object contianing the client's username, 
@@ -73,6 +73,7 @@ function clearHand() {
 }
 
 socket.on('clear', () => {
+	czarDeckDiv.innerHTML = ``;
 	judgeHandDiv.innerHTML = ``;
 	infoDiv.innerHTML = ``;
 });
@@ -88,6 +89,22 @@ socket.on('updateDOM', ({winner, GameState}) => {
 
 	// Update DOM with winner info
 	outputWinner(winner);
+
+	// Update DOM with new white cards
+	outputWhiteCards(GameState, true);
+});
+
+//  Update points in user table, and braodcast winner to room users
+socket.on('refreshDOM', ({GameState}) => {
+
+	// Update DOM with updated room user table
+	outputRoomUserTable(GameState);
+
+	// Update DOM with new black card
+	outputBlackCard(GameState);
+
+	outputCzarHand(GameState, true);
+	outputJudgeHand(GameState);
 
 	// Update DOM with new white cards
 	outputWhiteCards(GameState, true);
