@@ -1,7 +1,17 @@
 const gameControl = document.getElementById('gamecontrol');
 const chatForm = document.getElementById('chat-form');
 
-const socket = io();
+//const socket = io();
+const socket = io('http://teamhaircut.org:5000', {
+	'reconnection': true,
+	'reconnectionDelay': 50,
+	'maxReconnectionAttempts': Infinity
+});
+
+socket.on('reconnecting', () => {
+	console.log('reconnecting'); 
+	socket.emit('rejoinRoom', { username: getClientUsername() });
+});
 
 /* Send an object contianing the client's username, 
 and room name as soon as they join the room*/
@@ -63,6 +73,7 @@ function clearHand() {
 }
 
 socket.on('clear', () => {
+	czarDeckDiv.innerHTML = ``;
 	judgeHandDiv.innerHTML = ``;
 	infoDiv.innerHTML = ``;
 });
@@ -81,6 +92,47 @@ socket.on('updateDOM', ({winner, GameState}) => {
 
 	// Update DOM with new white cards
 	outputWhiteCards(GameState, true);
+});
+
+//  Update points in user table, and braodcast winner to room users
+socket.on('refreshDOM', ({GameState}) => {
+
+	infoDiv.innerHTML =``;
+	// Update DOM with updated room user table
+	outputRoomUserTable(GameState);
+
+	// Update DOM with new black card
+	outputBlackCard(GameState);
+
+	outputCzarHand(GameState, true);
+	outputJudgeHand(GameState);
+
+	// Update DOM with new white cards
+	
+	//there are three conditions when the idle user would not have the play button
+	//1. if they are the czar.
+	//2. if czarHand contains a card from idleUser.
+	//3. if judgeHand contains a card from idleUser.
+
+	var flag = true;
+	if(GameState.cardCzar.username == getClientUsername()) {
+		flag = false;
+	}
+	GameState.czarHand.forEach(card => {
+		if (card.user.username == getClientUsername()) {
+			flag = false;
+		}
+	});
+	GameState.judgeHand.forEach(card => {
+		if (card.user.username == getClientUsername()) {
+			flag = false;
+		}
+	});
+	outputWhiteCards(GameState, true);
+	if(!flag) {
+		removePlayButton(GameState.user, GameState.user);
+	}
+
 });
 
 //  Broadcast white cards received by server
@@ -135,13 +187,14 @@ function terminateGame(GameState) {
 
 // get gamestate from server
 socket.on('gamestate', ({gameState, GameState}) => {
+	console.log(GameState);
 	switch (gameState) {
 		case 1:
 			terminateGame(GameState);
 			break;
 		case 2:
 			initializeGame(GameState);
-			break;
+			break;			
 		default:
 			break;
 	}

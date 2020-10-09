@@ -55,7 +55,6 @@ function getCardHeader() {
 }
 
 function getCardButton(czar, card, user, buttonType) {
-	console.log(czar);
     var button0 = document.createElement('p');
     switch(buttonType) {
         case 'play':
@@ -73,7 +72,8 @@ function getCardButton(czar, card, user, buttonType) {
                 button0.addEventListener('click', () => {
                     sendWinnerInfoToServer(card);
                     setTimeout(() => {
-                        clearHand();
+						clearHand();
+						drawBlackCard();
                     },
                         3000
                     )
@@ -153,6 +153,7 @@ function getFlipButton(flag,czar,cardB, czarHand, users) {
 		infoDiv.innerHTML = `Waiting for ... ${czar.username}<i class="fas fa-gavel"></i> `;
 	} else {
 		if(flag) {infoDiv.innerHTML = ``;}
+			
 		const cardButton = getCardButton(czar, czarHand, users, 'flip');//
 		cardB.appendChild(cardButton);
 	}
@@ -167,7 +168,6 @@ function getInfoDivText(list) {
 }
 
 function buildCard(bgColor, czar, card, user, buttonType) {
-	console.log(czar);
 	const cardBorder = getCardBorder(bgColor);
 	const cardHeader = getCardHeader();
 	const cardButton = getCardButton(czar, card, user, buttonType);
