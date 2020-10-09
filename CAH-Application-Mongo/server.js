@@ -31,14 +31,14 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 const GameState = {
 	TERMINATE: 1,
-	INITIALIZE: 2
+	INITIALIZE: 2,
+	REJOIN: 3
 };
 var gameState = GameState.TERMINATE;
 
 //Run when client connects
 io.on('connection', socket => {
 	socket.on('joinRoom', ({ username, room }) => {
-		console.log(socket.id);
 		const user = userJoin(socket.id, username, room);
 
 		//Add the connecting socket to the defined room
@@ -205,7 +205,7 @@ io.on('connection', socket => {
 			});
 
 			io.to(user.room).emit('gamestate', {
-				gameState,
+				gameState: 3,
 				GameState: getGameState(user, getRoomUserList(user.room))
 			});
 		}

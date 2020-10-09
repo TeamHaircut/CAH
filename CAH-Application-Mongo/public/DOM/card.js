@@ -55,7 +55,6 @@ function getCardHeader() {
 }
 
 function getCardButton(czar, card, user, buttonType) {
-	//console.log(czar);
     var button0 = document.createElement('p');
     switch(buttonType) {
         case 'play':
@@ -169,7 +168,6 @@ function getInfoDivText(list) {
 }
 
 function buildCard(bgColor, czar, card, user, buttonType) {
-	//console.log(czar);
 	const cardBorder = getCardBorder(bgColor);
 	const cardHeader = getCardHeader();
 	const cardButton = getCardButton(czar, card, user, buttonType);

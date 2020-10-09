@@ -97,6 +97,7 @@ socket.on('updateDOM', ({winner, GameState}) => {
 //  Update points in user table, and braodcast winner to room users
 socket.on('refreshDOM', ({GameState}) => {
 
+	infoDiv.innerHTML =``;
 	// Update DOM with updated room user table
 	outputRoomUserTable(GameState);
 
@@ -107,7 +108,31 @@ socket.on('refreshDOM', ({GameState}) => {
 	outputJudgeHand(GameState);
 
 	// Update DOM with new white cards
+	
+	//there are three conditions when the idle user would not have the play button
+	//1. if they are the czar.
+	//2. if czarHand contains a card from idleUser.
+	//3. if judgeHand contains a card from idleUser.
+
+	var flag = true;
+	if(GameState.cardCzar.username == getClientUsername()) {
+		flag = false;
+	}
+	GameState.czarHand.forEach(card => {
+		if (card.user.username == getClientUsername()) {
+			flag = false;
+		}
+	});
+	GameState.judgeHand.forEach(card => {
+		if (card.user.username == getClientUsername()) {
+			flag = false;
+		}
+	});
 	outputWhiteCards(GameState, true);
+	if(!flag) {
+		removePlayButton(GameState.user, GameState.user);
+	}
+
 });
 
 //  Broadcast white cards received by server
@@ -162,13 +187,14 @@ function terminateGame(GameState) {
 
 // get gamestate from server
 socket.on('gamestate', ({gameState, GameState}) => {
+	console.log(GameState);
 	switch (gameState) {
 		case 1:
 			terminateGame(GameState);
 			break;
 		case 2:
 			initializeGame(GameState);
-			break;
+			break;			
 		default:
 			break;
 	}

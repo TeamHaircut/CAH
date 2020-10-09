@@ -17,8 +17,6 @@ function outputBlackCard(GameState) {
 	blackCardDiv.innerHTML = ``;
 	if(GameState.blackCard != false) {
 		var div1;
-		console.log(GameState.czarHand.length);
-		console.log(GameState.judgeHand.length);
 		if(GameState.czarHand.length == 0 && (GameState.judgeHand.length <= 1 || GameState.judgeHand.length == 0 )  ) {
 			div1 = buildCard('dark', GameState.cardCzar, GameState.blackCard, false, 'next');
 		} else {
@@ -167,7 +165,31 @@ function outputWinner(winner) {
 	judgeHandDiv.innerHTML = ``;
 	judgeHandDiv.style.overflowX = "auto";
 	//////
-	const div1 = buildCard('light', false, winner, false, false);
-	div1.classList.add("bg-success");
-	document.querySelector('.judgehand-div').appendChild(div1);
+	//const div1 = buildCard('light', false, winner, false, false);
+	//div1.classList.add("bg-success");
+
+	const cardBorder = document.createElement('div');
+		cardBorder.classList.add("card");
+		cardBorder.classList.add("bg-success");
+		cardBorder.style.height = "13rem";
+		cardBorder.style.minWidth = "8rem";
+		cardBorder.style.maxWidth = "8rem";
+		cardBorder.style.borderColor = "black";
+		//cardBorder.style.backgroundColor = "border-dark";
+		cardBorder.style.marginRight ="-7rem";
+		cardBorder.style.boxShadow = "1px 1px 1px 1px black";
+
+		const cardHead = getCardHeader();
+
+		const cardB = getCardBody(winner);
+		cardB.querySelector('.card-text').innerHTML = `${winner.user.username} Wins!`;
+
+		cardBorder.appendChild(cardB);
+		cardBorder.appendChild(cardHead);
+
+		document.querySelector('.judgehand-div').appendChild(cardBorder);
+
+
+
+	//document.querySelector('.judgehand-div').appendChild(div1);
 }
