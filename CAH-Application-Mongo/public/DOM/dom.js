@@ -164,9 +164,6 @@ function outputWinner(winner) {
 	infoDiv.innerHTML = ``;
 	judgeHandDiv.innerHTML = ``;
 	judgeHandDiv.style.overflowX = "auto";
-	//////
-	//const div1 = buildCard('light', false, winner, false, false);
-	//div1.classList.add("bg-success");
 
 	const cardBorder = document.createElement('div');
 		cardBorder.classList.add("card");
@@ -175,7 +172,6 @@ function outputWinner(winner) {
 		cardBorder.style.minWidth = "8rem";
 		cardBorder.style.maxWidth = "8rem";
 		cardBorder.style.borderColor = "black";
-		//cardBorder.style.backgroundColor = "border-dark";
 		cardBorder.style.marginRight ="-7rem";
 		cardBorder.style.boxShadow = "1px 1px 1px 1px black";
 
@@ -188,8 +184,4 @@ function outputWinner(winner) {
 		cardBorder.appendChild(cardHead);
 
 		document.querySelector('.judgehand-div').appendChild(cardBorder);
-
-
-
-	//document.querySelector('.judgehand-div').appendChild(div1);
 }

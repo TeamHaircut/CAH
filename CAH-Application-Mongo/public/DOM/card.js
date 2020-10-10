@@ -95,7 +95,7 @@ function getCardButton(czar, card, user, buttonType) {
         case 'flip':
             button0 = getButtonText(buttonType);
             button0.addEventListener('click', () => {
-                turnCzarCard(user, card, czar);
+                turnCzarCard();
             });
 	}
     

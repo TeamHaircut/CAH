@@ -1,7 +1,6 @@
 const gameControl = document.getElementById('gamecontrol');
 const chatForm = document.getElementById('chat-form');
 
-//const socket = io();
 const socket = io('http://teamhaircut.org:5000', {
 	'reconnection': true,
 	'reconnectionDelay': 50,
@@ -13,8 +12,7 @@ socket.on('reconnecting', () => {
 	socket.emit('rejoinRoom', { username: getClientUsername() });
 });
 
-/* Send an object contianing the client's username, 
-and room name as soon as they join the room*/
+/* Send an object contianing the client's username, and room name as soon as they join the room*/
 socket.emit('joinRoom', { username: getClientUsername(), room: getClientRoom() });
 
 // Message from server
@@ -60,8 +58,8 @@ function sendWhiteCardToServer(whiteCard) {
 	socket.emit('sendWhiteCardToServer', {whiteCard});
 }
 
-function turnCzarCard(users, czarHand, czar) {
-	socket.emit('removeCzarCard', {users, czarHand, czar});
+function turnCzarCard() {
+	socket.emit('removeCzarCard');
 }
 
 function sendWinnerInfoToServer(card) {
@@ -72,6 +70,7 @@ function clearHand() {
 	socket.emit('clearHand');
 }
 
+// Clear Divs
 socket.on('clear', () => {
 	czarDeckDiv.innerHTML = ``;
 	judgeHandDiv.innerHTML = ``;
@@ -107,9 +106,7 @@ socket.on('refreshDOM', ({GameState}) => {
 	outputCzarHand(GameState, true);
 	outputJudgeHand(GameState);
 
-	// Update DOM with new white cards
-	
-	//there are three conditions when the idle user would not have the play button
+	//There are three conditions when the idle user would not have the play card button
 	//1. if they are the czar.
 	//2. if czarHand contains a card from idleUser.
 	//3. if judgeHand contains a card from idleUser.
@@ -128,6 +125,8 @@ socket.on('refreshDOM', ({GameState}) => {
 			flag = false;
 		}
 	});
+
+	// Update DOM with new white cards
 	outputWhiteCards(GameState, true);
 	if(!flag) {
 		removePlayButton(GameState.user, GameState.user);
@@ -137,9 +136,9 @@ socket.on('refreshDOM', ({GameState}) => {
 
 //  Broadcast white cards received by server
 socket.on('czarHand', ({GameState}) => {
+
 	// Update DOM with czar info
 	outputCzarHand(GameState, true);
-	//drawCzarHand(roomUserList, czarHand, czar);
 });
 
 //  Broadcast white cards received by server
@@ -158,11 +157,13 @@ socket.on('displayCards', ({GameState}) => {
 
 // Launch event from server
 socket.on('launch', ({GameState}) => {
+
 	initializeGame(GameState);
 });
 
 // Apply game intialization to DOM
 function initializeGame(GameState) {
+
 	gameControl.innerHTML = `<i class="fas fa-stop"></i> Terminate Game`;
 	outputRoomUserTable(GameState);
 	outputBlackCard(GameState);
@@ -171,11 +172,13 @@ function initializeGame(GameState) {
 
 // Termination event from server
 socket.on('terminate', ({GameState}) => {
+
 	terminateGame(GameState);
 });
 
 // Apply game termination to DOM
 function terminateGame(GameState) {
+
 	gameControl.innerHTML = `<i class="fas fa-play"></i> Launch Game`;
 	outputBlackCard(GameState);
 	outputWhiteCards(GameState, false);
@@ -187,7 +190,7 @@ function terminateGame(GameState) {
 
 // get gamestate from server
 socket.on('gamestate', ({gameState, GameState}) => {
-	console.log(GameState);
+	
 	switch (gameState) {
 		case 1:
 			terminateGame(GameState);
@@ -199,6 +202,5 @@ socket.on('gamestate', ({gameState, GameState}) => {
 			break;
 	}
 	setClientRoom(room);
-	
 	outputRoomUserTable(GameState);
 });
