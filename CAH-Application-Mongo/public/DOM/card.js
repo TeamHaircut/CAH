@@ -55,7 +55,9 @@ function getCardHeader() {
 }
 
 function getCardButton(czar, card, user, buttonType) {
-    var button0 = document.createElement('p');
+	var button2 = document.createElement('p');
+	var button0 = document.createElement('p');
+	var button1 = document.createElement('p');
     switch(buttonType) {
         case 'play':
             if(getClientUsername() != czar.username) {
@@ -82,10 +84,22 @@ function getCardButton(czar, card, user, buttonType) {
             break;
         case 'next':
             if(getClientUsername() == czar.username) {
-                button0 = getButtonText(buttonType);
-                button0.addEventListener('click', () => {
+                button1 = getButtonText(buttonType);
+                button1.addEventListener('click', () => {
                     drawBlackCard();
-                });
+				});
+                button2 = getButtonText('select-black');
+                button2.addEventListener('click', () => {
+					socket.emit('startRound',{ username: getClientUsername(), blackCardSelected: true });
+				});	
+				button0.style.maxWidth ="20rem";
+				button0.style.display ="flex";
+				button0.style.flexDirection ="row";
+				button0.style.flexWrap ="nowrap";
+				button0.style.justifyContent ="space-between";
+				button0.style.margin = "-0.75rem";
+				button0.appendChild(button1);
+				button0.appendChild(button2);			
             } 
             break;
         case 'client':
@@ -95,7 +109,7 @@ function getCardButton(czar, card, user, buttonType) {
         case 'flip':
             button0 = getButtonText(buttonType);
             button0.addEventListener('click', () => {
-                turnCzarCard(user, card, czar);
+                turnCzarCard();
             });
 	}
     
@@ -122,7 +136,10 @@ function getButtonText(type) {
             break;
         case 'flip':
             icon = `<i class="fas fa-play"></i>`;
-            break;
+			break;
+		case 'select-black':
+            icon = `<i class="fas fa-play"></i>`;
+			break;
         default:
     }
 

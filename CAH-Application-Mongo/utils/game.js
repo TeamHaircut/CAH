@@ -106,11 +106,6 @@ function drawBlackCard(flag) {
 	}
 }
 
-// Get black card
-function getBlackCard() {
-	return blackCard;
-}
-
 // Set the card czar to user
 function setCardCzar(user) {
 	cardCzar = user;
@@ -125,10 +120,8 @@ module.exports = {
   setCardCzar,
   getCardCzar,
   drawBlackCard,
-  getBlackCard,
   initializeWhiteCards, 
   appendCzarHand,
-  getCzarHand,
   clearHand,
   nextCardCzar,
   replaceWhiteCards,

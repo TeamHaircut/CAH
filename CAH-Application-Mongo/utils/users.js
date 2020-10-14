@@ -1,15 +1,11 @@
 const users = [];
 
-var idleUser;
-
 function setIdleUser(currentUser) {
 	users.forEach(user => {
 		if(user.username == currentUser.username) {
 			user.status = 'idle';
 		}
 	});
-	idleUser = currentUser;
-
 }
 
 function getCurrentUserByUsername(username) {
@@ -50,7 +46,6 @@ function getCurrentUser(id) {
 function userRejoin(id, user) {
 	user.id = id;
 	user.status = 'active';
-	//users.push(user);
 }
 
 // User leaves chat
