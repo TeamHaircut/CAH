@@ -12,7 +12,7 @@ socket.on('reconnecting', () => {
 	socket.emit('rejoinRoom', { username: getClientUsername() });
 });
 
-/* Send an object contianing the client's username, and room name as soon as they join the room*/
+/* Send an object containing the client's username, and room name as soon as they join the room*/
 socket.emit('joinRoom', { username: getClientUsername(), room: getClientRoom() });
 
 // Message from server
@@ -79,7 +79,7 @@ socket.on('clear', () => {
 
 //  Update points in user table, and braodcast winner to room users
 socket.on('updateDOM', ({winner, GameState}) => {
-
+	cardSelected = false;
 	// Update DOM with updated room user table
 	outputRoomUserTable(GameState);
 
@@ -94,8 +94,9 @@ socket.on('updateDOM', ({winner, GameState}) => {
 });
 
 //  Update points in user table, and braodcast winner to room users
-socket.on('refreshDOM', ({GameState}) => {
-
+socket.on('refreshDOM', ({GameState, bcSelected}) => {
+	cardSelected = bcSelected;
+	
 	infoDiv.innerHTML =``;
 	// Update DOM with updated room user table
 	outputRoomUserTable(GameState);

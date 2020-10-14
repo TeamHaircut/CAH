@@ -36,6 +36,8 @@ const GameState = {
 };
 var gameState = GameState.TERMINATE;
 
+var cardSelected;
+
 //Run when client connects
 io.on('connection', socket => {
 	socket.on('joinRoom', ({ username, room }) => {
@@ -68,6 +70,7 @@ io.on('connection', socket => {
 	socket.on('gameControlState', ({state}) => {
 		const user = getCurrentUser(socket.id);
 		if(state === `<i class="fas fa-play"></i> Launch Game`) {
+			cardSelected = false;
 			gameState = GameState.INITIALIZE;
 
 			// Set card czar to current user
@@ -144,7 +147,7 @@ io.on('connection', socket => {
 	
 	// Listen for winner event
 	socket.on('declareWinner', ({card}) => {
-
+		cardSelected = false;
 		const user = getCurrentUser(socket.id);
 		//extract user from card
 		var name = card.user.username;
@@ -201,12 +204,24 @@ io.on('connection', socket => {
 			
 			// Refresh user UI
 			socket.emit('refreshDOM', { 
-				GameState: getGameState(user, getRoomUserList(user.room))
+				GameState: getGameState(user, getRoomUserList(user.room)),
+				bcSelected: cardSelected
 			});
 
 			io.to(user.room).emit('gamestate', {
 				gameState: GameState.REJOIN,
 				GameState: getGameState(user, getRoomUserList(user.room))
+			});
+		}
+	});
+
+	socket.on('startRound', ({ username, blackCardSelected }) => {
+		cardSelected = blackCardSelected;
+		var user = getCurrentUserByUsername(username);
+		if(user){
+			io.to(user.room).emit('refreshDOM', { 
+				GameState: getGameState(user, getRoomUserList(user.room)),
+				bcSelected: blackCardSelected
 			});
 		}
 	});

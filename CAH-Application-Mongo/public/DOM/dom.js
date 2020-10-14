@@ -10,6 +10,7 @@ const roomUserTable = document.querySelector('.userlist-table');
 const chatMessages = document.querySelector('.chat-messages');
 
 var myBlackCard;
+var cardSelected = false;
 
 // Add black card to DOM
 function outputBlackCard(GameState) {
@@ -18,7 +19,11 @@ function outputBlackCard(GameState) {
 	if(GameState.blackCard != false) {
 		var div1;
 		if(GameState.czarHand.length == 0 && (GameState.judgeHand.length <= 1 || GameState.judgeHand.length == 0 )  ) {
-			div1 = buildCard('dark', GameState.cardCzar, GameState.blackCard, false, 'next');
+			if(!cardSelected) {
+				div1 = buildCard('dark', GameState.cardCzar, GameState.blackCard, false, 'next');
+			} else {
+				div1 = buildCard('dark', GameState.cardCzar, GameState.blackCard, false, '');
+			}
 		} else {
 			div1 = buildCard('dark', GameState.cardCzar, GameState.blackCard, false, '');
 		}
@@ -72,7 +77,11 @@ function outputWhiteCards(GameState, flag) {
 		GameState.users.forEach(user => {
 			if(getClientUsername() == user.username) {
 				user.whiteCards.forEach(whiteCard=>{
-					document.querySelector('.whitecards-div').appendChild(buildCard('light', GameState.cardCzar, whiteCard, user, 'play'));
+					if (cardSelected) {
+						document.querySelector('.whitecards-div').appendChild(buildCard('light', GameState.cardCzar, whiteCard, user, 'play'));
+					} else {
+						document.querySelector('.whitecards-div').appendChild(buildCard('light', GameState.cardCzar, whiteCard, user, ''));
+					}
 				});
 			}
 		});
