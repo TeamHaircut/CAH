@@ -90,6 +90,12 @@ io.on('connection', socket => {
 			io.to(user.room).emit('launch', {
 				GameState: getGameState(user, getRoomUserList(user.room))
 			});
+
+			// Refresh user UI
+			socket.emit('refreshDOM', { 
+				GameState: getGameState(user, getRoomUserList(user.room)),
+				bcSelected: cardSelected
+			});
 			
 		} else {
 			const user = getCurrentUser(socket.id);
@@ -223,6 +229,25 @@ io.on('connection', socket => {
 				GameState: getGameState(user, getRoomUserList(user.room)),
 				bcSelected: blackCardSelected
 			});
+		}
+	});
+
+	socket.on('logoutUser', () => {
+		const user = userLeave(socket.id);
+		if(user) {
+
+			//Add the connecting socket to the defined room
+			socket.leave(user.room);
+		
+			// Broadcast to other room users when a new user connects
+			socket.broadcast.to(user.room).emit('message', formatMessage(`Mr. ${user.room}`,`${user.username} has left the room.`));
+			
+			/* Send GameState, room user list, and czar to all the room's clients*/
+			io.to(user.room).emit('gamestate', {
+				gameState,
+				GameState: getGameState(user, getRoomUserList(user.room))
+			});
+
 		}
 	});
 
