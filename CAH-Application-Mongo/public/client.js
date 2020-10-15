@@ -48,7 +48,6 @@ gameControl.addEventListener("click", function(){
 });
 
 logoutControl.addEventListener("click", function() {
-	console.log("logout button pressed");
 	socket.emit('logoutUser');
 });
 
