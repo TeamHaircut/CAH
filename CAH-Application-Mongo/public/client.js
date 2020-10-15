@@ -1,4 +1,6 @@
 const gameControl = document.getElementById('gamecontrol');
+const logoutControl = document.getElementById('logoutcontrol');
+
 const chatForm = document.getElementById('chat-form');
 
 const socket = io('http://teamhaircut.org:5000', {
@@ -43,6 +45,11 @@ gameControl.addEventListener("click", function(){
 	const state = gameControl.innerHTML;
 	socket.emit('gameControlState', {state});
 	
+});
+
+logoutControl.addEventListener("click", function() {
+	console.log("logout button pressed");
+	socket.emit('logoutUser');
 });
 
 function drawBlackCard() {
