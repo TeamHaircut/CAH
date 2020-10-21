@@ -11,7 +11,7 @@ const socket = io('http://teamhaircut.org:5000', {
 
 socket.on('reconnecting', () => {
 	console.log('reconnecting'); 
-	socket.emit('rejoinRoom', { username: getClientUsername() });
+		socket.emit('rejoinRoom', { username: getClientUsername() });
 });
 
 /* Send an object containing the client's username, and room name as soon as they join the room*/
@@ -46,10 +46,30 @@ gameControl.addEventListener("click", function(){
 	socket.emit('gameControlState', {state});
 	
 });
-
+///???
 logoutControl.addEventListener("click", function() {
 	socket.emit('logoutUser');
 });
+
+var logoutUser;
+
+document.addEventListener("visibilitychange", function() {
+	console.log("VIS CHANGED");
+
+	if (document.visibilityState === 'visible') {
+		socket.emit('rejoinRoom', { username: getClientUsername() });
+		clearTimeout(logoutUser);
+	} else {
+		socket.emit('goIdle');
+		logoutUser = setTimeout(() => {
+				socket.emit('logoutUser');
+		},
+			90000
+		)
+	}	
+	
+  })
+///???
 
 function drawBlackCard() {
 	socket.emit('drawBlackCard');
