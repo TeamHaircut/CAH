@@ -8,6 +8,14 @@ function setIdleUser(currentUser) {
 	});
 }
 
+function setInactiveUser(currentUser) {
+	users.forEach(user => {
+		if(user.username == currentUser.username) {
+			user.status = 'inactive';
+		}
+	});	
+}
+
 function getCurrentUserByUsername(username) {
 	return users.find(user => user.username === username);
 }
@@ -59,7 +67,9 @@ function userLeave(id) {
 
 // Get room users
 function getRoomUserList(room) {
-  return users.filter(user => user.room === room);
+  //return users.filter(user => user.room === room);
+  var roomUsers = users.filter(user => user.room === room);
+  return roomUsers.filter(user => user.status !== 'inactive');
 }
 
 // Update Room Users
@@ -83,5 +93,6 @@ module.exports = {
   updatePoints,
   userRejoin,
   setIdleUser,
-  getCurrentUserByUsername
+  getCurrentUserByUsername,
+  setInactiveUser
 };

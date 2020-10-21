@@ -7,7 +7,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
-const { setIdleUser, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
+const { setInactiveUser, setIdleUser, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
 const { getGameState, setCardCzar, getCardCzar, drawBlackCard, initializeWhiteCards, appendCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 
 const app = express();
@@ -41,23 +41,38 @@ var cardSelected;
 //Run when client connects
 io.on('connection', socket => {
 	socket.on('joinRoom', ({ username, room }) => {
-		const user = userJoin(socket.id, username, room);
+		var user = getCurrentUserByUsername(username);
+		if (!user) {
+			const user = userJoin(socket.id, username, room);
 
-		//Add the connecting socket to the defined room
-		socket.join(user.room);
+			//Add the connecting socket to the defined room
+			socket.join(user.room);
 
-		// Welcome current user to the room
-		socket.emit('message', formatMessage(`Mr. ${user.room}`, `Welcome to the ${user.room} room.`));
-	
-		// Broadcast to other room users when a new user connects
-		socket.broadcast.to(user.room).emit('message', formatMessage(`Mr. ${user.room}`,`${user.username} has joined the room.`));
+			// Welcome current user to the room
+			socket.emit('message', formatMessage(`Mr. ${user.room}`, `Welcome to the ${user.room} room.`));
 		
-		/* Send GameState, room user list, and czar to all the room's clients*/
-		io.to(user.room).emit('gamestate', {
-			gameState,
-			GameState: getGameState(user, getRoomUserList(user.room))
-		});
+			// Broadcast to other room users when a new user connects
+			socket.broadcast.to(user.room).emit('message', formatMessage(`Mr. ${user.room}`,`${user.username} has joined the room.`));
 
+			/* Send GameState, room user list, and czar to all the room's clients*/
+			io.to(user.room).emit('gamestate', {
+				gameState,
+				GameState: getGameState(user, getRoomUserList(user.room))
+			});	
+		} else {
+			userRejoin(socket.id, user);
+			socket.join(user.room);
+
+			// Broadcast to other room users when a new user connects
+			socket.broadcast.to(user.room).emit('message', formatMessage(`Mr. ${user.room}`,`${user.username} has joined the room.`));
+
+			/* Send GameState, room user list, and czar to all the room's clients*/
+			io.to(user.room).emit('gamestate', {
+				gameState,
+				GameState: getGameState(user, getRoomUserList(user.room))
+			});	
+		}
+		
 	});
 
 	// Listen for chatMessage
@@ -233,11 +248,13 @@ io.on('connection', socket => {
 	});
 
 	socket.on('logoutUser', () => {
-		const user = userLeave(socket.id);
+		var user = getCurrentUser(socket.id);
+		//const user = userLeave(socket.id);
 		if(user) {
-
-			//Add the connecting socket to the defined room
-			socket.leave(user.room);
+			setInactiveUser(user);
+			user = getCurrentUser(socket.id);
+			//Remove the connecting socket to the defined room
+				//socket.leave(user.room);
 		
 			// Broadcast to other room users when a new user connects
 			socket.broadcast.to(user.room).emit('message', formatMessage(`Mr. ${user.room}`,`${user.username} has left the room.`));
@@ -251,30 +268,63 @@ io.on('connection', socket => {
 		}
 	});
 
-  // Runs when client disconnects
+  // Runs when client closes browser
   socket.on('disconnect', () => {
+	var user = getCurrentUser(socket.id);
+   //const user = userLeave(socket.id);
+
+   if (user) {
+	   // set current user to inactive in user.js
+	   setInactiveUser(user);
+	   // get updated current user and send it to gamestate
+	   user = getCurrentUser(socket.id);
+	   
+	 io.to(user.room).emit(
+	   'message',
+	   formatMessage(`Mr. ${user.room}`, `${user.username} has left the room.`)
+	 );
+	 
+	 // Send users and room info
+	 io.to(user.room).emit('gamestate', {
+	   gameState: "default",
+	   GameState: getGameState(user, getRoomUserList(user.room))
+	   });
+   }
+ });
+
+
+  // Runs when client changes tab or app
+  socket.on('goIdle', () => {
 	 var user = getCurrentUser(socket.id);
 	//const user = userLeave(socket.id);
 
     if (user) {
 		// set current user to idle in user.js
-		setIdleUser(user);
-		// get updated current user and send it to gamestate
-		user = getCurrentUser(socket.id);
-		
+		if(user.status !== 'inactive') {
 
-	/*
-      io.to(user.room).emit(
-        'message',
-		formatMessage(`Mr. ${user.room}`, `${user.username} has left the room.`)
-	  );
-	*/
-	  
-      // Send users and room info
-	  io.to(user.room).emit('gamestate', {
-		gameState: "default",
-		GameState: getGameState(user, getRoomUserList(user.room))
-		});
+			setIdleUser(user);
+			// get updated current user and send it to gamestate
+			user = getCurrentUser(socket.id);
+		
+			// Send users and room info
+			io.to(user.room).emit('gamestate', {
+				gameState: "default",
+				GameState: getGameState(user, getRoomUserList(user.room))
+				});
+		} else {
+			//logout user and remove from userlist
+			setInactiveUser(user);
+			user = getCurrentUser(socket.id);
+		
+			// Broadcast to other room users when a new user connects
+			socket.broadcast.to(user.room).emit('message', formatMessage(`Mr. ${user.room}`,`${user.username} has left the room.`));
+			
+			/* Send GameState, room user list, and czar to all the room's clients*/
+			io.to(user.room).emit('gamestate', {
+				gameState,
+				GameState: getGameState(user, getRoomUserList(user.room))
+			});
+		}
     }
   });
 });
