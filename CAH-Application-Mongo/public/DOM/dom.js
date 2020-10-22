@@ -122,9 +122,12 @@ function outputRoomUserTable(GameState) {
 	if(user.status == 'active') {
 		tdName.style.color = "black";
 		tdName.innerHTML = `${user.username}`;
-	} else {
+	} else if(user.status == 'idle'){
 		tdName.style.color = "red";
 		tdName.innerHTML = `${user.username} (busy)`;
+	} else {
+		tdName.style.color = "red";
+		tdName.innerHTML = `${user.username} (offline)`;		
 	}
 	tr.appendChild(tdName);
 	const tdPoints = document.createElement('td');
