@@ -16,6 +16,22 @@ function setInactiveUser(currentUser) {
 	});	
 }
 
+function setLeavingUser(currentUser) {
+	users.forEach(user => {
+		if(user.username == currentUser.username) {
+			user.status = 'offline';
+		}
+	});	
+}
+
+function dropOfflineUsers() {
+	users.forEach(user => {
+		if(user.status == 'offline') {
+			users.splice(users.findIndex(user => user.status === 'offline'),1);
+		}
+	});	
+}
+
 function getCurrentUserByUsername(username) {
 	return users.find(user => user.username === username);
 }
@@ -94,5 +110,7 @@ module.exports = {
   userRejoin,
   setIdleUser,
   getCurrentUserByUsername,
-  setInactiveUser
+  setInactiveUser, 
+  setLeavingUser,
+  dropOfflineUsers
 };
