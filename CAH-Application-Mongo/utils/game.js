@@ -29,6 +29,19 @@ function appendCzarHand(user, whiteCard) {
 	czarHand.push({user, whiteCard});
 }
 
+function playedCard(user) {
+	console.log(user);
+	var flag = false;
+	czarHand.forEach(card => {
+		console.log(card);
+		if(card.user.username == user.username) {
+			console.log("HERE");
+			flag = true;
+		}
+	});
+	return flag;
+}
+
 // Push white card info to judge set
 function appendCards(card) {
 	judgeHand.push(card);
@@ -128,5 +141,6 @@ module.exports = {
   popCzarHand,
   appendCards,
   getJudgeHand,
-  getGameState
+  getGameState, 
+  playedCard
 };
