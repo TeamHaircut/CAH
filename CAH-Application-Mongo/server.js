@@ -7,7 +7,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
-const { dropOfflineUsers, setLeavingUser, setInactiveUser, setIdleUser, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
+const { dropOfflineUsers, setOfflineUser, setInactiveUser, setIdleUser, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
 const { playedCard, getGameState, setCardCzar, getCardCzar, drawBlackCard, initializeWhiteCards, appendCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 
 const app = express();
@@ -291,7 +291,7 @@ io.on('connection', socket => {
 
 		var gamestate = getGameState(user, getRoomUserList(user.room));
 		if(gamestate.judgeHand.length > 0 || (gamestate.czarHand.length > 0 && playedCard(user))) {
-			setLeavingUser(user);
+			setOfflineUser(user);
 			user = getCurrentUser(socket.id);
 		} else {
 
