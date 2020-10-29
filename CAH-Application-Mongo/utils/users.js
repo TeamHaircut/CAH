@@ -16,7 +16,7 @@ function setInactiveUser(currentUser) {
 	});	
 }
 
-function setLeavingUser(currentUser) {
+function setOfflineUser(currentUser) {
 	users.forEach(user => {
 		if(user.username == currentUser.username) {
 			user.status = 'offline';
@@ -111,6 +111,6 @@ module.exports = {
   setIdleUser,
   getCurrentUserByUsername,
   setInactiveUser, 
-  setLeavingUser,
+  setOfflineUser,
   dropOfflineUsers
 };
