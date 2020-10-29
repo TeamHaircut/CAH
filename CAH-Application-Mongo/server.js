@@ -7,7 +7,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
-const { dropOfflineUsers, setOfflineUser, setInactiveUser, setIdleUser, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
+const { dropOfflineUsers, setWatchingUser, setOfflineUser, setInactiveUser, setIdleUser, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
 const { playedCard, getGameState, setCardCzar, getCardCzar, drawBlackCard, initializeWhiteCards, appendCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 
 const app = express();
@@ -35,6 +35,13 @@ const GameState = {
 	REJOIN: 3
 };
 var gameState = GameState.TERMINATE;
+
+const GamePhase = {
+	INITIAL: 1,
+	TERMINAL: 2,
+	NONE: 3
+}
+var gamePhase = GamePhase.NONE;
 
 var cardSelected;
 
@@ -77,6 +84,7 @@ io.on('connection', socket => {
 
 	// Listen for chatMessage
 	socket.on('chatMessage', msg => {
+		console.log("GAMEPHASE" +gamePhase);
 		const user = getCurrentUser(socket.id);
 		io.to(user.room).emit('message', formatMessage(user.username, msg));
 	});
@@ -87,6 +95,7 @@ io.on('connection', socket => {
 		if(state === `<i class="fas fa-play"></i> Launch Game`) {
 			cardSelected = false;
 			gameState = GameState.INITIALIZE;
+			gamePhase = GamePhase.INITIAL;
 
 			// Set card czar to current user
 			setCardCzar(user);
@@ -115,6 +124,7 @@ io.on('connection', socket => {
 		} else {
 			const user = getCurrentUser(socket.id);
 			gameState = GameState.TERMINATE;
+			gamePhase = GamePhase.NONE;
 
 			// Remove card czar
 			setCardCzar(false);
@@ -150,6 +160,7 @@ io.on('connection', socket => {
 
 	// Listen for incoming white cards
 	socket.on('removeCzarCard', () => {
+		gamePhase = GamePhase.TERMINAL;
 		const user = getCurrentUser(socket.id);
 		
 		// push white card and sending user to czar's hand
@@ -186,6 +197,7 @@ io.on('connection', socket => {
 		});
 
 		dropOfflineUsers();
+		gamePhase = GamePhase.INITIAL;
 
 		// Update card czar
 		setCardCzar(
@@ -251,6 +263,7 @@ io.on('connection', socket => {
 	});
 
 	socket.on('startRound', ({ username, blackCardSelected }) => {
+		gamePhase = GamePhase.INITIAL;
 		cardSelected = blackCardSelected;
 		var user = getCurrentUserByUsername(username);
 		if(user){
@@ -265,7 +278,7 @@ io.on('connection', socket => {
 		var user = getCurrentUser(socket.id);
 		//const user = userLeave(socket.id);
 		if(user) {
-			setInactiveUser(user);
+			setOfflineUser(user);
 			user = getCurrentUser(socket.id);
 			//Remove the connecting socket to the defined room
 				//socket.leave(user.room);
@@ -285,11 +298,12 @@ io.on('connection', socket => {
   // Runs when client closes browser
   socket.on('disconnect', () => {
 	var user = getCurrentUser(socket.id);
+	console.log("HERE");
    //const user = userLeave(socket.id);
 
    if (user) {
-
-		var gamestate = getGameState(user, getRoomUserList(user.room));
+		setOfflineUser(user);
+		/*var gamestate = getGameState(user, getRoomUserList(user.room));
 		if(gamestate.judgeHand.length > 0 || (gamestate.czarHand.length > 0 && playedCard(user))) {
 			setOfflineUser(user);
 			user = getCurrentUser(socket.id);
@@ -309,7 +323,7 @@ io.on('connection', socket => {
 				GameState: getGameState(user, getRoomUserList(user.room)),
 				bcSelected: true
 			});
-		}
+		}*/
 
 		// Send users and room info
 		io.to(user.room).emit('gamestate', {
@@ -327,8 +341,8 @@ io.on('connection', socket => {
 
     if (user) {
 		// set current user to idle in user.js
-		if(user.status !== 'inactive') {
-
+		//if(user.status !== 'inactive') {
+		if(user.status !== 'offline') {
 			setIdleUser(user);
 			// get updated current user and send it to gamestate
 			user = getCurrentUser(socket.id);
@@ -340,7 +354,7 @@ io.on('connection', socket => {
 				});
 		} else {
 			//logout user and remove from userlist
-			setInactiveUser(user);
+			setOfflineUser(user);
 			user = getCurrentUser(socket.id);
 		
 			// Broadcast to other room users when a new user connects
