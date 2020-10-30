@@ -64,7 +64,7 @@ document.addEventListener("visibilitychange", function() {
 		logoutUser = setTimeout(() => {
 				socket.emit('logoutUser');
 		},
-			15000//90000
+			90000//90000
 		)
 	}	
 	
@@ -74,10 +74,6 @@ document.addEventListener("visibilitychange", function() {
 function drawBlackCard() {
 	socket.emit('drawBlackCard');
 }
-
-socket.on('restartRound', ({GameState})=> {
-	socket.emit('startRound',{ username: getClientUsername(), blackCardSelected: false });
-});
 
 socket.on('drawBlackCard', ({GameState})=> {
 	// Update DOM with new black card

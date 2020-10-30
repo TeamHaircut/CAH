@@ -52,7 +52,7 @@ function outputCzarHand(GameState, flag) {
 		cardB.querySelector('.card-title').style.fontSize = "large";
 		cardB.querySelector('.card-title').innerHTML = "Cards<br>Against<br>Humanity<br>";
 
-		setUserWaitList(GameState.users, GameState.czarHand, GameState.cardCzar);
+		setUserWaitList(GameState.gameusers, GameState.czarHand, GameState.cardCzar);
 
 			infoDiv.innerHTML = "Waiting for";
 
@@ -60,7 +60,7 @@ function outputCzarHand(GameState, flag) {
 				infoDiv.innerHTML+=` ... ${name} `; 
 			});
 
-		const inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.users, cardB, flag);
+		const inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.gameusers, cardB, flag);
 		
 		cardBorder.appendChild(inter);
 		cardBorder.appendChild(cardHead);
@@ -74,7 +74,7 @@ function outputWhiteCards(GameState, flag) {
 	whiteCardsDiv.innerHTML = ``;
 	whiteCardsDiv.style.overflowX = "auto";
 	if(flag) {
-		GameState.users.forEach(user => {
+		GameState.gameusers.forEach(user => {
 			if(getClientUsername() == user.username) {
 				user.whiteCards.forEach(whiteCard=>{
 					if (cardSelected) {
@@ -158,7 +158,7 @@ function outputJudgeHand(GameState) {
 		judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
 		var myCard;
 		
-		if(GameState.judgeHand.length === (GameState.users.length-1)  && (getClientUsername() == GameState.cardCzar.username) )  {
+		if(GameState.judgeHand.length === (GameState.gameusers.length-1)  && (getClientUsername() == GameState.cardCzar.username) )  {
 			myCard = buildCard('light', GameState.cardCzar, card, false, 'select');
 		} else {
 			myCard = buildCard('light', GameState.cardCzar, card, false, 'client');

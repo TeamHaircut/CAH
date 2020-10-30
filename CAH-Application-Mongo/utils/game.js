@@ -7,8 +7,8 @@ var blackCard = '';
 var czarHand = [];
 var judgeHand =[];
 
-function getGameState(user, users) {
-	const gamestate = {cardCzar, blackCard, czarHand, judgeHand, user, users};
+function getGameState(user, users, gameusers) {
+	const gamestate = {cardCzar, blackCard, czarHand, judgeHand, user, users, gameusers};
 	return gamestate;
 }
 

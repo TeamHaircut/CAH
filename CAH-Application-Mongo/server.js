@@ -7,7 +7,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
-const { dropOfflineUsers, setWatchingUser, setOfflineUser, setInactiveUser, setIdleUser, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
+const { getGameUserList, dropOfflineUsers, setWatchingUser, setOfflineUser, setInactiveUser, setIdleUser, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
 const { playedCard, getGameState, setCardCzar, getCardCzar, drawBlackCard, initializeWhiteCards, appendCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 
 const app = express();
@@ -64,7 +64,7 @@ io.on('connection', socket => {
 			/* Send GameState, room user list, and czar to all the room's clients*/
 			io.to(user.room).emit('gamestate', {
 				gameState,
-				GameState: getGameState(user, getRoomUserList(user.room))
+				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});	
 		} else {
 			userRejoin(socket.id, user);
@@ -76,7 +76,7 @@ io.on('connection', socket => {
 			/* Send GameState, room user list, and czar to all the room's clients*/
 			io.to(user.room).emit('gamestate', {
 				gameState,
-				GameState: getGameState(user, getRoomUserList(user.room))
+				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});	
 		}
 		
@@ -112,12 +112,12 @@ io.on('connection', socket => {
 
 			//Send czar and room info to everybody in the room
 			io.to(user.room).emit('launch', {
-				GameState: getGameState(user, getRoomUserList(user.room))
+				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});
 
 			// Refresh user UI
 			socket.emit('refreshDOM', { 
-				GameState: getGameState(user, getRoomUserList(user.room)),
+				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room)),
 				bcSelected: cardSelected
 			});
 			
@@ -138,9 +138,9 @@ io.on('connection', socket => {
 
 			// Clear czar and judge hand
 			clearHand();
-			dropOfflineUsers();
+			//dropOfflineUsers();
 			io.to(user.room).emit('terminate', {
-				GameState: getGameState(user, getRoomUserList(user.room))
+				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});
 		}
 	});
@@ -154,7 +154,7 @@ io.on('connection', socket => {
 
 		// Emit czar hand to clients
 			io.to(user.room).emit('czarHand', {
-				GameState: getGameState(user, getRoomUserList(user.room))
+				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});
 	});
 
@@ -168,12 +168,12 @@ io.on('connection', socket => {
 
 		// Emit judge hand to clients
 			io.to(user.room).emit('displayCards', {
-				GameState: getGameState(user, getRoomUserList(user.room))
+				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});
 
 		// Emit czar hand to clients
 			io.to(user.room).emit('drawCzarCards', {
-				GameState: getGameState(user, getRoomUserList(user.room))
+				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});
 	});
 	
@@ -193,28 +193,28 @@ io.on('connection', socket => {
 		//Emit updated DOM to all users
 		io.to(card.user.room).emit('updateDOM', {
 			winner: card, 
-			GameState: getGameState(user, getRoomUserList(user.room))
+			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 		});
 
-		dropOfflineUsers();
+		//dropOfflineUsers();
 		gamePhase = GamePhase.INITIAL;
 
 		// Update card czar
 		setCardCzar(
 			nextCardCzar(
-				getCardCzar(), getRoomUserList(card.user.room)
+				getCardCzar(), getGameUserList(card.user.room)
 			)
 		);
 
 //		io.to(user.room).emit('refreshDOM', { 
-//			GameState: getGameState(user, getRoomUserList(user.room)),
+//			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room)),
 //			bcSelected: false
 //		});
 				
 		/* Send GameState, room user list, and czar to all the room's clients*/
 		io.to(user.room).emit('gamestate', {
 			gameState,
-			GameState: getGameState(user, getRoomUserList(user.room))
+			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 		});
 
 	});
@@ -225,7 +225,7 @@ io.on('connection', socket => {
 		drawBlackCard(true);
 
 		io.to(user.room).emit('drawBlackCard', {
-			GameState: getGameState(user, getRoomUserList(user.room))
+			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 		});
 	});
 
@@ -242,6 +242,7 @@ io.on('connection', socket => {
 	socket.on('rejoinRoom', ({ username }) => {
 		var user = getCurrentUserByUsername(username);
 		if(user) {
+			console.log("REJOIN");
 			// set current user to active in user.js
 			userRejoin(socket.id, user);
 			socket.join(user.room);
@@ -251,191 +252,89 @@ io.on('connection', socket => {
 			
 			// Refresh user UI
 			socket.emit('refreshDOM', { 
-				GameState: getGameState(user, getRoomUserList(user.room)),
+				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room)),
 				bcSelected: cardSelected
 			});
 
 			io.to(user.room).emit('gamestate', {
 				gameState: GameState.REJOIN,
-				GameState: getGameState(user, getRoomUserList(user.room))
+				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});
 		}
 	});
 
 	socket.on('startRound', ({ username, blackCardSelected }) => {
+		//dropOfflineUsers();
 		gamePhase = GamePhase.INITIAL;
 		cardSelected = blackCardSelected;
 		var user = getCurrentUserByUsername(username);
 		if(user){
 			io.to(user.room).emit('refreshDOM', { 
-				GameState: getGameState(user, getRoomUserList(user.room)),
+				//GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room)),
+				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room)),
 				bcSelected: blackCardSelected
 			});
 		}
 	});
 
 	socket.on('logoutUser', () => {
+
 		var user = getCurrentUser(socket.id);
-		//const user = userLeave(socket.id);
-		if(user) {
-			
-			switch(gamePhase) {
-				case GamePhase.INITIAL:
-					console.log("restart round");
-					io.to(user.room).emit('restartRound', {
-						GameState: getGameState(user, getRoomUserList(user.room))
-					});
-					setInactiveUser(user);
-					break;
-				case GamePhase.TERMINAL:
-					var state = getGameState(user, getRoomUserList(user.room));
-					console.log(state);
-					if(state.cardCzar.username == user.username) {
-						console.log("restart round");
-						setInactiveUser(user);
-					} else {
-						console.log("finish round");
-						setOfflineUser(user);
-					}
-					break;
-				case GamePhase.NONE:
-					console.log("no game detected");
-					setInactiveUser(user);
-					break;
-			}
-
+		console.log("logout Called");
+	
+	   if (user) {
+			setOfflineUser(user);
 			user = getCurrentUser(socket.id);
-			//Remove the connecting socket to the defined room
-				//socket.leave(user.room);
-		
-			// Broadcast to other room users when a new user connects
-			socket.broadcast.to(user.room).emit('message', formatMessage(`Mr. ${user.room}`,`${user.username} has left the room.`));
-			
-			/* Send GameState, room user list, and czar to all the room's clients*/
+	
+			// Send users and room info
 			io.to(user.room).emit('gamestate', {
-				gameState,
-				GameState: getGameState(user, getRoomUserList(user.room))
+				gameState: "default",
+				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});
-
-		}
+	   }
 	});
 
   // Runs when client closes browser
   socket.on('disconnect', () => {
+
 	var user = getCurrentUser(socket.id);
-	console.log("HERE");
-   //const user = userLeave(socket.id);
+	console.log("Disconnect Called");
 
    if (user) {
-	  // if(user.status === 'inactive') {
-	//	   console.log("ln 321");
-	//		setInactiveUser(user);
-	  // } else {
-	//	console.log("ln 324");
-	//		setOfflineUser(user);
-	  // }
-
-	   switch(gamePhase) {
-		case GamePhase.INITIAL:
-			console.log("restart round");
-			setInactiveUser(user);
-			break;
-		case GamePhase.TERMINAL:
-			var state = getGameState(user, getRoomUserList(user.room));
-			console.log(state);
-			if(state.cardCzar.username == user.username) {
-				console.log("restart round");
-				setInactiveUser(user);
-			} else {
-				console.log("finish round");
-				setOfflineUser(user);
-			}
-			break;
-		case GamePhase.NONE:
-			console.log("no game detected");
-			setInactiveUser(user);
-			break;
-	}
-
-	user = getCurrentUser(socket.id);
-		/*var gamestate = getGameState(user, getRoomUserList(user.room));
-		if(gamestate.judgeHand.length > 0 || (gamestate.czarHand.length > 0 && playedCard(user))) {
-			setOfflineUser(user);
-			user = getCurrentUser(socket.id);
-		} else {
-
-			// set current user to inactive in user.js
-			setInactiveUser(user);
-			// get updated current user and send it to gamestate
-			user = getCurrentUser(socket.id);
-			
-			io.to(user.room).emit(
-			'message',
-			formatMessage(`Mr. ${user.room}`, `${user.username} has left the room.`)
-			);
-
-			io.to(user.room).emit('refreshDOM', { 
-				GameState: getGameState(user, getRoomUserList(user.room)),
-				bcSelected: true
-			});
-		}*/
+		setOfflineUser(user);
+		user = getCurrentUser(socket.id);
 
 		// Send users and room info
 		io.to(user.room).emit('gamestate', {
 			gameState: "default",
-			GameState: getGameState(user, getRoomUserList(user.room))
-			});
+			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
+		});
    }
  });
 
 
   // Runs when client changes tab or app
   socket.on('goIdle', () => {
-	 var user = getCurrentUser(socket.id);
-	//const user = userLeave(socket.id);
 
+	var user = getCurrentUser(socket.id);
+	console.log("Go Idle Called");
     if (user) {
-		// set current user to idle in user.js
-		if(user.status === 'active') {
+
+		if(user.status == 'active'){
 			setIdleUser(user);
 			// get updated current user and send it to gamestate
 			user = getCurrentUser(socket.id);
-		
-			// Send users and room info
+						// Send users and room info
 			io.to(user.room).emit('gamestate', {
 				gameState: "default",
-				GameState: getGameState(user, getRoomUserList(user.room))
-				});
-		} 
-		else if(user.status === 'inactive') {
-			setInactiveUser(user);
-
-			// Broadcast to other room users when a new user connects
-			socket.broadcast.to(user.room).emit('message', formatMessage(`Mr. ${user.room}`,`${user.username} has left the room.`));
-
-			/* Send GameState, room user list, and czar to all the room's clients*/
-			io.to(user.room).emit('gamestate', {
-				gameState,
-				GameState: getGameState(user, getRoomUserList(user.room))
+				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});
 		}
-		else {
-			//logout user and remove from userlist
-			console.log("ln 377");
-			setOfflineUser(user);
-			user = getCurrentUser(socket.id);
-		
-			// Broadcast to other room users when a new user connects
-			socket.broadcast.to(user.room).emit('message', formatMessage(`Mr. ${user.room}`,`${user.username} has left the room.`));
-			
-			/* Send GameState, room user list, and czar to all the room's clients*/
-			io.to(user.room).emit('gamestate', {
-				gameState,
-				GameState: getGameState(user, getRoomUserList(user.room))
-			});
-		}
-    }
+	}
+	
   });
+
+
 });
 
 // Passport Config
