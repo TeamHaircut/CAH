@@ -278,7 +278,32 @@ io.on('connection', socket => {
 		var user = getCurrentUser(socket.id);
 		//const user = userLeave(socket.id);
 		if(user) {
-			setOfflineUser(user);
+			
+			switch(gamePhase) {
+				case GamePhase.INITIAL:
+					console.log("restart round");
+					io.to(user.room).emit('restartRound', {
+						GameState: getGameState(user, getRoomUserList(user.room))
+					});
+					setInactiveUser(user);
+					break;
+				case GamePhase.TERMINAL:
+					var state = getGameState(user, getRoomUserList(user.room));
+					console.log(state);
+					if(state.cardCzar.username == user.username) {
+						console.log("restart round");
+						setInactiveUser(user);
+					} else {
+						console.log("finish round");
+						setOfflineUser(user);
+					}
+					break;
+				case GamePhase.NONE:
+					console.log("no game detected");
+					setInactiveUser(user);
+					break;
+			}
+
 			user = getCurrentUser(socket.id);
 			//Remove the connecting socket to the defined room
 				//socket.leave(user.room);
@@ -302,7 +327,37 @@ io.on('connection', socket => {
    //const user = userLeave(socket.id);
 
    if (user) {
-		setOfflineUser(user);
+	  // if(user.status === 'inactive') {
+	//	   console.log("ln 321");
+	//		setInactiveUser(user);
+	  // } else {
+	//	console.log("ln 324");
+	//		setOfflineUser(user);
+	  // }
+
+	   switch(gamePhase) {
+		case GamePhase.INITIAL:
+			console.log("restart round");
+			setInactiveUser(user);
+			break;
+		case GamePhase.TERMINAL:
+			var state = getGameState(user, getRoomUserList(user.room));
+			console.log(state);
+			if(state.cardCzar.username == user.username) {
+				console.log("restart round");
+				setInactiveUser(user);
+			} else {
+				console.log("finish round");
+				setOfflineUser(user);
+			}
+			break;
+		case GamePhase.NONE:
+			console.log("no game detected");
+			setInactiveUser(user);
+			break;
+	}
+
+	user = getCurrentUser(socket.id);
 		/*var gamestate = getGameState(user, getRoomUserList(user.room));
 		if(gamestate.judgeHand.length > 0 || (gamestate.czarHand.length > 0 && playedCard(user))) {
 			setOfflineUser(user);
@@ -341,8 +396,7 @@ io.on('connection', socket => {
 
     if (user) {
 		// set current user to idle in user.js
-		//if(user.status !== 'inactive') {
-		if(user.status !== 'offline') {
+		if(user.status === 'active') {
 			setIdleUser(user);
 			// get updated current user and send it to gamestate
 			user = getCurrentUser(socket.id);
@@ -352,8 +406,22 @@ io.on('connection', socket => {
 				gameState: "default",
 				GameState: getGameState(user, getRoomUserList(user.room))
 				});
-		} else {
+		} 
+		else if(user.status === 'inactive') {
+			setInactiveUser(user);
+
+			// Broadcast to other room users when a new user connects
+			socket.broadcast.to(user.room).emit('message', formatMessage(`Mr. ${user.room}`,`${user.username} has left the room.`));
+
+			/* Send GameState, room user list, and czar to all the room's clients*/
+			io.to(user.room).emit('gamestate', {
+				gameState,
+				GameState: getGameState(user, getRoomUserList(user.room))
+			});
+		}
+		else {
 			//logout user and remove from userlist
+			console.log("ln 377");
 			setOfflineUser(user);
 			user = getCurrentUser(socket.id);
 		
