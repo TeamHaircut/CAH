@@ -36,13 +36,6 @@ const GameState = {
 };
 var gameState = GameState.TERMINATE;
 
-const GamePhase = {
-	INITIAL: 1,
-	TERMINAL: 2,
-	NONE: 3
-}
-var gamePhase = GamePhase.NONE;
-
 var cardSelected;
 
 //Run when client connects
@@ -84,7 +77,6 @@ io.on('connection', socket => {
 
 	// Listen for chatMessage
 	socket.on('chatMessage', msg => {
-		console.log("GAMEPHASE" +gamePhase);
 		const user = getCurrentUser(socket.id);
 		io.to(user.room).emit('message', formatMessage(user.username, msg));
 	});
@@ -95,7 +87,6 @@ io.on('connection', socket => {
 		if(state === `<i class="fas fa-play"></i> Launch Game`) {
 			cardSelected = false;
 			gameState = GameState.INITIALIZE;
-			gamePhase = GamePhase.INITIAL;
 
 			// Set card czar to current user
 			setCardCzar(user);
@@ -124,7 +115,6 @@ io.on('connection', socket => {
 		} else {
 			const user = getCurrentUser(socket.id);
 			gameState = GameState.TERMINATE;
-			gamePhase = GamePhase.NONE;
 
 			// Remove card czar
 			setCardCzar(false);
@@ -159,7 +149,6 @@ io.on('connection', socket => {
 
 	// Listen for incoming white cards
 	socket.on('removeCzarCard', () => {
-		gamePhase = GamePhase.TERMINAL;
 		const user = getCurrentUser(socket.id);
 		
 		// push white card and sending user to czar's hand
@@ -195,19 +184,12 @@ io.on('connection', socket => {
 			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 		});
 
-		gamePhase = GamePhase.INITIAL;
-
 		// Update card czar
 		setCardCzar(
 			nextCardCzar(
 				getCardCzar(), getGameUserList(card.user.room)
 			)
 		);
-
-//		io.to(user.room).emit('refreshDOM', { 
-//			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room)),
-//			bcSelected: false
-//		});
 				
 		/* Send GameState, room user list, and czar to all the room's clients*/
 		io.to(user.room).emit('gamestate', {
@@ -240,7 +222,6 @@ io.on('connection', socket => {
 	socket.on('rejoinRoom', ({ username }) => {
 		var user = getCurrentUserByUsername(username);
 		if(user) {
-			console.log("REJOIN");
 			// set current user to active in user.js
 			userRejoin(socket.id, user);
 			socket.join(user.room);
@@ -262,12 +243,10 @@ io.on('connection', socket => {
 	});
 
 	socket.on('startRound', ({ username, blackCardSelected }) => {
-		gamePhase = GamePhase.INITIAL;
 		cardSelected = blackCardSelected;
 		var user = getCurrentUserByUsername(username);
 		if(user){
 			io.to(user.room).emit('refreshDOM', { 
-				//GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room)),
 				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room)),
 				bcSelected: blackCardSelected
 			});
@@ -277,7 +256,6 @@ io.on('connection', socket => {
 	socket.on('logoutUser', () => {
 
 		var user = getCurrentUser(socket.id);
-		console.log("logout Called");
 	
 	   if (user) {
 			setOfflineUser(user);
@@ -295,7 +273,6 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
 
 	var user = getCurrentUser(socket.id);
-	console.log("Disconnect Called");
 
    if (user) {
 		setOfflineUser(user);
@@ -314,7 +291,7 @@ io.on('connection', socket => {
   socket.on('goIdle', () => {
 
 	var user = getCurrentUser(socket.id);
-	console.log("Go Idle Called");
+
     if (user) {
 
 		if(user.status == 'active'){
@@ -328,9 +305,7 @@ io.on('connection', socket => {
 			});
 		}
 	}
-	
   });
-
 
 });
 
