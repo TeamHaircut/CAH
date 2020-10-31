@@ -1,19 +1,11 @@
 const users = [];
 
-function setIdleUser(currentUser) {
+function setUserStatus(currentUser, status) {
 	users.forEach(user => {
 		if(user.username == currentUser.username) {
-			user.status = 'idle';
+			user.status = status;
 		}
 	});
-}
-
-function setOfflineUser(currentUser) {
-	users.forEach(user => {
-		if(user.username == currentUser.username) {
-			user.status = 'offline';
-		}
-	});	
 }
 
 function getCurrentUserByUsername(username) {
@@ -90,7 +82,6 @@ module.exports = {
   updateRoomUsersWhiteCards,
   updatePoints,
   userRejoin,
-  setIdleUser,
   getCurrentUserByUsername, 
-  setOfflineUser
+  setUserStatus
 };
