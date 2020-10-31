@@ -25,14 +25,6 @@ function setOfflineUser(currentUser) {
 	});	
 }
 
-function setWatchingUser(currentUser) {
-	users.forEach(user => {
-		if(user.username == currentUser.username) {
-			user.status = 'watching';
-		}
-	});	
-}
-
 function getCurrentUserByUsername(username) {
 	return users.find(user => user.username === username);
 }
@@ -120,6 +112,5 @@ module.exports = {
   setIdleUser,
   getCurrentUserByUsername,
   setInactiveUser, 
-  setOfflineUser,
-  setWatchingUser
+  setOfflineUser
 };
