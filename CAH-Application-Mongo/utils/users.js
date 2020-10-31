@@ -56,15 +56,6 @@ function userRejoin(id, user) {
 	user.status = 'active';
 }
 
-// User leaves chat
-function userLeave(id) {
-  const index = users.findIndex(user => user.id === id);
-
-  if (index !== -1) {
-    return users.splice(index, 1)[0];
-  }
-}
-
 // Get room users
 function getRoomUserList(room) {
   //return users.filter(user => user.room === room);
@@ -93,7 +84,6 @@ function updateRoomUsersWhiteCards(roomusers) {
 module.exports = {
   userJoin,
   getCurrentUser,
-  userLeave,
   getRoomUserList,
   getGameUserList,
   resetPoints,
