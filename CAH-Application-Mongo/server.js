@@ -7,7 +7,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
-const { getGameUserList, setOfflineUser, setIdleUser, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
+const { getGameUserList, setUserStatus, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
 const { getGameState, setCardCzar, getCardCzar, drawBlackCard, initializeWhiteCards, appendCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 
 const app = express();
@@ -40,6 +40,7 @@ var cardSelected;
 
 //Run when client connects
 io.on('connection', socket => {
+
 	socket.on('joinRoom', ({ username, room }) => {
 		var user = getCurrentUserByUsername(username);
 		if (!user) {
@@ -50,9 +51,6 @@ io.on('connection', socket => {
 
 			// Welcome current user to the room
 			socket.emit('message', formatMessage(`Mr. ${user.room}`, `Welcome to the ${user.room} room.`));
-		
-			// Broadcast to other room users when a new user connects
-			socket.broadcast.to(user.room).emit('message', formatMessage(`Mr. ${user.room}`,`${user.username} has joined the room.`));
 
 			/* Send GameState, room user list, and czar to all the room's clients*/
 			io.to(user.room).emit('gamestate', {
@@ -61,10 +59,9 @@ io.on('connection', socket => {
 			});	
 		} else {
 			userRejoin(socket.id, user);
-			socket.join(user.room);
 
-			// Broadcast to other room users when a new user connects
-			socket.broadcast.to(user.room).emit('message', formatMessage(`Mr. ${user.room}`,`${user.username} has joined the room.`));
+			//Add the connecting socket to the defined room			
+			socket.join(user.room);
 
 			/* Send GameState, room user list, and czar to all the room's clients*/
 			io.to(user.room).emit('gamestate', {
@@ -142,9 +139,9 @@ io.on('connection', socket => {
 		appendCzarHand(user, whiteCard);
 
 		// Emit czar hand to clients
-			io.to(user.room).emit('czarHand', {
-				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
-			});
+		io.to(user.room).emit('czarHand', {
+			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
+		});
 	});
 
 	// Listen for incoming white cards
@@ -155,14 +152,14 @@ io.on('connection', socket => {
 		appendCards(popCzarHand());
 
 		// Emit judge hand to clients
-			io.to(user.room).emit('displayCards', {
-				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
-			});
+		io.to(user.room).emit('displayCards', {
+			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
+		});
 
 		// Emit czar hand to clients
-			io.to(user.room).emit('drawCzarCards', {
-				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
-			});
+		io.to(user.room).emit('drawCzarCards', {
+			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
+		});
 	});
 	
 	// Listen for winner event
@@ -256,56 +253,54 @@ io.on('connection', socket => {
 	socket.on('logoutUser', () => {
 
 		var user = getCurrentUser(socket.id);
-	
-	   if (user) {
-			setOfflineUser(user);
+
+		if (user) {
+			setUserStatus(user, 'offline');
 			user = getCurrentUser(socket.id);
-	
+
 			// Send users and room info
 			io.to(user.room).emit('gamestate', {
 				gameState: "default",
 				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});
-	   }
+		}
 	});
 
-  // Runs when client closes browser
-  socket.on('disconnect', () => {
+	// Runs when client closes browser
+	socket.on('disconnect', () => {
 
-	var user = getCurrentUser(socket.id);
+		var user = getCurrentUser(socket.id);
 
-   if (user) {
-		setOfflineUser(user);
-		user = getCurrentUser(socket.id);
-
-		// Send users and room info
-		io.to(user.room).emit('gamestate', {
-			gameState: "default",
-			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
-		});
-   }
- });
-
-
-  // Runs when client changes tab or app
-  socket.on('goIdle', () => {
-
-	var user = getCurrentUser(socket.id);
-
-    if (user) {
-
-		if(user.status == 'active'){
-			setIdleUser(user);
-			// get updated current user and send it to gamestate
+		if (user) {
+			setUserStatus(user, 'offline');
 			user = getCurrentUser(socket.id);
-						// Send users and room info
+
+			// Send users and room info
 			io.to(user.room).emit('gamestate', {
 				gameState: "default",
 				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});
 		}
-	}
-  });
+	});
+
+	// Runs when client changes tab or app
+	socket.on('goIdle', () => {
+
+		var user = getCurrentUser(socket.id);
+
+		if (user) {
+			if(user.status == 'active'){
+				setUserStatus(user,'idle');
+				user = getCurrentUser(socket.id);
+
+				// Send users and room info
+				io.to(user.room).emit('gamestate', {
+					gameState: "default",
+					GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
+				});
+			}
+		}
+	});
 
 });
 
