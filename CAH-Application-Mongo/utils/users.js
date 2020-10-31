@@ -11,6 +11,7 @@ function setIdleUser(currentUser) {
 function setInactiveUser(currentUser) {
 	users.forEach(user => {
 		if(user.username == currentUser.username) {
+			console.log("SET TO INACTIVE");
 			user.status = 'inactive';
 		}
 	});	
@@ -20,6 +21,14 @@ function setOfflineUser(currentUser) {
 	users.forEach(user => {
 		if(user.username == currentUser.username) {
 			user.status = 'offline';
+		}
+	});	
+}
+
+function setWatchingUser(currentUser) {
+	users.forEach(user => {
+		if(user.username == currentUser.username) {
+			user.status = 'watching';
 		}
 	});	
 }
@@ -84,9 +93,16 @@ function userLeave(id) {
 // Get room users
 function getRoomUserList(room) {
   //return users.filter(user => user.room === room);
-  var roomUsers = users.filter(user => user.room === room);
+  var roomUsers = users.filter(user => user.room === room); 
   return roomUsers.filter(user => user.status !== 'inactive');
 }
+
+function getGameUserList(room) {
+	//return users.filter(user => user.room === room);
+	var roomUsers = users.filter(user => user.room === room); 
+	var temp = roomUsers.filter(user => user.status !== 'inactive');
+	return temp.filter(user => user.status !== 'offline');
+  }
 
 // Update Room Users
 function updateRoomUsersWhiteCards(roomusers) {
@@ -104,6 +120,7 @@ module.exports = {
   getCurrentUser,
   userLeave,
   getRoomUserList,
+  getGameUserList,
   resetPoints,
   updateRoomUsersWhiteCards,
   updatePoints,
@@ -112,5 +129,6 @@ module.exports = {
   getCurrentUserByUsername,
   setInactiveUser, 
   setOfflineUser,
+  setWatchingUser,
   dropOfflineUsers
 };

@@ -64,7 +64,7 @@ document.addEventListener("visibilitychange", function() {
 		logoutUser = setTimeout(() => {
 				socket.emit('logoutUser');
 		},
-			90000
+			90000//90000
 		)
 	}	
 	
