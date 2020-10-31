@@ -7,7 +7,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
-const { getGameUserList, dropOfflineUsers, setWatchingUser, setOfflineUser, setInactiveUser, setIdleUser, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
+const { getGameUserList, setWatchingUser, setOfflineUser, setInactiveUser, setIdleUser, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, userLeave, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
 const { getGameState, setCardCzar, getCardCzar, drawBlackCard, initializeWhiteCards, appendCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 
 const app = express();
@@ -138,7 +138,6 @@ io.on('connection', socket => {
 
 			// Clear czar and judge hand
 			clearHand();
-			//dropOfflineUsers();
 			io.to(user.room).emit('terminate', {
 				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});
@@ -196,7 +195,6 @@ io.on('connection', socket => {
 			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 		});
 
-		//dropOfflineUsers();
 		gamePhase = GamePhase.INITIAL;
 
 		// Update card czar
@@ -264,7 +262,6 @@ io.on('connection', socket => {
 	});
 
 	socket.on('startRound', ({ username, blackCardSelected }) => {
-		//dropOfflineUsers();
 		gamePhase = GamePhase.INITIAL;
 		cardSelected = blackCardSelected;
 		var user = getCurrentUserByUsername(username);
