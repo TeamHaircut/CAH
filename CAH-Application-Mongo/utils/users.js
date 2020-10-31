@@ -8,15 +8,6 @@ function setIdleUser(currentUser) {
 	});
 }
 
-function setInactiveUser(currentUser) {
-	users.forEach(user => {
-		if(user.username == currentUser.username) {
-			console.log("SET TO INACTIVE");
-			user.status = 'inactive';
-		}
-	});	
-}
-
 function setOfflineUser(currentUser) {
 	users.forEach(user => {
 		if(user.username == currentUser.username) {
@@ -110,7 +101,6 @@ module.exports = {
   updatePoints,
   userRejoin,
   setIdleUser,
-  getCurrentUserByUsername,
-  setInactiveUser, 
+  getCurrentUserByUsername, 
   setOfflineUser
 };
