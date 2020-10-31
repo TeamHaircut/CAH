@@ -33,14 +33,6 @@ function setWatchingUser(currentUser) {
 	});	
 }
 
-function dropOfflineUsers() {
-	users.forEach(user => {
-		if(user.status == 'offline') {
-			users.splice(users.findIndex(user => user.status === 'offline'),1);
-		}
-	});	
-}
-
 function getCurrentUserByUsername(username) {
 	return users.find(user => user.username === username);
 }
@@ -129,6 +121,5 @@ module.exports = {
   getCurrentUserByUsername,
   setInactiveUser, 
   setOfflineUser,
-  setWatchingUser,
-  dropOfflineUsers
+  setWatchingUser
 };
