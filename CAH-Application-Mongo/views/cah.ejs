@@ -17,6 +17,18 @@
 			<li class="nav-item active">
 				<a id="gamecontrol" href="#" class="nav-link"><i class="fas fa-play"></i> Launch Game</a>
 			</li>
+			<li class="nav-item active">
+				<input type="checkbox" id="cxbox0" onclick="selectDeck()" name="basecards" value="Base" class="nav-link">
+				<label for="basecards">Base</label>
+			</li>
+			<li class="nav-item active">
+				<input type="checkbox" id="cxbox2" onclick="selectDeck()" name="1stexpcards" value="1st Expansion" class="nav-link">
+				<label for="1stexpcards">1st Expansion</label>
+			</li>
+			<li class="nav-item active">
+				<input type="checkbox" id="cxbox1" onclick="selectDeck()" name="customcards" value="Custom" class="nav-link">
+				<label for="basecards">Custom</label>
+			</li>
 		</ul>
 		<form class="form-inline my-2 my-lg-0">
 			<a id="logoutcontrol" href="/users/logout" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a>

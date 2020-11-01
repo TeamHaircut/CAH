@@ -1,5 +1,14 @@
-const blackDeck = require('./blackcards');
-const whiteDeck = require('./whitecards');
+var blackDeck;
+var whiteDeck;
+
+const blackDeck_base = require('./blackcards');
+const whiteDeck_base = require('./whitecards');
+
+const blackDeck_1stexp = require('./firstExpBlackcards');
+const whiteDeck_1stexp = require('./firstExpWhitecards');
+
+const blackDeck_custom = require('./customBlackcards');
+const whiteDeck_custom = require('./customWhitecards');
 
 var cardCzar = false;
 var blackCard = '';
@@ -7,8 +16,62 @@ var blackCard = '';
 var czarHand = [];
 var judgeHand =[];
 
+var selectedDecks = { deck_base: true};
+
+function setSelectedDecks(decks) {
+	selectedDecks = decks;
+	console.log(decks);
+}
+
+function mergeSelectedDecks() {
+	//mergeDecks
+	var tempBlack = [];
+	var tempWhite = [];
+	console.log(selectedDecks);
+	if(selectedDecks.deck_base == true) {
+		tempBlack = tempBlack.concat(blackDeck_base.getBlackDeck());
+		tempWhite = tempWhite.concat(whiteDeck_base.getWhiteDeck());
+		console.log(whiteDeck_base.getWhiteDeck());
+	}
+	if(selectedDecks.deck_1stexp == true) {
+		tempBlack = tempBlack.concat(blackDeck_1stexp.getBlackDeck());
+		tempWhite = tempWhite.concat(whiteDeck_1stexp.getWhiteDeck());
+	}
+	if(selectedDecks.deck_custom == true) {
+		tempBlack = tempBlack.concat(blackDeck_custom.getBlackDeck());
+		tempWhite = tempWhite.concat(whiteDeck_custom.getWhiteDeck());
+	}
+	blackDeck = tempBlack;
+	whiteDeck = tempWhite;
+
+}
+
+function getBlackDeck() {
+	var i = blackDeck.length, k, temp;
+	while(--i > 0) {
+		k = Math.floor(Math.random() * (i+1));
+		temp = blackDeck[k];
+		blackDeck[k] = blackDeck[i];
+		blackDeck[i] = temp;
+	}
+	//console.log("Black Cards Left: " +blackDeck.length);
+	return blackDeck;
+}
+
+function getWhiteDeck() {
+	var i = whiteDeck.length, k, temp;
+	while(--i > 0) {
+		k = Math.floor(Math.random() * (i+1));
+		temp = whiteDeck[k];
+		whiteDeck[k] = whiteDeck[i];
+		whiteDeck[i] = temp;
+	}
+	//console.log("White Cards Left: " + whiteDeck.length);
+	return whiteDeck;
+}
+
 function getGameState(user, users, gameusers) {
-	const gamestate = {cardCzar, blackCard, czarHand, judgeHand, user, users, gameusers};
+	const gamestate = {cardCzar, blackCard, czarHand, judgeHand, user, users, gameusers, selectedDecks};
 	return gamestate;
 }
 
@@ -68,7 +131,8 @@ function initializeWhiteCards(roomusers,flag) {
 		var i;
 		for(i = 0; i < 10 ; i++) {
 			if(flag) {
-				var whiteCard = whiteDeck.getWhiteDeck().pop();
+				//var whiteCard = whiteDeck.getWhiteDeck().pop();
+				var whiteCard = getWhiteDeck().pop();
 				user.whiteCards.push(whiteCard);
 			}
 		}
@@ -85,7 +149,8 @@ function replaceWhiteCards(roomUserList, czarHand) {
 	czarHand.forEach(card => {
 		var userIndex = roomUserList.findIndex(user => user.username === card.user.username);
 		var cardIndex = roomUserList[userIndex].whiteCards.findIndex(whiteCard => whiteCard === card.whiteCard);
-		roomUserList[userIndex].whiteCards[cardIndex] = whiteDeck.getWhiteDeck().pop();
+		//roomUserList[userIndex].whiteCards[cardIndex] = whiteDeck.getWhiteDeck().pop();
+		roomUserList[userIndex].whiteCards[cardIndex] = getWhiteDeck().pop();
 
 	});
 	return roomUserList;
@@ -100,7 +165,8 @@ function getCzarHand() {
 // Draw a black card
 function drawBlackCard(flag) {
 	if (flag) {
-		blackCard = blackDeck.getBlackDeck().pop();
+		//blackCard = blackDeck.getBlackDeck().pop();
+		blackCard = getBlackDeck().pop();
 	} else {
 		blackCard = '';
 	}
@@ -128,5 +194,7 @@ module.exports = {
   popCzarHand,
   appendCards,
   getJudgeHand,
-  getGameState
+  getGameState,
+  setSelectedDecks,
+  mergeSelectedDecks
 };
