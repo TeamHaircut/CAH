@@ -4,10 +4,13 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 // Load User model
 const User = require('../models/User');
-const { forwardAuthenticated } = require('../config/auth');
+const { ensureAuthenticated,  forwardAuthenticated } = require('../config/auth');
 
 // Login Page
 router.get('/login', forwardAuthenticated, (req, res) => res.render('login'));
+
+// Login Page
+router.get('/deck', ensureAuthenticated, (req, res) => res.render('deck'));
 
 // Register Page
 router.get('/register', forwardAuthenticated, (req, res) => res.render('register'));

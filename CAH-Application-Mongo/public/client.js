@@ -50,18 +50,6 @@ logoutControl.addEventListener("click", function() {
 	socket.emit('logoutUser');
 });
 
-function selectDeck() {
-	var card_base_control = document.getElementById('cxbox0');
-	var card_custom_control = document.getElementById('cxbox1');
-	var card_1stexp_control = document.getElementById('cxbox2');
-	var selectedDecks = {
-		deck_base: card_base_control.checked,
-		deck_1stexp: card_1stexp_control.checked,
-		deck_custom: card_custom_control.checked
-	}
-	socket.emit('selectDeck', {selectedDecks});
-}
-
 var logoutUser;
 
 document.addEventListener("visibilitychange", function() {
@@ -193,7 +181,6 @@ socket.on('displayCards', ({GameState}) => {
 
 // Launch event from server
 socket.on('launch', ({GameState}) => {
-
 	initializeGame(GameState);
 });
 

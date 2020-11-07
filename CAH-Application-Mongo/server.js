@@ -8,7 +8,7 @@ const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
 const { getGameUserList, setUserStatus, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
-const { setSelectedDecks, mergeSelectedDecks, getGameState, setCardCzar, getCardCzar, drawBlackCard, initializeWhiteCards, appendCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
+const { setDeckMap, getDeckMap, mergeSelectedDecks, getGameState, setCardCzar, getCardCzar, drawBlackCard, initializeWhiteCards, appendCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 
 const app = express();
 
@@ -83,6 +83,7 @@ io.on('connection', socket => {
 		const user = getCurrentUser(socket.id);
 		if(state === `<i class="fas fa-play"></i> Launch Game`) {
 			//merge selected decks
+
 			mergeSelectedDecks();
 			cardSelected = false;
 			gameState = GameState.INITIALIZE;
@@ -133,9 +134,29 @@ io.on('connection', socket => {
 		}
 	});
 
-	socket.on('selectDeck', ({selectedDecks}) => {
-		setSelectedDecks(selectedDecks);
-		//console.log(selectedDecks);
+	socket.on('selectDeck', ({optionMap}) => {
+		setDeckMap(optionMap.key, optionMap.value);
+	});
+
+	socket.on('getServerDeckOptions', () => {
+
+				io.emit('serverDeckData', 
+				Array.from(
+					getDeckMap()
+					)
+			);
+
+	});
+
+	socket.on('requestDeckInfo', ({key, val}) => {
+		setDeckMap(key, val);
+
+		io.emit('serverDeckData', 
+		Array.from(
+			getDeckMap()
+			)
+		);
+
 	});
 	
 	// Listen for incoming white cards
