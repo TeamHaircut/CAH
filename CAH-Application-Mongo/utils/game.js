@@ -1,14 +1,12 @@
+const deckMap = new Map();
+const map2 = new Map();
+
+/////////////////////////////////
+
+////////////////////////////////
+
 var blackDeck;
 var whiteDeck;
-
-const blackDeck_base = require('./blackcards');
-const whiteDeck_base = require('./whitecards');
-
-const blackDeck_1stexp = require('./firstExpBlackcards');
-const whiteDeck_1stexp = require('./firstExpWhitecards');
-
-const blackDeck_custom = require('./customBlackcards');
-const whiteDeck_custom = require('./customWhitecards');
 
 var cardCzar = false;
 var blackCard = '';
@@ -16,31 +14,25 @@ var blackCard = '';
 var czarHand = [];
 var judgeHand =[];
 
-var selectedDecks = { deck_base: true};
+function setDeckMap(key, value) {
+	deckMap.set(key, value);
+}
 
-function setSelectedDecks(decks) {
-	selectedDecks = decks;
-	console.log(decks);
+function getDeckMap() {
+	return deckMap;
 }
 
 function mergeSelectedDecks() {
-	//mergeDecks
 	var tempBlack = [];
 	var tempWhite = [];
-	console.log(selectedDecks);
-	if(selectedDecks.deck_base == true) {
-		tempBlack = tempBlack.concat(blackDeck_base.getBlackDeck());
-		tempWhite = tempWhite.concat(whiteDeck_base.getWhiteDeck());
-		console.log(whiteDeck_base.getWhiteDeck());
+	for (let key of getDeckMap().keys()) {
+		if(getDeckMap().get(key) == true) {
+			tempWhite = tempWhite.concat(map2.get(key).white);
+			tempBlack = tempBlack.concat(map2.get(key).black);
+		}
+
 	}
-	if(selectedDecks.deck_1stexp == true) {
-		tempBlack = tempBlack.concat(blackDeck_1stexp.getBlackDeck());
-		tempWhite = tempWhite.concat(whiteDeck_1stexp.getWhiteDeck());
-	}
-	if(selectedDecks.deck_custom == true) {
-		tempBlack = tempBlack.concat(blackDeck_custom.getBlackDeck());
-		tempWhite = tempWhite.concat(whiteDeck_custom.getWhiteDeck());
-	}
+
 	blackDeck = tempBlack;
 	whiteDeck = tempWhite;
 
@@ -71,7 +63,7 @@ function getWhiteDeck() {
 }
 
 function getGameState(user, users, gameusers) {
-	const gamestate = {cardCzar, blackCard, czarHand, judgeHand, user, users, gameusers, selectedDecks};
+	const gamestate = {cardCzar, blackCard, czarHand, judgeHand, user, users, gameusers};
 	return gamestate;
 }
 
@@ -195,6 +187,7 @@ module.exports = {
   appendCards,
   getJudgeHand,
   getGameState,
-  setSelectedDecks,
-  mergeSelectedDecks
+  mergeSelectedDecks,
+  setDeckMap,
+  getDeckMap
 };

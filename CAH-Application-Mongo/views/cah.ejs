@@ -17,17 +17,16 @@
 			<li class="nav-item active">
 				<a id="gamecontrol" href="#" class="nav-link"><i class="fas fa-play"></i> Launch Game</a>
 			</li>
-			<li class="nav-item active">
-				<input type="checkbox" id="cxbox0" onclick="selectDeck()" value="Base" class="nav-link">
-				<label>Base</label>
-			</li>
-			<li class="nav-item active">
-				<input type="checkbox" id="cxbox2" onclick="selectDeck()" value="1st Expansion" class="nav-link">
-				<label>1st Expansion</label>
-			</li>
-			<li class="nav-item active">
-				<input type="checkbox" id="cxbox1" onclick="selectDeck()" value="Custom" class="nav-link">
-				<label>Custom</label>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Game Options</a>
+				<div class="dropdown-menu">
+						<a class="dropdown-item">
+							<a id="gamecontrol" href="#" class="nav-link"> House Rules (broken link)</a>
+						</a>
+						<a class="dropdown-item">
+							<a id="gamecontrol" a href="/users/deck" class="nav-link"> Deck Settings: 0 cards (0 Black, 0 White)</a>
+						</a>
+				</div>
 			</li>
 		</ul>
 		<form class="form-inline my-2 my-lg-0">
