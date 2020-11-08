@@ -12,8 +12,8 @@
               <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
 
-                    <div class="btn-group-vertical btn-block" data-toggle="buttons">
-                      <button id="Custom" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Custom</button>
+                    <div id="customBtnGroup" class="btn-group-vertical btn-block" data-toggle="buttons">
+
                     </div>
 
                 </li>
@@ -30,12 +30,8 @@
                   <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
 
-                        <div class="btn-group-vertical btn-block" data-toggle="buttons">
-                          <button id="BaseGameUS" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Base Game (US)</button>
-                          <button id="BaseGame1v0" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Base Game 1.0</button>
-                          <button id="BaseGame1v3" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Base Game 1.3</button>                       
-                          <button id="BaseGame1v5" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Base Game 1.5</button>                         
-                          <button id="BaseGame1v6" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Base Game 1.6</button>
+                        <div id="baseBtnGroup" class="btn-group-vertical btn-block" data-toggle="buttons">
+
                         </div>
 
                     </li>
@@ -52,13 +48,8 @@
                   <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
 
-                      <div class="btn-group-vertical btn-block" data-toggle="buttons">
-                        <button id="FirstExpansion" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">First Expansion</button>
-                        <button id="SecondExpansion" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Second Expansion</button>
-                        <button id="ThirdExpansion" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Third Expansion</button>
-                        <button id="FourthExpansion" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Fourth Expansion</button>
-                        <button id="FifthExpansion" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Fifth Expansion</button>
-                        <button id="SixthExpansion" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Sixth Expansion</button>                                                                                                                       
+                      <div id="expansionBtnGroup" class="btn-group-vertical btn-block" data-toggle="buttons">
+                                                                                                                       
                       </div>
 
                     </li>
@@ -75,10 +66,8 @@
                   <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
 
-                      <div class="btn-group-vertical btn-block" data-toggle="buttons">
-                        <button id="AbsurdBox" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Absurd Box</button>
-                        <button id="BiggerBlackerBox" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">The Bigger Blacker Box Expansion</button>
-                        <button id="TheGreenBox" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">The Green Box</button>                                                
+                      <div id="boxBtnGroup" class="btn-group-vertical btn-block" data-toggle="buttons">
+                                               
                       </div>
 
                     </li>
@@ -95,10 +84,8 @@
                   <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
 
-                      <div class="btn-group-vertical btn-block" data-toggle="buttons">
-                        <button id="BaseGameAustralia" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Base Game (Australia)</button>
-                        <button id="BaseGameCanada" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Base Game (Canada)</button>                     
-                        <button id="BaseGameUK" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Base Game (UK)</button>
+                      <div id="internationalBtnGroup" class="btn-group-vertical btn-block" data-toggle="buttons">
+
                       </div>
 
                     </li>
@@ -115,32 +102,8 @@
                   <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
 
-                      <div class="btn-group-vertical btn-block" data-toggle="buttons">
-                        <button id="p90sNostalgia" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">90's Nostalgia Pack</button>
-                        <button id="p2000sNostalgiaPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">2000s Nostalgia Pack</button>                      
-                        <button id="AIPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">A.I. Pack - Black Friday 2019</button>                   
-                        <button id="AssPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Ass Pack</button>                    
-                        <button id="CollegePack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">College Pack</button>                                                
-                        <button id="DadPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Dad Pack</button>
-                        <button id="FantasyPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Fantasy Pack</button>
-                        <button id="FoodPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Food Pack</button>
-                        <button id="GeekPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Geek Pack</button>
-                        <button id="HolidayPack2012" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Holiday Pack 2012</button>
-                        <button id="HolidayPack2013" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Holiday Pack 2013</button>
-                        <button id="HolidayPack2014" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Holiday Pack 2014</button>
-                        <button id="HumanPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Human Pack - Black Friday 2019</button>
-                        <button id="JewPack2015" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Jew Pack 2015</button>
-                        <button id="PeriodPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Period Pack</button>
-                        <button id="PostTrumpPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Post-Trump Pack</button>
-                        <button id="PridePack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Pride Pack</button>
-                        <button id="SavesAmericaPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Saves America Pack</button>
-                        <button id="SciencePack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Science Pack</button>
-                        <button id="SciFiPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Sci-Fi Pack</button>
-                        <button id="TheTheatrePack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">The Theatre Pack</button>
-                        <button id="VoteForHillary" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Vote For Hillary Pack</button>
-                        <button id="WeedPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Weed Pack</button>
-                        <button id="WorldWideWeb" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">World Wide Web Pack</button>
-                        
+                      <div id="themeBtnGroup" class="btn-group-vertical btn-block" data-toggle="buttons">
+
                       </div>
 
                     </li>
@@ -157,20 +120,7 @@
                   <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
 
-                      <div class="btn-group-vertical btn-block" data-toggle="buttons">
-                        <button id="FascismPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Fascism Pack</button>
-                        <button id="HanukkahLOLPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Hanukkah LOL Pack</button>
-                        <button id="HiddenCompartment" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Hidden Compartment Pack</button>
-                        <button id="HouseOfCards" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">House of Cards Pack</button>
-                        <button id="MassEffectPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Mass Effect Pack</button>
-                        <button id="PAX2013EastPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">PAX 2013 East Pack</button>
-                        <button id="PAX2013PrimePack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">PAX 2013 Prime Pack</button>
-                        <button id="PAX2014EastPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">PAX 2014 East Pack</button>
-                        <button id="PAX2014EastPanelPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">PAX 2014 East Panel Pack</button>
-                        <button id="PAX2014PrimePanelPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">PAX 2014 Prime Panel Pack</button>
-                        <button id="RejectPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Reject Pack</button>
-                        <button id="RetailPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Retail Pack</button>
-                        <button id="TabletopPack" class="btn btn-outline-primary btn-lg btn-block" style="border-color: black" onclick="buttonPressed(this)">Tabletop Pack</button>
+                      <div id="limitedBtnGroup" class="btn-group-vertical btn-block" data-toggle="buttons">
                         
                       </div>
 
