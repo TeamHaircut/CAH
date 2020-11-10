@@ -162,7 +162,10 @@ io.on('connection', socket => {
 	// Listen for incoming white cards
 	socket.on('sendWhiteCardToServer', ({whiteCard}) => {
 		const user = getCurrentUser(socket.id);
-		
+		//this event occurs after client plays a white card
+		//and simulates the action of the czar receiving a white card from user
+		//example whiteCard = "AXE Body Spray."
+
 		// push white card and sending user to czar's hand
 		appendCzarHand(user, whiteCard);
 
@@ -172,12 +175,26 @@ io.on('connection', socket => {
 		});
 	});
 
-	// Listen for incoming white cards
+	// Listen Event of czar turnin czarhand cards
 	socket.on('removeCzarCard', () => {
 		const user = getCurrentUser(socket.id);
 		
 		// push white card and sending user to czar's hand
 		appendCards(popCzarHand());
+		//example judgeHand
+/*		[
+			{
+			  user: {
+				id: 'pNBnWH_HlfQ70NIWAAAE',
+				username: 'Joe',
+				room: 'Sausage',
+				points: 0,
+				whiteCards: [Array],
+				status: 'active'
+			  },
+			  whiteCard: 'Racism.'
+			}
+		  ]								*/
 
 		// Emit judge hand to clients
 		io.to(user.room).emit('displayCards', {
@@ -192,6 +209,30 @@ io.on('connection', socket => {
 	
 	// Listen for winner event
 	socket.on('declareWinner', ({card}) => {
+		console.log(card);
+/*		example card
+		{
+			user: {
+			  id: '6opNp_yzzaEqM0E8AAAE',
+			  username: 'Joe',
+			  room: 'Sausage',
+			  points: 0,
+			  whiteCards: [
+				'Sexy pillow fights.',
+				'A pyramid of severed heads.',
+				'This year’s mass shootings.',
+				'Christopher Walken.',
+				'Wearing underwear inside-out to avoid doing laundry.',
+				'Me time.',
+				'Spontaneous human combustion.',
+				'Full frontal nudity.',
+				'Doing the right thing.',
+				'Sean Connery.'
+			  ],
+			  status: 'active'
+			},
+			whiteCard: 'Sexy pillow fights.'
+		  }										*/
 		cardSelected = false;
 		const user = getCurrentUser(socket.id);
 		//extract user from card

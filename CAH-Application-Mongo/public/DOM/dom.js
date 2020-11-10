@@ -153,6 +153,12 @@ function outputJudgeHand(GameState) {
 	judgeHandDiv.style.overflowX = "auto";
 	var count = 0;
 	GameState.judgeHand.slice().reverse().forEach(card => {
+		//example of card
+		/*
+		{user: {…}, whiteCard: "Black people."}
+			=>user: {id: "K0sFyAMM-yNy1gQsAAAE", username: "Joe", room: "Sausage", points: 0, whiteCards: Array(10), …}
+			=>whiteCard: "Black people."
+		*/
 		count++;
 		var scrollSize = 9*count;
 		judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
@@ -173,6 +179,11 @@ function outputJudgeHand(GameState) {
 }
 
 function outputWinner(winner) {
+	/* example winner
+	{user: {…}, whiteCard: "YOU MUST CONSTRUCT ADDITIONAL PYLONS."}
+		=>user: {id: "QrtAPvMfiVpLLJgxAAAE", username: "Joe", room: "Sausage", points: 0, whiteCards: Array(10), …}
+		=>whiteCard: "YOU MUST CONSTRUCT ADDITIONAL PYLONS."
+	*/
 	infoDiv.innerHTML = ``;
 	judgeHandDiv.innerHTML = ``;
 	judgeHandDiv.style.overflowX = "auto";

@@ -58,6 +58,27 @@ function nextCardCzar(currentCzar, roomUserList) {
 // Push white card info to czarHand Array
 function appendCzarHand(user, whiteCard) {
 	czarHand.push({user, whiteCard});
+
+	//example czarHand contents
+/*	[
+		{
+		  user: {
+			id: 'apEG879H73_udWOyAAAE',
+			username: 'Joe',
+			room: 'Sausage',
+			points: 0,
+			whiteCards: [Array],
+			status: 'active'
+		  },
+		  whiteCard: 'Crucifixion.'
+		}
+	  ]									*/
+}
+
+//Grab a top card from czar hand
+function popCzarHand() {
+	czarHand = shuffleCards(getCzarHand());
+	return czarHand.pop();
 }
 
 // Push white card info to judge set
@@ -80,12 +101,6 @@ function shuffleCards(cards) {
 		cards[i] = temp;
 	}
 	return cards;
-}
-
-//Grab a top card from czar hand
-function popCzarHand() {
-	czarHand = shuffleCards(getCzarHand());
-	return czarHand.pop();
 }
 
 function clearHand() {

@@ -78,6 +78,9 @@ socket.on('drawBlackCard', ({GameState})=> {
 });
 
 function sendWhiteCardToServer(whiteCard) {
+	//this event occurs after client plays a white card
+	//and simulates the action of handing a white card to the czar
+	//example whiteCard = "AXE Body Spray."
 	socket.emit('sendWhiteCardToServer', {whiteCard});
 }
 
@@ -86,6 +89,12 @@ function turnCzarCard() {
 }
 
 function sendWinnerInfoToServer(card) {
+	//example card
+	/*
+	{user: {…}, whiteCard: "Getting drunk on mouthwash."}
+		=>user: {id: "EyRQfZz0DJRFpoIqAAAE", username: "Joe", room: "Sausage", points: 0, whiteCards: Array(10), …}
+		=>whiteCard: "Getting drunk on mouthwash."
+	*/
 	socket.emit('declareWinner', {card});
 }
 
@@ -102,6 +111,11 @@ socket.on('clear', () => {
 
 //  Update points in user table, and braodcast winner to room users
 socket.on('updateDOM', ({winner, GameState}) => {
+	/* example winner
+	{user: {…}, whiteCard: "YOU MUST CONSTRUCT ADDITIONAL PYLONS."}
+		=>user: {id: "QrtAPvMfiVpLLJgxAAAE", username: "Joe", room: "Sausage", points: 0, whiteCards: Array(10), …}
+		=>whiteCard: "YOU MUST CONSTRUCT ADDITIONAL PYLONS."
+	*/
 	cardSelected = false;
 	// Update DOM with updated room user table
 	outputRoomUserTable(GameState);
