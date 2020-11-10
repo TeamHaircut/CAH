@@ -1,3 +1,5 @@
+
+
 function getCardBorder(type) {
 	const cardBorderDiv = document.createElement('div');
 	
@@ -58,6 +60,10 @@ function getCardButton(czar, card, user, buttonType) {
 	var button2 = document.createElement('p');
 	var button0 = document.createElement('p');
 	var button1 = document.createElement('p');
+	const cardArray = [];
+	cardArray.push(card);
+	cardArray.push(card);
+	cardArray.push(card);
     switch(buttonType) {
         case 'play':
             if(getClientUsername() != czar.username) {
@@ -72,12 +78,12 @@ function getCardButton(czar, card, user, buttonType) {
             if(getClientUsername() == czar.username) {
                 button0 = getButtonText(buttonType);
                 button0.addEventListener('click', () => {
-                    sendWinnerInfoToServer(card);
+                    sendWinnerInfoToServer(cardArray);
                     setTimeout(() => {
 						clearHand();
 						drawBlackCard();
                     },
-                        3000
+                        30000
                     )
                 });
             }

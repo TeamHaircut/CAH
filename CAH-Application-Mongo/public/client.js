@@ -88,14 +88,18 @@ function turnCzarCard() {
 	socket.emit('removeCzarCard');
 }
 
-function sendWinnerInfoToServer(card) {
+function sendWinnerInfoToServer(cardArray) {
 	//example card
 	/*
 	{user: {…}, whiteCard: "Getting drunk on mouthwash."}
 		=>user: {id: "EyRQfZz0DJRFpoIqAAAE", username: "Joe", room: "Sausage", points: 0, whiteCards: Array(10), …}
 		=>whiteCard: "Getting drunk on mouthwash."
 	*/
-	socket.emit('declareWinner', {card});
+	//const cardArray = [];
+	//cardArray.push(card);
+	//cardArray.push(card);
+	//cardArray.push(card);
+	socket.emit('declareWinner', {cardArray});
 }
 
 function clearHand() {
@@ -110,7 +114,7 @@ socket.on('clear', () => {
 });
 
 //  Update points in user table, and braodcast winner to room users
-socket.on('updateDOM', ({winner, GameState}) => {
+socket.on('updateDOM', ({winnerArray, GameState}) => {
 	/* example winner
 	{user: {…}, whiteCard: "YOU MUST CONSTRUCT ADDITIONAL PYLONS."}
 		=>user: {id: "QrtAPvMfiVpLLJgxAAAE", username: "Joe", room: "Sausage", points: 0, whiteCards: Array(10), …}
@@ -124,7 +128,11 @@ socket.on('updateDOM', ({winner, GameState}) => {
 	outputBlackCard(GameState);
 
 	// Update DOM with winner info
-	outputWinner(winner);
+	//const winnerArray = [];
+	//winnerArray.push(winner);
+	//winnerArray.push(winner);
+	//winnerArray.push(winner);
+	outputWinner(winnerArray);
 
 	// Update DOM with new white cards
 	outputWhiteCards(GameState, true);

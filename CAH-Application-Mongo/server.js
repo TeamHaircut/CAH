@@ -208,8 +208,7 @@ io.on('connection', socket => {
 	});
 	
 	// Listen for winner event
-	socket.on('declareWinner', ({card}) => {
-		console.log(card);
+	socket.on('declareWinner', ({cardArray}) => {
 /*		example card
 		{
 			user: {
@@ -235,6 +234,17 @@ io.on('connection', socket => {
 		  }										*/
 		cardSelected = false;
 		const user = getCurrentUser(socket.id);
+
+		//const cardArray = [];
+		//cardArray.push(card);
+		//cardArray.push(card);
+		//cardArray.push(card);
+
+		var card = {};
+		cardArray.forEach(c => {
+			card = c;
+		});
+
 		//extract user from card
 		var name = card.user.username;
 
@@ -246,7 +256,7 @@ io.on('connection', socket => {
 		
 		//Emit updated DOM to all users
 		io.to(card.user.room).emit('updateDOM', {
-			winner: card, 
+			winnerArray: cardArray, 
 			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 		});
 

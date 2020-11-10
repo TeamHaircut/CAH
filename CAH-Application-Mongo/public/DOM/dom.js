@@ -178,7 +178,7 @@ function outputJudgeHand(GameState) {
 	});
 }
 
-function outputWinner(winner) {
+function outputWinner(winnerArray) {
 	/* example winner
 	{user: {…}, whiteCard: "YOU MUST CONSTRUCT ADDITIONAL PYLONS."}
 		=>user: {id: "QrtAPvMfiVpLLJgxAAAE", username: "Joe", room: "Sausage", points: 0, whiteCards: Array(10), …}
@@ -186,9 +186,32 @@ function outputWinner(winner) {
 	*/
 	infoDiv.innerHTML = ``;
 	judgeHandDiv.innerHTML = ``;
-	judgeHandDiv.style.overflowX = "auto";
+	judgeHandDiv.style.overflowX = "visible";
 
-	const cardBorder = document.createElement('div');
+	//assume winner is an array with multiple cards
+	var count = 0;
+	//const winnerArray = [];
+	//winnerArray.push(winner);
+	//winnerArray.push(winner);
+	//winnerArray.push(winner);
+	winnerArray.forEach(winner => {
+
+		count++;
+		var multiplier = 1;
+		switch(count) {
+			case 1:
+				multiplier = 1; break;
+			case 2:
+				multiplier = 4; break;
+			case 3:
+				multiplier = 5; break;
+			default:
+				multiplier = 9; break;
+		}
+		var scrollSize = multiplier*count;
+		judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
+
+		const cardBorder = document.createElement('div');
 		cardBorder.classList.add("card");
 		cardBorder.classList.add("bg-success");
 		cardBorder.style.height = "13rem";
@@ -207,4 +230,6 @@ function outputWinner(winner) {
 		cardBorder.appendChild(cardHead);
 
 		document.querySelector('.judgehand-div').appendChild(cardBorder);
+
+	});
 }
