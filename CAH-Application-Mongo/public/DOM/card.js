@@ -60,10 +60,6 @@ function getCardButton(czar, card, user, buttonType) {
 	var button2 = document.createElement('p');
 	var button0 = document.createElement('p');
 	var button1 = document.createElement('p');
-	const cardArray = [];
-	cardArray.push(card);
-	cardArray.push(card);
-	cardArray.push(card);
     switch(buttonType) {
         case 'play':
             if(getClientUsername() != czar.username) {
@@ -78,6 +74,11 @@ function getCardButton(czar, card, user, buttonType) {
             if(getClientUsername() == czar.username) {
                 button0 = getButtonText(buttonType);
                 button0.addEventListener('click', () => {
+					//build winning card array from data
+					const cardArray = [];
+					cardArray.push(card);
+					cardArray.push(card);
+					cardArray.push(card);
                     sendWinnerInfoToServer(cardArray);
                     setTimeout(() => {
 						clearHand();
