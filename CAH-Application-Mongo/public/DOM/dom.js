@@ -159,8 +159,10 @@ function outputJudgeHand(GameState) {
 		player.clientCardArray.forEach(card => {
 
 			count++;
-			var scrollSize = 9*count;
-			judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
+			var scrollSize = 10*count;
+			//judgeHandDiv.stle.minWidth = "5rem";
+			//judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
+			judgeHandDiv.style.maxWidth = `210rem`;
 			var cardBorder;
 			var cardHead;
 			var cardButton;

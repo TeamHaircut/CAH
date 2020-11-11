@@ -56,7 +56,7 @@ function getCardHeader() {
 	return cardHeader;
 }
 ///////////////////////////////
-var drawCount = 2;
+var drawCount = 3;
 var cardCount = 0;
 var clientCardArray = [];
 ///////////////////////////////
