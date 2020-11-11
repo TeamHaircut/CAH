@@ -291,7 +291,6 @@ function outputWinner(winnerArray) {
 	winnerArray.forEach(winner => {
 		winner.forEach(card=> {
 
-			console.log(card);
 			count++;
 			var multiplier = 1;
 			switch(count) {
@@ -326,6 +325,8 @@ function outputWinner(winnerArray) {
 			cardBorder.appendChild(cardHead);
 
 			document.querySelector('.judgehand-div').appendChild(cardBorder);
+			cardCount = 0;
+			clientCardArray = [];
 		});
 	});
 }

@@ -57,8 +57,8 @@ function getCardHeader() {
 }
 ///////////////////////////////
 var drawCount = 2;
-var count = 0;
-const clientCardArray = [];
+var cardCount = 0;
+var clientCardArray = [];
 ///////////////////////////////
 function getCardButton(czar, card, user, buttonType) {
 	var button2 = document.createElement('p');
@@ -70,10 +70,10 @@ function getCardButton(czar, card, user, buttonType) {
                 button0 = getButtonText(buttonType);
                 button0.addEventListener('click', () => {
 					////////////////////////////////////////
-					count++;
+					cardCount++;
 					clientCardArray.push({whiteCard: card, username: user.username});
 					//removePlayButton(czar, user);
-					if(count == drawCount) {
+					if(cardCount == drawCount) {
 						removePlayButton(czar, user);//remove this
 						sendWhiteCardToServer(clientCardArray);
 					}
@@ -94,7 +94,7 @@ function getCardButton(czar, card, user, buttonType) {
 						clearHand();
 						drawBlackCard();
                     },
-                        30000
+                        3000
                     )
                 });
             }

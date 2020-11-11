@@ -211,7 +211,6 @@ io.on('connection', socket => {
 	
 	// Listen for winner event
 	socket.on('declareWinner', ({card}) => {
-		console.log(card);
 /*		example card
 		{
 			user: {
@@ -244,13 +243,11 @@ io.on('connection', socket => {
 		//cardArray.push(card);
 		//cardArray.push(card);
 
-		console.log(getJudgeHand());
 		getJudgeHand().forEach(cardArray0 => {
 			if (cardArray0.user.username == card.username) {
 				cardArray.push(cardArray0.clientCardArray);
 			}
 		});
-		console.log(cardArray);
 
 		//var card = {};
 		//cardArray.forEach(c => {
