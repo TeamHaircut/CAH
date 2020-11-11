@@ -55,7 +55,11 @@ function getCardHeader() {
     cardHeader.classList.add('card-header');
 	return cardHeader;
 }
-
+///////////////////////////////
+var drawCount = 2;
+var count = 0;
+const clientCardArray = [];
+///////////////////////////////
 function getCardButton(czar, card, user, buttonType) {
 	var button2 = document.createElement('p');
 	var button0 = document.createElement('p');
@@ -65,8 +69,15 @@ function getCardButton(czar, card, user, buttonType) {
             if(getClientUsername() != czar.username) {
                 button0 = getButtonText(buttonType);
                 button0.addEventListener('click', () => {
-                    sendWhiteCardToServer(card);
-                    removePlayButton(czar, user);	
+					////////////////////////////////////////
+					count++;
+					clientCardArray.push({whiteCard: card, username: user.username});
+					//removePlayButton(czar, user);
+					if(count == drawCount) {
+						removePlayButton(czar, user);//remove this
+						sendWhiteCardToServer(clientCardArray);
+					}
+					////////////////////////////////////////	
                 });
             }
             break;
@@ -75,11 +86,10 @@ function getCardButton(czar, card, user, buttonType) {
                 button0 = getButtonText(buttonType);
                 button0.addEventListener('click', () => {
 					//build winning card array from data
-					const cardArray = [];
-					cardArray.push(card);
-					cardArray.push(card);
-					cardArray.push(card);
-                    sendWinnerInfoToServer(cardArray);
+					//cardArray.push(card);
+					//cardArray.push(card);
+					//cardArray.push(card);
+                    sendWinnerInfoToServer(card);
                     setTimeout(() => {
 						clearHand();
 						drawBlackCard();

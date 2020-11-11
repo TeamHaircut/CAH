@@ -56,9 +56,8 @@ function nextCardCzar(currentCzar, roomUserList) {
 }
 
 // Push white card info to czarHand Array
-function appendCzarHand(user, whiteCard) {
-	czarHand.push({user, whiteCard});
-
+function appendCzarHand(user, clientCardArray) {
+	czarHand.push({user, clientCardArray});
 	//example czarHand contents
 /*	[
 		{
@@ -70,9 +69,10 @@ function appendCzarHand(user, whiteCard) {
 			whiteCards: [Array],
 			status: 'active'
 		  },
-		  whiteCard: 'Crucifixion.'
+		  whiteCard: 'Crucifixion.'					-old
+		  clientCardArray: [ [Object], [Object] ]	-new
 		}
-	  ]									*/
+	]									*/
 }
 
 //Grab a top card from czar hand

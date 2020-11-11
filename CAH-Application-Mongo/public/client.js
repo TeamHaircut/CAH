@@ -77,18 +77,19 @@ socket.on('drawBlackCard', ({GameState})=> {
 	outputBlackCard(GameState);
 });
 
-function sendWhiteCardToServer(whiteCard) {
+function sendWhiteCardToServer(clientCardArray) {
 	//this event occurs after client plays a white card
 	//and simulates the action of handing a white card to the czar
 	//example whiteCard = "AXE Body Spray."
-	socket.emit('sendWhiteCardToServer', {whiteCard});
+
+	socket.emit('sendWhiteCardToServer', {clientCardArray});
 }
 
 function turnCzarCard() {
 	socket.emit('removeCzarCard');
 }
 
-function sendWinnerInfoToServer(cardArray) {
+function sendWinnerInfoToServer(card) {
 	//example card
 	/*
 	{user: {…}, whiteCard: "Getting drunk on mouthwash."}
@@ -99,7 +100,7 @@ function sendWinnerInfoToServer(cardArray) {
 	//cardArray.push(card);
 	//cardArray.push(card);
 	//cardArray.push(card);
-	socket.emit('declareWinner', {cardArray});
+	socket.emit('declareWinner', {card});
 }
 
 function clearHand() {
@@ -182,7 +183,6 @@ socket.on('refreshDOM', ({GameState, bcSelected}) => {
 
 //  Broadcast white cards received by server
 socket.on('czarHand', ({GameState}) => {
-
 	// Update DOM with czar info
 	outputCzarHand(GameState, true);
 });

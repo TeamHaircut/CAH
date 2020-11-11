@@ -34,38 +34,39 @@ function outputBlackCard(GameState) {
 function outputCzarHand(GameState, flag) {
 	outputBlackCard(GameState);
 	czarDeckDiv.innerHTML =``;
+	//GameState.czarHand.forEach(card => {
+	GameState.czarHand.forEach(player => {
+		player.clientCardArray.forEach(card => {
+			const cardBorder = document.createElement('div');
+			cardBorder.classList.add("card");
+			cardBorder.style.height = "13rem";
+			cardBorder.style.minWidth = "8rem";
+			cardBorder.style.maxWidth = "8rem";
+			cardBorder.style.borderColor = "black";
+			cardBorder.style.backgroundColor = "border-dark";
+			cardBorder.style.marginRight ="-7rem";
+			cardBorder.style.boxShadow = "1px 1px 1px 1px black";
 
-	GameState.czarHand.forEach(card => {
-		const cardBorder = document.createElement('div');
-		cardBorder.classList.add("card");
-		cardBorder.style.height = "13rem";
-		cardBorder.style.minWidth = "8rem";
-		cardBorder.style.maxWidth = "8rem";
-		cardBorder.style.borderColor = "black";
-		cardBorder.style.backgroundColor = "border-dark";
-		cardBorder.style.marginRight ="-7rem";
-		cardBorder.style.boxShadow = "1px 1px 1px 1px black";
+			const cardHead = getCardHeader();
 
-		const cardHead = getCardHeader();
+			const cardB = getCardBody(card);
+			cardB.querySelector('.card-title').style.fontSize = "large";
+			cardB.querySelector('.card-title').innerHTML = "Cards<br>Against<br>Humanity<br>";
 
-		const cardB = getCardBody(card);
-		cardB.querySelector('.card-title').style.fontSize = "large";
-		cardB.querySelector('.card-title').innerHTML = "Cards<br>Against<br>Humanity<br>";
+			setUserWaitList(GameState.gameusers, GameState.czarHand, GameState.cardCzar);
 
-		setUserWaitList(GameState.gameusers, GameState.czarHand, GameState.cardCzar);
+				infoDiv.innerHTML = "Waiting for";
 
-			infoDiv.innerHTML = "Waiting for";
+				getUserWaitList().forEach(name => {
+					infoDiv.innerHTML+=` ... ${name} `; 
+				});
 
-			getUserWaitList().forEach(name => {
-				infoDiv.innerHTML+=` ... ${name} `; 
-			});
-
-		const inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.gameusers, cardB, flag);
-		
-		cardBorder.appendChild(inter);
-		cardBorder.appendChild(cardHead);
-
-		document.querySelector('.czardeck-div').appendChild(cardBorder);
+			const inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.gameusers, cardB, flag);
+			
+			cardBorder.appendChild(inter);
+			cardBorder.appendChild(cardHead);
+			document.querySelector('.czardeck-div').appendChild(cardBorder);
+		});
 	});
 }
 
@@ -150,35 +151,128 @@ function outputMessage(message) {
 
 function outputJudgeHand(GameState) {
 	judgeHandDiv.innerHTML =``;
-	judgeHandDiv.style.overflowX = "auto";
-	var count = 0;
-	GameState.judgeHand.slice().reverse().forEach(card => {
-		//example of card
-		/*
-		{user: {…}, whiteCard: "Black people."}
-			=>user: {id: "K0sFyAMM-yNy1gQsAAAE", username: "Joe", room: "Sausage", points: 0, whiteCards: Array(10), …}
-			=>whiteCard: "Black people."
-		*/
-		count++;
-		var scrollSize = 9*count;
-		judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
-		var myCard;
-		
-		if(GameState.judgeHand.length === (GameState.gameusers.length-1)  && (getClientUsername() == GameState.cardCzar.username) )  {
-			myCard = buildCard('light', GameState.cardCzar, card, false, 'select');
-		} else {
-			myCard = buildCard('light', GameState.cardCzar, card, false, 'client');
-		}
+	judgeHandDiv.style.overflowX = "auto";//auto
+	
+	//GameState.judgeHand.slice().reverse().forEach(card => {
+	GameState.judgeHand.slice().reverse().forEach(player => {
+		var count = 0;	
+		player.clientCardArray.forEach(card => {
 
-		if(getClientUsername() != GameState.cardCzar.username) {
-			myCard = buildCard('light', GameState.cardCzar, card, false, 'client');
-		}
+			count++;
+			var scrollSize = 9*count;
+			judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
+			var cardBorder;
+			var cardHead;
+			var cardButton;
+			var cardB;
+			var inter;
+			
+			if(GameState.judgeHand.length === (GameState.gameusers.length-1)  && (getClientUsername() == GameState.cardCzar.username) )  {
+				//cardBorder = buildCard('light', GameState.cardCzar, card, false, 'select');
+				cardBorder = document.createElement('div');
+				cardBorder.classList.add("card");
+				cardBorder.style.height = "13rem";
+				cardBorder.style.minWidth = "8rem";
+				cardBorder.style.maxWidth = "8rem";
+				cardBorder.style.borderColor = "black";
+				cardBorder.style.backgroundColor = "border-dark";
+				if(count==1) {
+					cardBorder.style.marginLeft ="2rem";//-7, 1.5?
+				}
+				cardBorder.style.marginRight ="0rem";//-7, 1.5?
+				cardBorder.style.boxShadow = "1px 1px 1px 1px black";
 
-		document.querySelector('.judgehand-div').appendChild(myCard);
+				cardHead = getCardHeader();
+				if(count==1) {
+					cardButton = getCardButton(GameState.cardCzar, card, false, 'select');
+					cardHead.appendChild(cardButton);
+				} else {
+					cardHead.appendChild(document.createElement('p'));
+				}
+				cardB = getCardBody(card);
+				
+				cardBorder.appendChild(cardB);
+				cardBorder.appendChild(cardHead);				
+
+				//inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.gameusers, cardB, false);
+				//cardBorder.appendChild(inter);
+				//cardBorder.appendChild(cardHead);
+			} else {
+				//cardBorder = buildCard('light', GameState.cardCzar, card, false, 'client');
+				cardBorder = document.createElement('div');
+				cardBorder.classList.add("card");
+				cardBorder.style.height = "13rem";
+				cardBorder.style.minWidth = "8rem";
+				cardBorder.style.maxWidth = "8rem";
+				cardBorder.style.borderColor = "black";
+				cardBorder.style.backgroundColor = "border-dark";
+				if(count==1) {
+					cardBorder.style.marginLeft ="2rem";//-7, 1.5?
+				}
+				cardBorder.style.marginRight ="0rem";//-7, 1.5?
+				cardBorder.style.boxShadow = "1px 1px 1px 1px black";
+
+				cardHead = getCardHeader();
+				if(count==1) {
+					cardButton = getCardButton(GameState.cardCzar, card, false, 'client');
+					cardHead.appendChild(cardButton);
+				} else {
+					cardHead.appendChild(document.createElement('p'));
+				}
+				cardB = getCardBody(card);
+				
+				cardBorder.appendChild(cardB);
+				cardBorder.appendChild(cardHead);				
+
+				//inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.gameusers, cardB, false);
+				//cardBorder.appendChild(inter);
+				//cardBorder.appendChild(cardHead);
+			}
+
+			if(getClientUsername() != GameState.cardCzar.username) {
+				//cardBorder = buildCard('light', GameState.cardCzar, card, false, 'client');
+				cardBorder = document.createElement('div');
+				cardBorder.classList.add("card");
+				cardBorder.style.height = "13rem";
+				cardBorder.style.minWidth = "8rem";
+				cardBorder.style.maxWidth = "8rem";
+				cardBorder.style.borderColor = "black";
+				cardBorder.style.backgroundColor = "border-dark";
+				if(count==1) {
+					cardBorder.style.marginLeft ="2rem";//-7, 1.5?
+				}
+				cardBorder.style.marginRight ="0rem";//-7, 1.5?
+				cardBorder.style.boxShadow = "1px 1px 1px 1px black";
+
+				cardHead = getCardHeader();
+				if(count==1) {
+					cardButton = getCardButton(GameState.cardCzar, card, false, 'client');
+					cardHead.appendChild(cardButton);
+				} else {
+					cardHead.appendChild(document.createElement('p'));
+				}
+				cardB = getCardBody(card);
+				
+				cardBorder.appendChild(cardB);
+				cardBorder.appendChild(cardHead);				
+
+				//inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.gameusers, cardB, false);
+				//cardBorder.appendChild(inter);
+				//cardBorder.appendChild(cardHead);
+			}
+			//////////////////////////////////////////////////////////
+			//TODO OVERLAP RELATED JUDGE HAND CARDS.
+			//TODO FIX WINNER SELECTION
+			//TODO FIX REMOVEPLAYBUTTON FUNCTION
+			//TESTING CURRENTLY SET FOR DRAW 2 (see cards.js)
+			//////////////////////////////////////////////////////////
+			document.querySelector('.judgehand-div').appendChild(cardBorder);
+		});
 	});
 }
 
 function outputWinner(winnerArray) {
+	
 	/* example winner
 	{user: {…}, whiteCard: "YOU MUST CONSTRUCT ADDITIONAL PYLONS."}
 		=>user: {id: "QrtAPvMfiVpLLJgxAAAE", username: "Joe", room: "Sausage", points: 0, whiteCards: Array(10), …}
@@ -195,41 +289,43 @@ function outputWinner(winnerArray) {
 	//winnerArray.push(winner);
 	//winnerArray.push(winner);
 	winnerArray.forEach(winner => {
+		winner.forEach(card=> {
 
-		count++;
-		var multiplier = 1;
-		switch(count) {
-			case 1:
-				multiplier = 1; break;
-			case 2:
-				multiplier = 4; break;
-			case 3:
-				multiplier = 5; break;
-			default:
-				multiplier = 9; break;
-		}
-		var scrollSize = multiplier*count;
-		judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
+			console.log(card);
+			count++;
+			var multiplier = 1;
+			switch(count) {
+				case 1:
+					multiplier = 1; break;
+				case 2:
+					multiplier = 4; break;
+				case 3:
+					multiplier = 5; break;
+				default:
+					multiplier = 9; break;
+			}
+			var scrollSize = multiplier*count;
+			judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
 
-		const cardBorder = document.createElement('div');
-		cardBorder.classList.add("card");
-		cardBorder.classList.add("bg-success");
-		cardBorder.style.height = "13rem";
-		cardBorder.style.minWidth = "8rem";
-		cardBorder.style.maxWidth = "8rem";
-		cardBorder.style.borderColor = "black";
-		cardBorder.style.marginRight ="-7rem";
-		cardBorder.style.boxShadow = "1px 1px 1px 1px black";
+			const cardBorder = document.createElement('div');
+			cardBorder.classList.add("card");
+			cardBorder.classList.add("bg-success");
+			cardBorder.style.height = "13rem";
+			cardBorder.style.minWidth = "8rem";
+			cardBorder.style.maxWidth = "8rem";
+			cardBorder.style.borderColor = "black";
+			cardBorder.style.marginRight ="0rem";
+			cardBorder.style.boxShadow = "1px 1px 1px 1px black";
 
-		const cardHead = getCardHeader();
+			const cardHead = getCardHeader();
 
-		const cardB = getCardBody(winner);
-		cardB.querySelector('.card-text').innerHTML = `${winner.user.username} Wins!`;
+			const cardB = getCardBody(card.whiteCard);
+			cardB.querySelector('.card-text').innerHTML = `${card.username} Wins!`;
 
-		cardBorder.appendChild(cardB);
-		cardBorder.appendChild(cardHead);
+			cardBorder.appendChild(cardB);
+			cardBorder.appendChild(cardHead);
 
-		document.querySelector('.judgehand-div').appendChild(cardBorder);
-
+			document.querySelector('.judgehand-div').appendChild(cardBorder);
+		});
 	});
 }

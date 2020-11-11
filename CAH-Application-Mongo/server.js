@@ -160,14 +160,14 @@ io.on('connection', socket => {
 	});
 	
 	// Listen for incoming white cards
-	socket.on('sendWhiteCardToServer', ({whiteCard}) => {
+	socket.on('sendWhiteCardToServer', ({clientCardArray}) => {
 		const user = getCurrentUser(socket.id);
 		//this event occurs after client plays a white card
 		//and simulates the action of the czar receiving a white card from user
 		//example whiteCard = "AXE Body Spray."
 
 		// push white card and sending user to czar's hand
-		appendCzarHand(user, whiteCard);
+		appendCzarHand(user, clientCardArray);
 
 		// Emit czar hand to clients
 		io.to(user.room).emit('czarHand', {
@@ -181,6 +181,7 @@ io.on('connection', socket => {
 		
 		// push white card and sending user to czar's hand
 		appendCards(popCzarHand());
+		// don't for get to uncomment emits at bottom of this function
 		//example judgeHand
 /*		[
 			{
@@ -192,7 +193,8 @@ io.on('connection', socket => {
 				whiteCards: [Array],
 				status: 'active'
 			  },
-			  whiteCard: 'Racism.'
+			  whiteCard: 'Racism.'				-old
+			  clientCardArray: [ [Object] ]		-new
 			}
 		  ]								*/
 
@@ -208,7 +210,8 @@ io.on('connection', socket => {
 	});
 	
 	// Listen for winner event
-	socket.on('declareWinner', ({cardArray}) => {
+	socket.on('declareWinner', ({card}) => {
+		console.log(card);
 /*		example card
 		{
 			user: {
@@ -235,27 +238,37 @@ io.on('connection', socket => {
 		cardSelected = false;
 		const user = getCurrentUser(socket.id);
 
-		//const cardArray = [];
+		const cardArray = [];
+		//build winning card array from judgeHand
 		//cardArray.push(card);
 		//cardArray.push(card);
 		//cardArray.push(card);
 
-		var card = {};
-		cardArray.forEach(c => {
-			card = c;
+		console.log(getJudgeHand());
+		getJudgeHand().forEach(cardArray0 => {
+			if (cardArray0.user.username == card.username) {
+				cardArray.push(cardArray0.clientCardArray);
+			}
 		});
+		console.log(cardArray);
+
+		//var card = {};
+		//cardArray.forEach(c => {
+		//	card = c;
+		//});
 
 		//extract user from card
-		var name = card.user.username;
+		var name = card.username;
 
 		//update points for name
 		updatePoints(name);
 		
 		// Replace Used White Cards
-		updateRoomUsersWhiteCards(replaceWhiteCards(getRoomUserList(card.user.room), getJudgeHand()));
+		//updateRoomUsersWhiteCards(replaceWhiteCards(getRoomUserList(card.user.room), getJudgeHand()));
+		updateRoomUsersWhiteCards(replaceWhiteCards(getRoomUserList(user.room), getJudgeHand()));
 		
 		//Emit updated DOM to all users
-		io.to(card.user.room).emit('updateDOM', {
+		io.to(user.room).emit('updateDOM', {
 			winnerArray: cardArray, 
 			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 		});
@@ -263,7 +276,7 @@ io.on('connection', socket => {
 		// Update card czar
 		setCardCzar(
 			nextCardCzar(
-				getCardCzar(), getGameUserList(card.user.room)
+				getCardCzar(), getGameUserList(user.room)
 			)
 		);
 				
