@@ -34,38 +34,39 @@ function outputBlackCard(GameState) {
 function outputCzarHand(GameState, flag) {
 	outputBlackCard(GameState);
 	czarDeckDiv.innerHTML =``;
+	//GameState.czarHand.forEach(card => {
+	GameState.czarHand.forEach(player => {
+		player.clientCardArray.forEach(card => {
+			const cardBorder = document.createElement('div');
+			cardBorder.classList.add("card");
+			cardBorder.style.height = "13rem";
+			cardBorder.style.minWidth = "8rem";
+			cardBorder.style.maxWidth = "8rem";
+			cardBorder.style.borderColor = "black";
+			cardBorder.style.backgroundColor = "border-dark";
+			cardBorder.style.marginRight ="-7rem";
+			cardBorder.style.boxShadow = "1px 1px 1px 1px black";
 
-	GameState.czarHand.forEach(card => {
-		const cardBorder = document.createElement('div');
-		cardBorder.classList.add("card");
-		cardBorder.style.height = "13rem";
-		cardBorder.style.minWidth = "8rem";
-		cardBorder.style.maxWidth = "8rem";
-		cardBorder.style.borderColor = "black";
-		cardBorder.style.backgroundColor = "border-dark";
-		cardBorder.style.marginRight ="-7rem";
-		cardBorder.style.boxShadow = "1px 1px 1px 1px black";
+			const cardHead = getCardHeader();
 
-		const cardHead = getCardHeader();
+			const cardB = getCardBody(card);
+			cardB.querySelector('.card-title').style.fontSize = "large";
+			cardB.querySelector('.card-title').innerHTML = "Cards<br>Against<br>Humanity<br>";
 
-		const cardB = getCardBody(card);
-		cardB.querySelector('.card-title').style.fontSize = "large";
-		cardB.querySelector('.card-title').innerHTML = "Cards<br>Against<br>Humanity<br>";
+			setUserWaitList(GameState.gameusers, GameState.czarHand, GameState.cardCzar);
 
-		setUserWaitList(GameState.gameusers, GameState.czarHand, GameState.cardCzar);
+				infoDiv.innerHTML = "Waiting for";
 
-			infoDiv.innerHTML = "Waiting for";
+				getUserWaitList().forEach(name => {
+					infoDiv.innerHTML+=` ... ${name} `; 
+				});
 
-			getUserWaitList().forEach(name => {
-				infoDiv.innerHTML+=` ... ${name} `; 
-			});
-
-		const inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.gameusers, cardB, flag);
-		
-		cardBorder.appendChild(inter);
-		cardBorder.appendChild(cardHead);
-
-		document.querySelector('.czardeck-div').appendChild(cardBorder);
+			const inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.gameusers, cardB, flag);
+			
+			cardBorder.appendChild(inter);
+			cardBorder.appendChild(cardHead);
+			document.querySelector('.czardeck-div').appendChild(cardBorder);
+		});
 	});
 }
 
@@ -93,7 +94,20 @@ function removePlayButton(czar, user) {
 	whiteCardsDiv.innerHTML = ``;
 	whiteCardsDiv.style.overflowX = "auto";
 	user.whiteCards.forEach(whiteCard=>{
-		document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, false));
+		//document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, false));
+		var localArray = getClientCardArray();
+		var localMap = new Map();	
+		localArray.forEach(card => {
+			localMap.set(card.whiteCard, true);
+			console.log("localMap Card "+card.whiteCard);
+		});	
+		console.log("WhiteCard "+whiteCard);
+		if(localMap.get(whiteCard) || (cardCount == drawCount)) {
+			document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, false));
+		} else {
+			document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, 'play'));
+		}
+
 	});
 }
 
@@ -150,50 +164,184 @@ function outputMessage(message) {
 
 function outputJudgeHand(GameState) {
 	judgeHandDiv.innerHTML =``;
-	judgeHandDiv.style.overflowX = "auto";
-	var count = 0;
-	GameState.judgeHand.slice().reverse().forEach(card => {
-		count++;
-		var scrollSize = 9*count;
-		judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
-		var myCard;
-		
-		if(GameState.judgeHand.length === (GameState.gameusers.length-1)  && (getClientUsername() == GameState.cardCzar.username) )  {
-			myCard = buildCard('light', GameState.cardCzar, card, false, 'select');
-		} else {
-			myCard = buildCard('light', GameState.cardCzar, card, false, 'client');
-		}
+	judgeHandDiv.style.overflowX = "auto";//auto
+	
+	//GameState.judgeHand.slice().reverse().forEach(card => {
+	GameState.judgeHand.slice().reverse().forEach(player => {
+		var count = 0;	
+		player.clientCardArray.forEach(card => {
 
-		if(getClientUsername() != GameState.cardCzar.username) {
-			myCard = buildCard('light', GameState.cardCzar, card, false, 'client');
-		}
+			count++;
+			var scrollSize = 10*count;
+			//judgeHandDiv.stle.minWidth = "5rem";
+			//judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
+			judgeHandDiv.style.maxWidth = `210rem`;
+			var cardBorder;
+			var cardHead;
+			var cardButton;
+			var cardB;
+			var inter;
+			
+			if(GameState.judgeHand.length === (GameState.gameusers.length-1)  && (getClientUsername() == GameState.cardCzar.username) )  {
+				//cardBorder = buildCard('light', GameState.cardCzar, card, false, 'select');
+				cardBorder = document.createElement('div');
+				cardBorder.classList.add("card");
+				cardBorder.style.height = "13rem";
+				cardBorder.style.minWidth = "8rem";
+				cardBorder.style.maxWidth = "8rem";
+				cardBorder.style.borderColor = "black";
+				cardBorder.style.backgroundColor = "border-dark";
+				if(count==1) {
+					cardBorder.style.marginLeft ="1rem";//set margin-left =2 to increase separation between judge cardArrays
+				}
+				cardBorder.style.marginRight ="0rem";
+				cardBorder.style.boxShadow = "1px 1px 1px 1px black";
 
-		document.querySelector('.judgehand-div').appendChild(myCard);
+				cardHead = getCardHeader();
+				if(count==1) {
+					cardButton = getCardButton(GameState.cardCzar, card, false, 'select');
+					cardHead.appendChild(cardButton);
+				} else {
+					cardHead.appendChild(document.createElement('p'));
+				}
+				cardB = getCardBody(card);
+				
+				cardBorder.appendChild(cardB);
+				cardBorder.appendChild(cardHead);				
+
+				//inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.gameusers, cardB, false);
+				//cardBorder.appendChild(inter);
+				//cardBorder.appendChild(cardHead);
+			} else {
+				//cardBorder = buildCard('light', GameState.cardCzar, card, false, 'client');
+				cardBorder = document.createElement('div');
+				cardBorder.classList.add("card");
+				cardBorder.style.height = "13rem";
+				cardBorder.style.minWidth = "8rem";
+				cardBorder.style.maxWidth = "8rem";
+				cardBorder.style.borderColor = "black";
+				cardBorder.style.backgroundColor = "border-dark";
+				if(count==1) {
+					cardBorder.style.marginLeft ="1rem";//set margin-left =2 to increase separation between judge cardArrays
+				}
+				cardBorder.style.marginRight ="0rem";//-7, 1.5?
+				cardBorder.style.boxShadow = "1px 1px 1px 1px black";
+
+				cardHead = getCardHeader();
+				if(count==1) {
+					cardButton = getCardButton(GameState.cardCzar, card, false, 'client');
+					cardHead.appendChild(cardButton);
+				} else {
+					cardHead.appendChild(document.createElement('p'));
+				}
+				cardB = getCardBody(card);
+				
+				cardBorder.appendChild(cardB);
+				cardBorder.appendChild(cardHead);				
+
+				//inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.gameusers, cardB, false);
+				//cardBorder.appendChild(inter);
+				//cardBorder.appendChild(cardHead);
+			}
+
+			if(getClientUsername() != GameState.cardCzar.username) {
+				//cardBorder = buildCard('light', GameState.cardCzar, card, false, 'client');
+				cardBorder = document.createElement('div');
+				cardBorder.classList.add("card");
+				cardBorder.style.height = "13rem";
+				cardBorder.style.minWidth = "8rem";
+				cardBorder.style.maxWidth = "8rem";
+				cardBorder.style.borderColor = "black";
+				cardBorder.style.backgroundColor = "border-dark";
+				if(count==1) {
+					cardBorder.style.marginLeft ="1rem";//set margin-left =2 to increase separation between judge cardArrays
+				}
+				cardBorder.style.marginRight ="0rem";//-7, 1.5?
+				cardBorder.style.boxShadow = "1px 1px 1px 1px black";
+
+				cardHead = getCardHeader();
+				if(count==1) {
+					cardButton = getCardButton(GameState.cardCzar, card, false, 'client');
+					cardHead.appendChild(cardButton);
+				} else {
+					cardHead.appendChild(document.createElement('p'));
+				}
+				cardB = getCardBody(card);
+				
+				cardBorder.appendChild(cardB);
+				cardBorder.appendChild(cardHead);				
+
+				//inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.gameusers, cardB, false);
+				//cardBorder.appendChild(inter);
+				//cardBorder.appendChild(cardHead);
+			}
+			//////////////////////////////////////////////////////////
+			//TODO OVERLAP RELATED JUDGE HAND CARDS.
+			//TODO FIX WINNER SELECTION
+			//TODO FIX REMOVEPLAYBUTTON FUNCTION
+			//TESTING CURRENTLY SET FOR DRAW 2 (see cards.js)
+			//////////////////////////////////////////////////////////
+			document.querySelector('.judgehand-div').appendChild(cardBorder);
+		});
 	});
 }
 
-function outputWinner(winner) {
+function outputWinner(winnerArray) {
+	
+	/* example winner
+	{user: {…}, whiteCard: "YOU MUST CONSTRUCT ADDITIONAL PYLONS."}
+		=>user: {id: "QrtAPvMfiVpLLJgxAAAE", username: "Joe", room: "Sausage", points: 0, whiteCards: Array(10), …}
+		=>whiteCard: "YOU MUST CONSTRUCT ADDITIONAL PYLONS."
+	*/
 	infoDiv.innerHTML = ``;
 	judgeHandDiv.innerHTML = ``;
-	judgeHandDiv.style.overflowX = "auto";
+	judgeHandDiv.style.overflowX = "visible";
 
-	const cardBorder = document.createElement('div');
-		cardBorder.classList.add("card");
-		cardBorder.classList.add("bg-success");
-		cardBorder.style.height = "13rem";
-		cardBorder.style.minWidth = "8rem";
-		cardBorder.style.maxWidth = "8rem";
-		cardBorder.style.borderColor = "black";
-		cardBorder.style.marginRight ="-7rem";
-		cardBorder.style.boxShadow = "1px 1px 1px 1px black";
+	//assume winner is an array with multiple cards
+	var count = 0;
+	//const winnerArray = [];
+	//winnerArray.push(winner);
+	//winnerArray.push(winner);
+	//winnerArray.push(winner);
+	winnerArray.forEach(winner => {
+		winner.forEach(card=> {
 
-		const cardHead = getCardHeader();
+			count++;
+			var multiplier = 1;
+			switch(count) {
+				case 1:
+					multiplier = 1; break;
+				case 2:
+					multiplier = 4; break;
+				case 3:
+					multiplier = 5; break;
+				default:
+					multiplier = 9; break;
+			}
+			var scrollSize = multiplier*count;
+			judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
 
-		const cardB = getCardBody(winner);
-		cardB.querySelector('.card-text').innerHTML = `${winner.user.username} Wins!`;
+			const cardBorder = document.createElement('div');
+			cardBorder.classList.add("card");
+			cardBorder.classList.add("bg-success");
+			cardBorder.style.height = "13rem";
+			cardBorder.style.minWidth = "8rem";
+			cardBorder.style.maxWidth = "8rem";
+			cardBorder.style.borderColor = "black";
+			cardBorder.style.marginRight ="0rem";
+			cardBorder.style.boxShadow = "1px 1px 1px 1px black";
 
-		cardBorder.appendChild(cardB);
-		cardBorder.appendChild(cardHead);
+			const cardHead = getCardHeader();
 
-		document.querySelector('.judgehand-div').appendChild(cardBorder);
+			const cardB = getCardBody(card.whiteCard);
+			cardB.querySelector('.card-text').innerHTML = `${card.username} Wins!`;
+
+			cardBorder.appendChild(cardB);
+			cardBorder.appendChild(cardHead);
+
+			document.querySelector('.judgehand-div').appendChild(cardBorder);
+			cardCount = 0;
+			clientCardArray = [];
+		});
+	});
 }

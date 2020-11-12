@@ -56,8 +56,29 @@ function nextCardCzar(currentCzar, roomUserList) {
 }
 
 // Push white card info to czarHand Array
-function appendCzarHand(user, whiteCard) {
-	czarHand.push({user, whiteCard});
+function appendCzarHand(user, clientCardArray) {
+	czarHand.push({user, clientCardArray});
+	//example czarHand contents
+/*	[
+		{
+		  user: {
+			id: 'apEG879H73_udWOyAAAE',
+			username: 'Joe',
+			room: 'Sausage',
+			points: 0,
+			whiteCards: [Array],
+			status: 'active'
+		  },
+		  whiteCard: 'Crucifixion.'					-old
+		  clientCardArray: [ [Object], [Object] ]	-new
+		}
+	]									*/
+}
+
+//Grab a top card from czar hand
+function popCzarHand() {
+	czarHand = shuffleCards(getCzarHand());
+	return czarHand.pop();
 }
 
 // Push white card info to judge set
@@ -80,12 +101,6 @@ function shuffleCards(cards) {
 		cards[i] = temp;
 	}
 	return cards;
-}
-
-//Grab a top card from czar hand
-function popCzarHand() {
-	czarHand = shuffleCards(getCzarHand());
-	return czarHand.pop();
 }
 
 function clearHand() {
@@ -114,11 +129,28 @@ function initializeWhiteCards(roomusers,flag) {
 
 // Replace White Cards
 function replaceWhiteCards(roomUserList, czarHand) {
+	//console.log(czarHand);
 	czarHand.forEach(card => {
+		console.log(card);
 		var userIndex = roomUserList.findIndex(user => user.username === card.user.username);
-		var cardIndex = roomUserList[userIndex].whiteCards.findIndex(whiteCard => whiteCard === card.whiteCard);
+		console.log("userUndex "+userIndex);
+		//var cardIndex = roomUserList[userIndex].whiteCards.findIndex(whiteCard => whiteCard === card.whiteCard);
+		var cardIndex = -1;
+		card.clientCardArray.forEach(c => {
+
+			roomUserList[userIndex].whiteCards.forEach(whiteCard => {
+				if(c.whiteCard === whiteCard) {
+					console.log("cardIndex "+cardIndex);
+					cardIndex = roomUserList[userIndex].whiteCards.findIndex(w => w === c.whiteCard);
+					roomUserList[userIndex].whiteCards[cardIndex] = getWhiteDeck().pop();
+				}
+			});
+
+		});
+
+		
 		//roomUserList[userIndex].whiteCards[cardIndex] = whiteDeck.getWhiteDeck().pop();
-		roomUserList[userIndex].whiteCards[cardIndex] = getWhiteDeck().pop();
+		//roomUserList[userIndex].whiteCards[cardIndex] = getWhiteDeck().pop();
 
 	});
 	return roomUserList;
