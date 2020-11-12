@@ -56,9 +56,12 @@ function getCardHeader() {
 	return cardHeader;
 }
 ///////////////////////////////
-var drawCount = 3;
+var drawCount = 1;
 var cardCount = 0;
 var clientCardArray = [];
+function getClientCardArray() {
+	return clientCardArray;
+}
 ///////////////////////////////
 function getCardButton(czar, card, user, buttonType) {
 	var button2 = document.createElement('p');
@@ -72,9 +75,9 @@ function getCardButton(czar, card, user, buttonType) {
 					////////////////////////////////////////
 					cardCount++;
 					clientCardArray.push({whiteCard: card, username: user.username});
-					//removePlayButton(czar, user);
+					removePlayButton(czar, user);
 					if(cardCount == drawCount) {
-						removePlayButton(czar, user);//remove this
+						//removePlayButton(czar, user);//remove this
 						sendWhiteCardToServer(clientCardArray);
 					}
 					////////////////////////////////////////	

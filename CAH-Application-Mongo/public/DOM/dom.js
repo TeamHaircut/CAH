@@ -94,7 +94,20 @@ function removePlayButton(czar, user) {
 	whiteCardsDiv.innerHTML = ``;
 	whiteCardsDiv.style.overflowX = "auto";
 	user.whiteCards.forEach(whiteCard=>{
-		document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, false));
+		//document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, false));
+		var localArray = getClientCardArray();
+		var localMap = new Map();	
+		localArray.forEach(card => {
+			localMap.set(card.whiteCard, true);
+			console.log("localMap Card "+card.whiteCard);
+		});	
+		console.log("WhiteCard "+whiteCard);
+		if(localMap.get(whiteCard) || (cardCount == drawCount)) {
+			document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, false));
+		} else {
+			document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, 'play'));
+		}
+
 	});
 }
 
@@ -179,9 +192,9 @@ function outputJudgeHand(GameState) {
 				cardBorder.style.borderColor = "black";
 				cardBorder.style.backgroundColor = "border-dark";
 				if(count==1) {
-					cardBorder.style.marginLeft ="2rem";//-7, 1.5?
+					cardBorder.style.marginLeft ="1rem";//set margin-left =2 to increase separation between judge cardArrays
 				}
-				cardBorder.style.marginRight ="0rem";//-7, 1.5?
+				cardBorder.style.marginRight ="0rem";
 				cardBorder.style.boxShadow = "1px 1px 1px 1px black";
 
 				cardHead = getCardHeader();
@@ -209,7 +222,7 @@ function outputJudgeHand(GameState) {
 				cardBorder.style.borderColor = "black";
 				cardBorder.style.backgroundColor = "border-dark";
 				if(count==1) {
-					cardBorder.style.marginLeft ="2rem";//-7, 1.5?
+					cardBorder.style.marginLeft ="1rem";//set margin-left =2 to increase separation between judge cardArrays
 				}
 				cardBorder.style.marginRight ="0rem";//-7, 1.5?
 				cardBorder.style.boxShadow = "1px 1px 1px 1px black";
@@ -241,7 +254,7 @@ function outputJudgeHand(GameState) {
 				cardBorder.style.borderColor = "black";
 				cardBorder.style.backgroundColor = "border-dark";
 				if(count==1) {
-					cardBorder.style.marginLeft ="2rem";//-7, 1.5?
+					cardBorder.style.marginLeft ="1rem";//set margin-left =2 to increase separation between judge cardArrays
 				}
 				cardBorder.style.marginRight ="0rem";//-7, 1.5?
 				cardBorder.style.boxShadow = "1px 1px 1px 1px black";
