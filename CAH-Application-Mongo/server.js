@@ -162,10 +162,6 @@ io.on('connection', socket => {
 	// Listen for incoming white cards
 	socket.on('sendWhiteCardToServer', ({clientCardArray}) => {
 		const user = getCurrentUser(socket.id);
-		//this event occurs after client plays a white card
-		//and simulates the action of the czar receiving a white card from user
-		//example whiteCard = "AXE Body Spray."
-
 		// push white card and sending user to czar's hand
 		appendCzarHand(user, clientCardArray);
 
@@ -181,22 +177,6 @@ io.on('connection', socket => {
 		
 		// push white card and sending user to czar's hand
 		appendCards(popCzarHand());
-		// don't for get to uncomment emits at bottom of this function
-		//example judgeHand
-/*		[
-			{
-			  user: {
-				id: 'pNBnWH_HlfQ70NIWAAAE',
-				username: 'Joe',
-				room: 'Sausage',
-				points: 0,
-				whiteCards: [Array],
-				status: 'active'
-			  },
-			  whiteCard: 'Racism.'				-old
-			  clientCardArray: [ [Object] ]		-new
-			}
-		  ]								*/
 
 		// Emit judge hand to clients
 		io.to(user.room).emit('displayCards', {
@@ -211,48 +191,15 @@ io.on('connection', socket => {
 	
 	// Listen for winner event
 	socket.on('declareWinner', ({card}) => {
-/*		example card
-		{
-			user: {
-			  id: '6opNp_yzzaEqM0E8AAAE',
-			  username: 'Joe',
-			  room: 'Sausage',
-			  points: 0,
-			  whiteCards: [
-				'Sexy pillow fights.',
-				'A pyramid of severed heads.',
-				'This year’s mass shootings.',
-				'Christopher Walken.',
-				'Wearing underwear inside-out to avoid doing laundry.',
-				'Me time.',
-				'Spontaneous human combustion.',
-				'Full frontal nudity.',
-				'Doing the right thing.',
-				'Sean Connery.'
-			  ],
-			  status: 'active'
-			},
-			whiteCard: 'Sexy pillow fights.'
-		  }										*/
 		cardSelected = false;
 		const user = getCurrentUser(socket.id);
 
 		const cardArray = [];
-		//build winning card array from judgeHand
-		//cardArray.push(card);
-		//cardArray.push(card);
-		//cardArray.push(card);
-
 		getJudgeHand().forEach(cardArray0 => {
 			if (cardArray0.user.username == card.username) {
 				cardArray.push(cardArray0.clientCardArray);
 			}
 		});
-
-		//var card = {};
-		//cardArray.forEach(c => {
-		//	card = c;
-		//});
 
 		//extract user from card
 		var name = card.username;
@@ -261,7 +208,6 @@ io.on('connection', socket => {
 		updatePoints(name);
 		
 		// Replace Used White Cards
-		//updateRoomUsersWhiteCards(replaceWhiteCards(getRoomUserList(card.user.room), getJudgeHand()));
 		updateRoomUsersWhiteCards(replaceWhiteCards(getRoomUserList(user.room), getJudgeHand()));
 		
 		//Emit updated DOM to all users

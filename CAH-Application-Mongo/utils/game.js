@@ -59,21 +59,6 @@ function nextCardCzar(currentCzar, roomUserList) {
 // Push white card info to czarHand Array
 function appendCzarHand(user, clientCardArray) {
 	czarHand.push({user, clientCardArray});
-	//example czarHand contents
-/*	[
-		{
-		  user: {
-			id: 'apEG879H73_udWOyAAAE',
-			username: 'Joe',
-			room: 'Sausage',
-			points: 0,
-			whiteCards: [Array],
-			status: 'active'
-		  },
-		  whiteCard: 'Crucifixion.'					-old
-		  clientCardArray: [ [Object], [Object] ]	-new
-		}
-	]									*/
 }
 
 //Grab a top card from czar hand
@@ -115,7 +100,6 @@ function initializeWhiteCards(roomusers,flag) {
 		var i;
 		for(i = 0; i < 10 ; i++) {
 			if(flag) {
-				//var whiteCard = whiteDeck.getWhiteDeck().pop();
 				var whiteCard = getWhiteDeck().pop();
 				user.whiteCards.push(whiteCard);
 			}
@@ -130,29 +114,19 @@ function initializeWhiteCards(roomusers,flag) {
 
 // Replace White Cards
 function replaceWhiteCards(roomUserList, czarHand) {
-	//console.log(czarHand);
 	czarHand.forEach(card => {
-		//console.log(card);
 		var userIndex = roomUserList.findIndex(user => user.username === card.user.username);
-		//console.log("userUndex "+userIndex);
-		//var cardIndex = roomUserList[userIndex].whiteCards.findIndex(whiteCard => whiteCard === card.whiteCard);
 		var cardIndex = -1;
 		card.clientCardArray.forEach(c => {
 
 			roomUserList[userIndex].whiteCards.forEach(whiteCard => {
 				if(c.whiteCard === whiteCard) {
-					//console.log("cardIndex "+cardIndex);
 					cardIndex = roomUserList[userIndex].whiteCards.findIndex(w => w === c.whiteCard);
 					roomUserList[userIndex].whiteCards[cardIndex] = getWhiteDeck().pop();
 				}
 			});
 
 		});
-
-		
-		//roomUserList[userIndex].whiteCards[cardIndex] = whiteDeck.getWhiteDeck().pop();
-		//roomUserList[userIndex].whiteCards[cardIndex] = getWhiteDeck().pop();
-
 	});
 	return roomUserList;
 
@@ -166,18 +140,15 @@ function getCzarHand() {
 // Draw a black card
 function drawBlackCard(flag) {
 	if (flag) {
-		//blackCard = blackDeck.getBlackDeck().pop();
 		blackCard = getBlackDeck().pop();
 		if(!blackCard) {
-			//console.log("HERE")
 			var tempCount = 0;
 			while(!blackCard && tempCount < 10) {
 				blackCard = getBlackDeck().pop();
 				tempCount++;
 			}
 		}
-		//Add logic to determine drawcount
-		//hardcoded as 2 for now
+		// Logic to determine drawCount from blackCard text
 		var temp = blackCard;
 		if(temp) {
 			var count = (temp.match(/_*_/g) || []).length;
