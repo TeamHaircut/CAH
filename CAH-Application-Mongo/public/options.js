@@ -8,6 +8,7 @@ const limitedBtnGroup = document.getElementById('limitedBtnGroup');
 
 const  deckMap = new Map();
 const map2 = new Map();
+//New Deck Options go here
 ////////////////////////////////////////////////////////////
 var customPacks = [{id:'Custom', text:'Custom Cards'}];
 var basePacks = [
@@ -62,7 +63,7 @@ function createToggleButtons(packs, btnGroup) {
         map2.set(p.id, button);
     }
 }
-//////////////////////////////////////////////////////////////
+
 const socket1 = io('http://teamhaircut.org:5000', {
 	'reconnection': true,
 	'reconnectionDelay': 50,

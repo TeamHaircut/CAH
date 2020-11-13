@@ -35,7 +35,6 @@ function outputBlackCard(GameState) {
 function outputCzarHand(GameState, flag) {
 	outputBlackCard(GameState);
 	czarDeckDiv.innerHTML =``;
-	//GameState.czarHand.forEach(card => {
 	GameState.czarHand.forEach(player => {
 		player.clientCardArray.forEach(card => {
 			const cardBorder = document.createElement('div');
@@ -95,14 +94,11 @@ function removePlayButton(czar, user) {
 	whiteCardsDiv.innerHTML = ``;
 	whiteCardsDiv.style.overflowX = "auto";
 	user.whiteCards.forEach(whiteCard=>{
-		//document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, false));
 		var localArray = getClientCardArray();
 		var localMap = new Map();	
 		localArray.forEach(card => {
 			localMap.set(card.whiteCard, true);
-			//console.log("localMap Card "+card.whiteCard);
 		});	
-		//console.log("WhiteCard "+whiteCard);
 		if(localMap.get(whiteCard) || (cardCount == drawCount)) {
 			document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, false));
 		} else {
@@ -167,24 +163,18 @@ function outputJudgeHand(GameState) {
 	judgeHandDiv.innerHTML =``;
 	judgeHandDiv.style.overflowX = "auto";//auto
 	
-	//GameState.judgeHand.slice().reverse().forEach(card => {
 	GameState.judgeHand.slice().reverse().forEach(player => {
 		var count = 0;	
 		player.clientCardArray.forEach(card => {
 
 			count++;
-			var scrollSize = 10*count;
-			//judgeHandDiv.stle.minWidth = "5rem";
-			//judgeHandDiv.style.maxWidth = `${scrollSize}rem`;
 			judgeHandDiv.style.maxWidth = `210rem`;
 			var cardBorder;
 			var cardHead;
 			var cardButton;
 			var cardB;
-			var inter;
 			
 			if(GameState.judgeHand.length === (GameState.gameusers.length-1)  && (getClientUsername() == GameState.cardCzar.username) )  {
-				//cardBorder = buildCard('light', GameState.cardCzar, card, false, 'select');
 				cardBorder = document.createElement('div');
 				cardBorder.classList.add("card");
 				cardBorder.style.height = "13rem";
@@ -210,11 +200,7 @@ function outputJudgeHand(GameState) {
 				cardBorder.appendChild(cardB);
 				cardBorder.appendChild(cardHead);				
 
-				//inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.gameusers, cardB, false);
-				//cardBorder.appendChild(inter);
-				//cardBorder.appendChild(cardHead);
 			} else {
-				//cardBorder = buildCard('light', GameState.cardCzar, card, false, 'client');
 				cardBorder = document.createElement('div');
 				cardBorder.classList.add("card");
 				cardBorder.style.height = "13rem";
@@ -239,14 +225,9 @@ function outputJudgeHand(GameState) {
 				
 				cardBorder.appendChild(cardB);
 				cardBorder.appendChild(cardHead);				
-
-				//inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.gameusers, cardB, false);
-				//cardBorder.appendChild(inter);
-				//cardBorder.appendChild(cardHead);
 			}
 
 			if(getClientUsername() != GameState.cardCzar.username) {
-				//cardBorder = buildCard('light', GameState.cardCzar, card, false, 'client');
 				cardBorder = document.createElement('div');
 				cardBorder.classList.add("card");
 				cardBorder.style.height = "13rem";
@@ -271,39 +252,21 @@ function outputJudgeHand(GameState) {
 				
 				cardBorder.appendChild(cardB);
 				cardBorder.appendChild(cardHead);				
-
-				//inter = updateCardButton(getUserWaitList(), GameState.cardCzar, GameState.czarHand, GameState.gameusers, cardB, false);
-				//cardBorder.appendChild(inter);
-				//cardBorder.appendChild(cardHead);
 			}
-			//////////////////////////////////////////////////////////
-			//TODO OVERLAP RELATED JUDGE HAND CARDS.
-			//TODO FIX WINNER SELECTION
-			//TODO FIX REMOVEPLAYBUTTON FUNCTION
-			//TESTING CURRENTLY SET FOR DRAW 2 (see cards.js)
-			//////////////////////////////////////////////////////////
+
 			document.querySelector('.judgehand-div').appendChild(cardBorder);
 		});
 	});
 }
 
 function outputWinner(winnerArray) {
-	
-	/* example winner
-	{user: {…}, whiteCard: "YOU MUST CONSTRUCT ADDITIONAL PYLONS."}
-		=>user: {id: "QrtAPvMfiVpLLJgxAAAE", username: "Joe", room: "Sausage", points: 0, whiteCards: Array(10), …}
-		=>whiteCard: "YOU MUST CONSTRUCT ADDITIONAL PYLONS."
-	*/
+
 	infoDiv.innerHTML = ``;
 	judgeHandDiv.innerHTML = ``;
 	judgeHandDiv.style.overflowX = "visible";
 
 	//assume winner is an array with multiple cards
 	var count = 0;
-	//const winnerArray = [];
-	//winnerArray.push(winner);
-	//winnerArray.push(winner);
-	//winnerArray.push(winner);
 	winnerArray.forEach(winner => {
 		winner.forEach(card=> {
 
