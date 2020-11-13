@@ -14,6 +14,7 @@ var cardSelected = false;
 
 // Add black card to DOM
 function outputBlackCard(GameState) {
+	drawCount = GameState.drawCount;
 	myBlackCard = GameState.blackCard;
 	blackCardDiv.innerHTML = ``;
 	if(GameState.blackCard != false) {
@@ -99,9 +100,9 @@ function removePlayButton(czar, user) {
 		var localMap = new Map();	
 		localArray.forEach(card => {
 			localMap.set(card.whiteCard, true);
-			console.log("localMap Card "+card.whiteCard);
+			//console.log("localMap Card "+card.whiteCard);
 		});	
-		console.log("WhiteCard "+whiteCard);
+		//console.log("WhiteCard "+whiteCard);
 		if(localMap.get(whiteCard) || (cardCount == drawCount)) {
 			document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, false));
 		} else {

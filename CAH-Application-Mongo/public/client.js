@@ -74,6 +74,7 @@ function drawBlackCard() {
 
 socket.on('drawBlackCard', ({GameState})=> {
 	// Update DOM with new black card
+	//console.log(GameState);
 	outputBlackCard(GameState);
 });
 
