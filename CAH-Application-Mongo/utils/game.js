@@ -5,6 +5,7 @@ var whiteDeck;
 
 var cardCzar = false;
 var blackCard = '';
+var drawCount = 1;
 
 var czarHand = [];
 var judgeHand =[];
@@ -39,7 +40,7 @@ function getWhiteDeck() {
 }
 
 function getGameState(user, users, gameusers) {
-	const gamestate = {cardCzar, blackCard, czarHand, judgeHand, user, users, gameusers};
+	const gamestate = {cardCzar, blackCard, drawCount, czarHand, judgeHand, user, users, gameusers};
 	return gamestate;
 }
 
@@ -131,16 +132,16 @@ function initializeWhiteCards(roomusers,flag) {
 function replaceWhiteCards(roomUserList, czarHand) {
 	//console.log(czarHand);
 	czarHand.forEach(card => {
-		console.log(card);
+		//console.log(card);
 		var userIndex = roomUserList.findIndex(user => user.username === card.user.username);
-		console.log("userUndex "+userIndex);
+		//console.log("userUndex "+userIndex);
 		//var cardIndex = roomUserList[userIndex].whiteCards.findIndex(whiteCard => whiteCard === card.whiteCard);
 		var cardIndex = -1;
 		card.clientCardArray.forEach(c => {
 
 			roomUserList[userIndex].whiteCards.forEach(whiteCard => {
 				if(c.whiteCard === whiteCard) {
-					console.log("cardIndex "+cardIndex);
+					//console.log("cardIndex "+cardIndex);
 					cardIndex = roomUserList[userIndex].whiteCards.findIndex(w => w === c.whiteCard);
 					roomUserList[userIndex].whiteCards[cardIndex] = getWhiteDeck().pop();
 				}
@@ -167,8 +168,29 @@ function drawBlackCard(flag) {
 	if (flag) {
 		//blackCard = blackDeck.getBlackDeck().pop();
 		blackCard = getBlackDeck().pop();
+		if(!blackCard) {
+			//console.log("HERE")
+			var tempCount = 0;
+			while(!blackCard && tempCount < 10) {
+				blackCard = getBlackDeck().pop();
+				tempCount++;
+			}
+		}
+		//Add logic to determine drawcount
+		//hardcoded as 2 for now
+		var temp = blackCard;
+		if(temp) {
+			var count = (temp.match(/_*_/g) || []).length;
+			if(count == 0) {
+				drawCount = 1;
+			} else {
+				drawCount = count;
+			}
+			console.log(getBlackDeck().length+": "+drawCount+": blackcard: "+blackCard);
+		}
 	} else {
 		blackCard = '';
+		drawCont = 1;
 	}
 }
 
