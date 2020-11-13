@@ -190,7 +190,7 @@ function drawBlackCard(flag) {
 		}
 	} else {
 		blackCard = '';
-		drawCont = 1;
+		drawCount = 1;
 	}
 }
 
