@@ -151,13 +151,13 @@ function popDiscardBlackDeck() {
 function drawBlackCard(flag) {
 	if (flag) {
 		blackCard = getBlackDeck().pop();
+		//if no cards left set black deck = to discard black dec
 		if(typeof blackCard == 'undefined') {
-			console.log("HERE 2");
 			blackDeck = discardBlackDeck;
 			discardBlackDeck = [];
 			blackCard = getBlackDeck().pop();
+			//if no cards in discard pile,  reshuffle black deck
 			if(typeof blackCard == 'undefined') {
-				console.log("HERE 3");
 				blackDeck = mergeSelectedBlackDecks();
 			}
 		}
