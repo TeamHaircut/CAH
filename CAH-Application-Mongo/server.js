@@ -8,7 +8,7 @@ const session = require('express-session');
 const socket = require('socket.io');
 const formatMessage = require('./utils/messages');
 const { getGameUserList, setUserStatus, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
-const { mergeSelectedDecks, getGameState, setCardCzar, getCardCzar, drawBlackCard, initializeWhiteCards, appendCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
+const { clearDiscardBlackDeck, popDiscardBlackDeck, mergeSelectedDecks, getGameState, setCardCzar, getCardCzar, drawBlackCard, initializeWhiteCards, appendCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 const { setDeckMap, getDeckMap} = require('./utils/serverDeck');
 const app = express();
 
@@ -125,6 +125,8 @@ io.on('connection', socket => {
 			// Clear white cards
 			var roomUserList = getRoomUserList(user.room);
 			updateRoomUsersWhiteCards(initializeWhiteCards(roomUserList, false));
+
+			clearDiscardBlackDeck();
 
 			// Clear czar and judge hand
 			clearHand();
@@ -276,6 +278,7 @@ io.on('connection', socket => {
 
 	socket.on('startRound', ({ username, blackCardSelected }) => {
 		cardSelected = blackCardSelected;
+		popDiscardBlackDeck();
 		var user = getCurrentUserByUsername(username);
 		if(user){
 			io.to(user.room).emit('refreshDOM', { 

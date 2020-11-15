@@ -3,6 +3,8 @@ const {mergeSelectedBlackDecks, mergeSelectedWhiteDecks} = require('./serverDeck
 var blackDeck;
 var whiteDeck;
 
+var discardBlackDeck = [];
+
 var cardCzar = false;
 var blackCard = '';
 var drawCount = 1;
@@ -137,10 +139,28 @@ function getCzarHand() {
 	return czarHand;
 }
 
+function clearDiscardBlackDeck() {
+	discardBlackDeck = [];
+}
+
+function popDiscardBlackDeck() {
+	discardBlackDeck.pop();
+}
+
 // Draw a black card
 function drawBlackCard(flag) {
 	if (flag) {
 		blackCard = getBlackDeck().pop();
+		if(typeof blackCard == 'undefined') {
+			console.log("HERE 2");
+			blackDeck = discardBlackDeck;
+			discardBlackDeck = [];
+			blackCard = getBlackDeck().pop();
+			if(typeof blackCard == 'undefined') {
+				console.log("HERE 3");
+				blackDeck = mergeSelectedBlackDecks();
+			}
+		}
 		if(!blackCard) {
 			var tempCount = 0;
 			while(!blackCard && tempCount < 10) {
@@ -158,6 +178,7 @@ function drawBlackCard(flag) {
 				drawCount = count;
 			}
 			console.log(getBlackDeck().length+": "+drawCount+": blackcard: "+blackCard);
+			discardBlackDeck.push(blackCard);
 		}
 	} else {
 		blackCard = '';
@@ -188,5 +209,7 @@ module.exports = {
   appendCards,
   getJudgeHand,
   getGameState,
-  mergeSelectedDecks
+  mergeSelectedDecks,
+  popDiscardBlackDeck,
+  clearDiscardBlackDeck
 };
