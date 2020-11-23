@@ -1,4 +1,5 @@
 const {mergeSelectedBlackDecks, mergeSelectedWhiteDecks} = require('./serverDeck');
+const { checkExceptions } = require('./exceptions');
 
 var blackDeck;
 var whiteDeck;
@@ -177,6 +178,7 @@ function drawBlackCard(flag) {
 			} else {
 				drawCount = count;
 			}
+			drawCount = checkExceptions(temp, drawCount);//from exceptions.js
 			console.log(getBlackDeck().length+": "+drawCount+": blackcard: "+blackCard);
 			discardBlackDeck.push(blackCard);
 		}
