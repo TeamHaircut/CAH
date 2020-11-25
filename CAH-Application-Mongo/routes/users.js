@@ -9,8 +9,11 @@ const { ensureAuthenticated,  forwardAuthenticated } = require('../config/auth')
 // Login Page
 router.get('/login', forwardAuthenticated, (req, res) => res.render('login'));
 
-// Login Page
+// Deck Options Page
 router.get('/deck', ensureAuthenticated, (req, res) => res.render('deck'));
+
+// House Rules Page
+router.get('/rules', ensureAuthenticated, (req, res) => res.render('rules'));
 
 // Register Page
 router.get('/register', forwardAuthenticated, (req, res) => res.render('register'));
