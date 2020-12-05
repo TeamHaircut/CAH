@@ -10,7 +10,9 @@ const socket = io('http://teamhaircut.org:5000', {
 });
 
 socket.on('reconnecting', () => {
+		console.log("rejoin called");
 		socket.emit('rejoinRoom', { username: getClientUsername() });
+		console.log("rejoined called");
 });
 
 /* Send an object containing the client's username, and room name as soon as they join the room*/
@@ -51,6 +53,28 @@ logoutControl.addEventListener("click", function() {
 });
 
 var logoutUser;
+
+//socket.on('disconnect', (reason) => {
+//		timer = setTimeout(() => {
+//			socket.emit('disconnect', {reason});
+//		},
+//			3000
+//		)
+//	});
+
+//  socket.on('transportClose', () => {
+//	logoutUser = setTimeout(() => {
+//		socket.emit('logoutUser');
+//	},
+//		3000
+//	)
+//  });
+
+//  socket.on('clearTimeout', () => {
+//	clearTimeout(logoutUser);
+//  });
+
+
 
 document.addEventListener("visibilitychange", function() {
 
