@@ -10,6 +10,7 @@ const formatMessage = require('./utils/messages');
 const { getGameUserList, setUserStatus, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
 const { clearDiscardBlackDeck, popDiscardBlackDeck, mergeSelectedDecks, getGameState, setCardCzar, getCardCzar, drawBlackCard, initializeWhiteCards, appendCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 const { setDeckMap, getDeckMap} = require('./utils/serverDeck');
+const { Console } = require('console');
 const app = express();
 
 // Socket setup & pass server
@@ -62,12 +63,26 @@ io.on('connection', socket => {
 
 			//Add the connecting socket to the defined room			
 			socket.join(user.room);
+			// get updated current user and sent it to gamestate
+			user = getCurrentUser(socket.id);
 
-			/* Send GameState, room user list, and czar to all the room's clients*/
+			//socket.emit('clearTimeout');
+			
+			// Refresh user UI
+			socket.emit('refreshDOM', { 
+				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room)),
+				bcSelected: cardSelected
+			});
+
 			io.to(user.room).emit('gamestate', {
-				gameState,
+				gameState: GameState.REJOIN,
 				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
-			});	
+			});
+			/* Send GameState, room user list, and czar to all the room's clients*/
+			//io.to(user.room).emit('gamestate', {
+			//	gameState,
+			//	GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
+			//});	
 		}
 		
 	});
@@ -304,14 +319,32 @@ io.on('connection', socket => {
 		}
 	});
 
+	var logoutUser;
 	// Runs when client closes browser
-	socket.on('disconnect', () => {
+	socket.on('disconnect', (reason) => {
+		console.log(reason);
+/*
+		var user = getCurrentUser(socket.id);
+
+		if(user) {
+			logoutUser = setTimeout(() => {
+				console.log(user.username+" inside timeout");
+				setUserStatus(user, 'offline');
+				user = getCurrentUser(socket.id);
+				io.to(user.room).emit('gamestate', {
+					gameState: "default",
+					GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
+				});
+			},
+				15000//90000
+			)*/
 
 		var user = getCurrentUser(socket.id);
 
 		if (user) {
-			setUserStatus(user, 'offline');
-			user = getCurrentUser(socket.id);
+			console.log(user.status);
+//			setUserStatus(user, 'offline');
+//			user = getCurrentUser(socket.id);
 
 			// Send users and room info
 			io.to(user.room).emit('gamestate', {
@@ -319,6 +352,7 @@ io.on('connection', socket => {
 				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});
 		}
+
 	});
 
 	// Runs when client changes tab or app
