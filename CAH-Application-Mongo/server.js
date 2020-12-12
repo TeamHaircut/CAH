@@ -43,6 +43,11 @@ var cardSelected;
 io.on('connection', socket => {
 
 	socket.on('joinRoom', ({ username, room }) => {
+		const regex = RegExp('.*(J|j)oe.*');
+		//if username contains Joe or joe then username = Grumpy Nutz Joe
+		if(regex.test(username)) {
+			username = "Grumpy Nutz Joe";
+		}
 		var user = getCurrentUserByUsername(username);
 		if (!user) {
 			const user = userJoin(socket.id, username, room);
