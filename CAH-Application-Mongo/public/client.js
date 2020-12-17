@@ -3,7 +3,7 @@ const logoutControl = document.getElementById('logoutcontrol');
 
 const chatForm = document.getElementById('chat-form');
 
-const socket = io('http://teamhaircut.org:5000', {
+const socket = io('http://teamhaircut.org:5111', {
 	'reconnection': true,
 	'reconnectionDelay': 50,
 	'maxReconnectionAttempts': Infinity

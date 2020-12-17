@@ -64,7 +64,7 @@ function createToggleButtons(packs, btnGroup) {
     }
 }
 
-const socket1 = io('http://teamhaircut.org:5000', {
+const socket1 = io('http://teamhaircut.org:5111', {
 	'reconnection': true,
 	'reconnectionDelay': 50,
 	'maxReconnectionAttempts': Infinity
