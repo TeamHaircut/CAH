@@ -10,7 +10,7 @@ const formatMessage = require('./utils/messages');
 const { getGameUserList, setUserStatus, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
 const { clearDiscardBlackDeck, popDiscardBlackDeck, mergeSelectedDecks, getGameState, setCardCzar, getCardCzar, drawBlackCard, initializeWhiteCards, appendCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 const { setDeckMap, getDeckMap} = require('./utils/serverDeck');
-const { setRuleMap, getRuleMap} = require('./utils/serverRules');
+const { setRuleMap, getRuleMap, isWCRebootOptionEnabled} = require('./utils/serverRules');
 const { Console } = require('console');
 const app = express();
 
@@ -111,6 +111,7 @@ io.on('connection', socket => {
 
 			// Set card czar to current user
 			setCardCzar(user);
+			console.log(isWCRebootOptionEnabled());
 			
 			// Set points for all users to 0
 			resetPoints();
@@ -266,6 +267,7 @@ io.on('connection', socket => {
 				getCardCzar(), getGameUserList(user.room)
 			)
 		);
+		console.log(isWCRebootOptionEnabled());
 				
 		/* Send GameState, room user list, and czar to all the room's clients*/
 		io.to(user.room).emit('gamestate', {
@@ -349,7 +351,7 @@ io.on('connection', socket => {
 	var logoutUser;
 	// Runs when client closes browser
 	socket.on('disconnect', (reason) => {
-		console.log(reason);
+		//console.log(reason);
 /*
 		var user = getCurrentUser(socket.id);
 
@@ -369,7 +371,7 @@ io.on('connection', socket => {
 		var user = getCurrentUser(socket.id);
 
 		if (user) {
-			console.log(user.status);
+			//console.log(user.status);
 //			setUserStatus(user, 'offline');
 //			user = getCurrentUser(socket.id);
 
