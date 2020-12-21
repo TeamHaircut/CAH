@@ -10,6 +10,7 @@ const formatMessage = require('./utils/messages');
 const { getGameUserList, setUserStatus, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
 const { clearDiscardBlackDeck, popDiscardBlackDeck, mergeSelectedDecks, getGameState, setCardCzar, getCardCzar, drawBlackCard, initializeWhiteCards, appendCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 const { setDeckMap, getDeckMap} = require('./utils/serverDeck');
+const { setRuleMap, getRuleMap} = require('./utils/serverRules');
 const { Console } = require('console');
 const app = express();
 
@@ -162,11 +163,32 @@ io.on('connection', socket => {
 
 	socket.on('getServerDeckOptions', () => {
 
-				io.emit('serverDeckData', 
-				Array.from(
-					getDeckMap()
-					)
-			);
+			io.emit('serverDeckData', 
+			Array.from(
+				getDeckMap()
+				)
+		);
+
+	});
+
+	socket.on('getServerRules', () => {
+
+			io.emit('serverRulesData', 
+			Array.from(
+				getRuleMap()
+				)
+		);
+
+	});
+
+	socket.on('requestRulesInfo', ({key, val}) => {
+		setRuleMap(key, val);
+
+		io.emit('serverRulesData', 
+		Array.from(
+			getRuleMap()
+			)
+		);
 
 	});
 

@@ -2,9 +2,10 @@
 const gamblingBtnGroup = document.getElementById('gamblingBtnGroup');*/
 const rulesBtnGroup = document.getElementById('rulesBtnGroup');
 
-const  deckMap = new Map();
-const map2 = new Map();
-//New Deck Options go here
+const  ruleMap = new Map();
+const localRuleMap = new Map();
+
+//New House Rules go here
 ////////////////////////////////////////////////////////////
 /*******Uncomment to to integrate gambling option*******
 //var gambling = [{id:'Gambling', text:'Gambling'}];*/
@@ -33,7 +34,7 @@ function createToggleButtons(ruleSet, btnGroup) {
         button.onclick = function() {buttonPressed(this)};
         button.innerHTML = r.text;
         btnGroup.appendChild(button);
-        map2.set(r.id, button);
+        localRuleMap.set(r.id, button);
     }
 }
 
@@ -43,14 +44,15 @@ const socket1 = io('http://teamhaircut.org:5000', {
 	'maxReconnectionAttempts': Infinity
 });
 
-socket1.emit('getServerDeckOptions');
+//Request List of Enabled Rules from Server
+socket1.emit('getServerRules');
 
-socket1.on('serverDeckData', deckData => {
+socket1.on('serverRulesData', rulesData => {
 
-    for(let [key, value] of deckData) {
-        deckMap.set(key, value);
+    for(let [key, value] of rulesData) {
+        ruleMap.set(key, value);
 
-        var element = map2.get(key);
+        var element = localRuleMap.get(key);
         console.log(key);
         console.log(element);
             if(value == 0) {
@@ -72,5 +74,5 @@ function buttonPressed(element) {
     } else {
         val = 0;
     }
-    socket1.emit('requestDeckInfo', {key: element.id, val});
+    socket1.emit('requestRulesInfo', {key: element.id, val});
 }
