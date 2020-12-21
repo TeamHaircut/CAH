@@ -15,6 +15,10 @@ function setRuleMap(key, value) {
 function getRuleMap() {
 	return ruleMap;
 }
+
+function isWCRebootOptionEnabled() {
+    return ruleMap.get('WhitecardReboot');
+}
 /*
 function mergeSelectedBlackDecks() {
 	var tempBlack = [];
@@ -40,7 +44,8 @@ function mergeSelectedWhiteDecks() {
 */
 module.exports = {
     setRuleMap,
-    getRuleMap
+    getRuleMap,
+    isWCRebootOptionEnabled
     //mergeSelectedBlackDecks,
     //mergeSelectedWhiteDecks
   };
