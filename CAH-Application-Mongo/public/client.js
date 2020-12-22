@@ -50,26 +50,6 @@ logoutControl.addEventListener("click", function() {
 	socket.emit('logoutUser');
 });
 
-//socket.on('disconnect', (reason) => {
-//		timer = setTimeout(() => {
-//			socket.emit('disconnect', {reason});
-//		},
-//			3000
-//		)
-//	});
-
-//  socket.on('transportClose', () => {
-//	logoutUser = setTimeout(() => {
-//		socket.emit('logoutUser');
-//	},
-//		3000
-//	)
-//  });
-
-//  socket.on('clearTimeout', () => {
-//	clearTimeout(logoutUser);
-//  });
-
 var logoutUser;
 
 document.addEventListener("visibilitychange", function() {
