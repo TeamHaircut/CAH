@@ -46,7 +46,10 @@ function getWhiteDeck() {
 }
 
 function getGameState(user, users, gameusers) {
-	options = isWCRebootOptionEnabled();
+	//currently there is only one house rule established. 
+	//only used in DOM.outputWhiteCards conditional statement 
+	//TODO - implement options as array of house rules
+	options = isWCRebootOptionEnabled(); //0 || 1
 	const gamestate = {cardCzar, blackCard, drawCount, czarHand, judgeHand, user, users, gameusers, options};
 	return gamestate;
 }
@@ -96,6 +99,7 @@ function shuffleCards(cards) {
 	return cards;
 }
 
+// Clear czar hand and display card arrays
 function clearHand() {
 	czarHand = [];
 	judgeHand = [];
@@ -121,7 +125,6 @@ function initializeWhiteCards(roomusers,flag) {
 
 // Replace White Cards
 function replaceWhiteCards(roomUserList, czarHand) {
-	//console.log(czarHand);
 	czarHand.forEach(card => {
 		var userIndex = roomUserList.findIndex(user => user.username === card.user.username);
 		var cardIndex = -1;
@@ -145,10 +148,12 @@ function getCzarHand() {
 	return czarHand;
 }
 
+// Clear Discarded Black Card Deck
 function clearDiscardBlackDeck() {
 	discardBlackDeck = [];
 }
 
+// Pull a card from black discard pile
 function popDiscardBlackDeck() {
 	discardBlackDeck.pop();
 }
@@ -157,7 +162,7 @@ function popDiscardBlackDeck() {
 function drawBlackCard(flag) {
 	if (flag) {
 		blackCard = getBlackDeck().pop();
-		//if no cards left set black deck = to discard black dec
+		//if no cards left set black deck = to discard black deck
 		if(typeof blackCard == 'undefined') {
 			blackDeck = discardBlackDeck;
 			discardBlackDeck = [];
@@ -184,7 +189,6 @@ function drawBlackCard(flag) {
 				drawCount = count;
 			}
 			drawCount = checkExceptions(temp, drawCount);//from exceptions.js
-			//console.log(getBlackDeck().length+": "+drawCount+": blackcard: "+blackCard);
 			discardBlackDeck.push(blackCard);
 		}
 	} else {
