@@ -101,6 +101,10 @@ function sendWhiteCardToServer(clientCardArray) {
 	socket.emit('sendWhiteCardToServer', {clientCardArray});
 }
 
+function exchangeWhiteCards(clientCardArray) {
+	socket.emit('exchangeWhiteCards', {clientCardArray});
+}
+
 function turnCzarCard() {
 	socket.emit('removeCzarCard');
 }
@@ -173,6 +177,7 @@ socket.on('refreshDOM', ({GameState, bcSelected}) => {
 	// Update DOM with new white cards
 	outputWhiteCards(GameState, true);
 	if(!flag) {
+		//console.log("REMOVING BUTTON");
 		removePlayButton(GameState.user, GameState.user);
 	}
 

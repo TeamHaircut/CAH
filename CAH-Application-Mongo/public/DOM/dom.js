@@ -78,34 +78,70 @@ function outputWhiteCards(GameState, flag) {
 		GameState.gameusers.forEach(user => {
 			if(getClientUsername() == user.username) {
 				user.whiteCards.forEach(whiteCard=>{
-					if (cardSelected) {
-						document.querySelector('.whitecards-div').appendChild(buildCard('light', GameState.cardCzar, whiteCard, user, 'play'));
-					} else {
-						document.querySelector('.whitecards-div').appendChild(buildCard('light', GameState.cardCzar, whiteCard, user, ''));
-					}
+						if (cardSelected) {
+							document.querySelector('.whitecards-div').appendChild(buildCard('light', GameState.cardCzar, whiteCard, user, 'play'));
+						} 
+						else {
+							//if (GameState.options.get('WhitecardReboot')==1) {
+							//	document.querySelector('.whitecards-div').appendChild(buildCard('light', GameState.cardCzar, whiteCard, user, 'exchange'));
+							//}
+							//else {
+								//console.log("HERE");
+								//FIX CONDITIONAL STATEMENT
+								if((getClientUsername() == GameState.cardCzar.username)&& GameState.options) {
+									document.querySelector('.whitecards-div').appendChild(buildCard('light', GameState.cardCzar, whiteCard, user, 'exchange'));
+								}
+								else {
+									document.querySelector('.whitecards-div').appendChild(buildCard('light', GameState.cardCzar, whiteCard, user, ''));	
+								}
+							//}
+						}
 				});
 			}
 		});
 	}
 }
 
+// Remove exchange button from DOM
+function removeExchangeButton(czar, user) {
+	if (getClientUsername() == czar.username) {
+		whiteCardsDiv.innerHTML = ``;
+		whiteCardsDiv.style.overflowX = "auto";
+		user.whiteCards.forEach(whiteCard=>{
+			var localArray = getClientCardArray();
+			var localMap = new Map();	
+			localArray.forEach(card => {
+				localMap.set(card.whiteCard, true);
+			});	
+			if(localMap.get(whiteCard)) {
+				document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, false));
+			} else {
+				document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, 'exchange'));
+			}
+
+		});
+	}
+}
+
 // Remove play button from DOM
 function removePlayButton(czar, user) {
-	whiteCardsDiv.innerHTML = ``;
-	whiteCardsDiv.style.overflowX = "auto";
-	user.whiteCards.forEach(whiteCard=>{
-		var localArray = getClientCardArray();
-		var localMap = new Map();	
-		localArray.forEach(card => {
-			localMap.set(card.whiteCard, true);
-		});	
-		if(localMap.get(whiteCard) || (cardCount == drawCount)) {
-			document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, false));
-		} else {
-			document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, 'play'));
-		}
+	if (getClientUsername() != czar.username) {
+		whiteCardsDiv.innerHTML = ``;
+		whiteCardsDiv.style.overflowX = "auto";
+		user.whiteCards.forEach(whiteCard=>{
+			var localArray = getClientCardArray();
+			var localMap = new Map();	
+			localArray.forEach(card => {
+				localMap.set(card.whiteCard, true);
+			});	
+			if(localMap.get(whiteCard) || (cardCount == drawCount)) {
+				document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, false));
+			} else {
+				document.querySelector('.whitecards-div').appendChild(buildCard('light', czar, whiteCard, user, 'play'));
+			}
 
-	});
+		});
+	}
 }
 
 // Show each room user in the room user table

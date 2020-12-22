@@ -66,6 +66,20 @@ function getCardButton(czar, card, user, buttonType) {
 	var button0 = document.createElement('p');
 	var button1 = document.createElement('p');
     switch(buttonType) {
+		case 'exchange':
+            if(getClientUsername() == czar.username) {
+                button0 = getButtonText(buttonType);
+                button0.addEventListener('click', () => {
+					//console.log("Button Clicked");
+					cardCount++;
+					clientCardArray.push({whiteCard: card, username: user.username});
+					removeExchangeButton(czar, user);
+					//if(cardCount == drawCount) {
+					//exchangeWhiteCards(clientCardArray);
+					//}	
+                });
+            }
+            break;
         case 'play':
             if(getClientUsername() != czar.username) {
                 button0 = getButtonText(buttonType);
@@ -102,6 +116,7 @@ function getCardButton(czar, card, user, buttonType) {
                 button2 = getButtonText('select-black');
                 button2.addEventListener('click', () => {
 					socket.emit('startRound',{ username: getClientUsername(), blackCardSelected: true });
+					exchangeWhiteCards(clientCardArray);
 				});	
 				button0.style.maxWidth ="20rem";
 				button0.style.display ="flex";
@@ -123,7 +138,7 @@ function getCardButton(czar, card, user, buttonType) {
                 turnCzarCard();
             });
 	}
-    
+    //console.log(button0);
     return button0;
 }
 
@@ -136,6 +151,9 @@ function getButtonText(type) {
     var icon;
 
     switch(type) {
+		case 'exchange':
+            icon =`<i class="fas fa-retweet"></i>`;
+            break;
         case 'play':
             icon =`<i class="fas fa-play"></i>`;
             break;

@@ -1,4 +1,5 @@
 const {mergeSelectedBlackDecks, mergeSelectedWhiteDecks} = require('./serverDeck');
+const {isWCRebootOptionEnabled} = require('./serverRules');
 const { checkExceptions } = require('./exceptions');
 
 var blackDeck;
@@ -12,6 +13,8 @@ var drawCount = 1;
 
 var czarHand = [];
 var judgeHand =[];
+
+var options = [];
 
 function mergeSelectedDecks() {
 	blackDeck = mergeSelectedBlackDecks();
@@ -43,7 +46,8 @@ function getWhiteDeck() {
 }
 
 function getGameState(user, users, gameusers) {
-	const gamestate = {cardCzar, blackCard, drawCount, czarHand, judgeHand, user, users, gameusers};
+	options = isWCRebootOptionEnabled();
+	const gamestate = {cardCzar, blackCard, drawCount, czarHand, judgeHand, user, users, gameusers, options};
 	return gamestate;
 }
 
@@ -117,6 +121,7 @@ function initializeWhiteCards(roomusers,flag) {
 
 // Replace White Cards
 function replaceWhiteCards(roomUserList, czarHand) {
+	//console.log(czarHand);
 	czarHand.forEach(card => {
 		var userIndex = roomUserList.findIndex(user => user.username === card.user.username);
 		var cardIndex = -1;
