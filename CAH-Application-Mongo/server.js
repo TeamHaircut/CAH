@@ -84,11 +84,6 @@ io.on('connection', socket => {
 				gameState: GameState.REJOIN,
 				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});
-			/* Send GameState, room user list, and czar to all the room's clients*/
-			//io.to(user.room).emit('gamestate', {
-			//	gameState,
-			//	GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
-			//});	
 		}
 		
 	});
@@ -103,9 +98,10 @@ io.on('connection', socket => {
 	socket.on('gameControlState', ({state}) => {
 		const user = getCurrentUser(socket.id);
 		if(state === `<i class="fas fa-play"></i> Launch Game`) {
-			//merge selected decks
 
+			//merge selected decks
 			mergeSelectedDecks();
+
 			cardSelected = false;
 			gameState = GameState.INITIALIZE;
 
@@ -206,9 +202,6 @@ io.on('connection', socket => {
 	// Exchange WhiteCards
 	socket.on('exchangeWhiteCards', ({clientCardArray}) => {
 		const user = getCurrentUser(socket.id);
-		// push white card and sending user to czar's hand
-		//appendCzarHand(user, clientCardArray);
-		//console.log(clientCardArray);
 		var hand = [];
 		hand.push({user, clientCardArray});
 		replaceWhiteCards(getRoomUserList(user.room), hand);
@@ -217,10 +210,6 @@ io.on('connection', socket => {
 			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room)),
 			bcSelected: cardSelected
 		});
-		// Emit czar hand to clients
-		//io.to(user.room).emit('czarHand', {
-		//	GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
-		//});
 	});
 
 	// Listen for incoming white cards
@@ -286,7 +275,6 @@ io.on('connection', socket => {
 				getCardCzar(), getGameUserList(user.room)
 			)
 		);
-		//console.log(isWCRebootOptionEnabled());
 				
 		/* Send GameState, room user list, and czar to all the room's clients*/
 		io.to(user.room).emit('gamestate', {
