@@ -82,19 +82,12 @@ function outputWhiteCards(GameState, flag) {
 							document.querySelector('.whitecards-div').appendChild(buildCard('light', GameState.cardCzar, whiteCard, user, 'play'));
 						} 
 						else {
-							//if (GameState.options.get('WhitecardReboot')==1) {
-							//	document.querySelector('.whitecards-div').appendChild(buildCard('light', GameState.cardCzar, whiteCard, user, 'exchange'));
-							//}
-							//else {
-								//console.log("HERE");
-								//FIX CONDITIONAL STATEMENT
-								if((getClientUsername() == GameState.cardCzar.username)&& GameState.options) {
+								if((getClientUsername() == GameState.cardCzar.username) && GameState.options) {
 									document.querySelector('.whitecards-div').appendChild(buildCard('light', GameState.cardCzar, whiteCard, user, 'exchange'));
 								}
 								else {
 									document.querySelector('.whitecards-div').appendChild(buildCard('light', GameState.cardCzar, whiteCard, user, ''));	
 								}
-							//}
 						}
 				});
 			}
@@ -202,11 +195,6 @@ function outputMessage(message) {
 	const div1 = document.createElement('div');
 	div1.classList.add("message");
 	div1.classList.add('last');
-	//var one = chatMessages.childNodes;
-	//console.log(one);
-	//if(one) {
-	//	one.classList.remove('last');
-	//}
 	
 	div1.style.fontSize = "medium";
 	//message.time not used
