@@ -50,13 +50,12 @@ function userRejoin(id, user) {
 
 // Get room users
 function getRoomUserList(room) {
-  //return users.filter(user => user.room === room);
   var roomUsers = users.filter(user => user.room === room); 
   return roomUsers.filter(user => user.status !== 'inactive');
 }
 
+// Get active game users
 function getGameUserList(room) {
-	//return users.filter(user => user.room === room);
 	var roomUsers = users.filter(user => user.room === room); 
 	var temp = roomUsers.filter(user => user.status !== 'inactive');
 	return temp.filter(user => user.status !== 'offline');
