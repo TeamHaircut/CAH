@@ -53,8 +53,8 @@ socket1.on('serverRulesData', rulesData => {
         ruleMap.set(key, value);
 
         var element = localRuleMap.get(key);
-        console.log(key);
-        console.log(element);
+        //console.log(key);
+        //console.log(element);
             if(value == 0) {
                 element.style.backgroundColor= "white";
                 element.style.color = "rgb(235,104,100)";

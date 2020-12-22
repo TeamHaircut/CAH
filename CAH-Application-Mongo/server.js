@@ -10,7 +10,7 @@ const formatMessage = require('./utils/messages');
 const { getGameUserList, setUserStatus, getCurrentUserByUsername, userRejoin, userJoin, getCurrentUser, getRoomUserList, resetPoints, updateRoomUsersWhiteCards, updatePoints  } = require('./utils/users');
 const { clearDiscardBlackDeck, popDiscardBlackDeck, mergeSelectedDecks, getGameState, setCardCzar, getCardCzar, drawBlackCard, initializeWhiteCards, appendCzarHand, clearHand, nextCardCzar, replaceWhiteCards, popCzarHand, appendCards, getJudgeHand} = require('./utils/game');
 const { setDeckMap, getDeckMap} = require('./utils/serverDeck');
-const { setRuleMap, getRuleMap, isWCRebootOptionEnabled} = require('./utils/serverRules');
+const { setRuleMap, getRuleMap} = require('./utils/serverRules');
 const { Console } = require('console');
 const app = express();
 
@@ -111,7 +111,6 @@ io.on('connection', socket => {
 
 			// Set card czar to current user
 			setCardCzar(user);
-			console.log(isWCRebootOptionEnabled());
 			
 			// Set points for all users to 0
 			resetPoints();
@@ -204,6 +203,26 @@ io.on('connection', socket => {
 
 	});
 	
+	// Exchange WhiteCards
+	socket.on('exchangeWhiteCards', ({clientCardArray}) => {
+		const user = getCurrentUser(socket.id);
+		// push white card and sending user to czar's hand
+		//appendCzarHand(user, clientCardArray);
+		//console.log(clientCardArray);
+		var hand = [];
+		hand.push({user, clientCardArray});
+		replaceWhiteCards(getRoomUserList(user.room), hand);
+		// Refresh user UI
+		socket.emit('refreshDOM', { 
+			GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room)),
+			bcSelected: cardSelected
+		});
+		// Emit czar hand to clients
+		//io.to(user.room).emit('czarHand', {
+		//	GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
+		//});
+	});
+
 	// Listen for incoming white cards
 	socket.on('sendWhiteCardToServer', ({clientCardArray}) => {
 		const user = getCurrentUser(socket.id);
@@ -267,7 +286,7 @@ io.on('connection', socket => {
 				getCardCzar(), getGameUserList(user.room)
 			)
 		);
-		console.log(isWCRebootOptionEnabled());
+		//console.log(isWCRebootOptionEnabled());
 				
 		/* Send GameState, room user list, and czar to all the room's clients*/
 		io.to(user.room).emit('gamestate', {
