@@ -1,3 +1,7 @@
+var drawCount = 1;
+var cardCount = 0;
+var clientCardArray = [];
+
 function getCardBorder(type) {
 	const cardBorderDiv = document.createElement('div');
 	
@@ -28,23 +32,19 @@ function getCardBorder(type) {
 function getCardBody(card) {
 	const cardBody = document.createElement('div');
 	cardBody.classList.add('card-body');
-	//
 	const cardText = document.createElement('h4');
 	cardText.classList.add('card-title');
 	cardText.style.fontFamily = "Helvetica, Neue, Bold";
 	cardText.style.fontSize = "small";
-	//
 	if(typeof card === 'object') {
 		card = card.whiteCard;
 	}
 	cardText.innerHTML = `${card}`;
 	cardBody.appendChild(cardText);
-	//
 	const altCardText = document.createElement('p');
 	altCardText.classList.add('card-text');
 	altCardText.innerHTML = '';
 	cardBody.appendChild(altCardText);
-	//
 	return cardBody;
 }
 
@@ -53,14 +53,11 @@ function getCardHeader() {
     cardHeader.classList.add('card-header');
 	return cardHeader;
 }
-///////////////////////////////
-var drawCount = 1;
-var cardCount = 0;
-var clientCardArray = [];
+
 function getClientCardArray() {
 	return clientCardArray;
 }
-///////////////////////////////
+
 function getCardButton(czar, card, user, buttonType) {
 	var button2 = document.createElement('p');
 	var button0 = document.createElement('p');
@@ -70,13 +67,9 @@ function getCardButton(czar, card, user, buttonType) {
             if(getClientUsername() == czar.username) {
                 button0 = getButtonText(buttonType);
                 button0.addEventListener('click', () => {
-					//console.log("Button Clicked");
 					cardCount++;
 					clientCardArray.push({whiteCard: card, username: user.username});
 					removeExchangeButton(czar, user);
-					//if(cardCount == drawCount) {
-					//exchangeWhiteCards(clientCardArray);
-					//}	
                 });
             }
             break;
@@ -116,7 +109,7 @@ function getCardButton(czar, card, user, buttonType) {
                 button2 = getButtonText('select-black');
                 button2.addEventListener('click', () => {
 					socket.emit('startRound',{ username: getClientUsername(), blackCardSelected: true });
-					exchangeWhiteCards(clientCardArray);
+					exchangeWhiteCards(clientCardArray);//Move this to flip event
 				});	
 				button0.style.maxWidth ="20rem";
 				button0.style.display ="flex";
@@ -138,7 +131,6 @@ function getCardButton(czar, card, user, buttonType) {
                 turnCzarCard();
             });
 	}
-    //console.log(button0);
     return button0;
 }
 
