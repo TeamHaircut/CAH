@@ -3,12 +3,12 @@
 	src:url("Gufftron-Regular.ttf") format("truetype");
 	font-weight:normal;font-style:normal;
 }
-**/
-/**/
-/* Fonts for everything generic */
 div, option, p, tr, th, .normalFont {
 	font-family: "Gufftron-Regular";
 }
+/**/
+/* Fonts for everything generic */
+
 
 body {
   font-family: helvetica;
