@@ -1,7 +1,7 @@
 <div class="row mt-5">
   <div class="col-md-6 m-auto">
     <div class="card card-body">
-      <h1 class="text-center mb-3"><i class="fas fa-blind"></i>  CAH</h1>
+      <h3 class="text-center mb-3">Cards Against Humanity</h3>
       <% include ./partials/messages %>
       <form action="/selectroom" method="POST">
         <div class="form-group">
@@ -12,19 +12,19 @@
             name="name"
             class="form-control"
             placeholder="Enter Username"
-			value='<%- user.name %>'
+            maxlength="16"
+			      value=''
           />
         </div>
         <div class="form-group">
           <label for="room">Room</label>
-			<select name="room" id="room" class="form-control">
-				<option value="Sausage">Sausage</option>
-				<option value="Broccoli">Broccoli</option>
-			</select>
+			<input name="room" id="room" type="text" maxlength="6" placeholder="Code" style="text-transform: uppercase;">
+      </input>
         </div>
-        <button type="submit" class="btn btn-primary btn-block mb-2">Join Room</button>
+        <button type="submit" onclick=setUserName(); class="btn btn-primary btn-block mb-2">Join Room</button>
       </form>
 		<a href="/users/logout" class="btn btn-secondary">Logout</a>
     </div>
   </div>
 </div>
+<script src="/utils/selectroom.js"></script>

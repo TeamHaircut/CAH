@@ -1,3 +1,15 @@
+/**@font-face {
+	font-family:"Gufftron-Regular";
+	src:url("Gufftron-Regular.ttf") format("truetype");
+	font-weight:normal;font-style:normal;
+}
+div, option, p, tr, th, .normalFont {
+	font-family: "Gufftron-Regular";
+}
+/**/
+/* Fonts for everything generic */
+
+
 body {
   font-family: helvetica;
   display: flex ;

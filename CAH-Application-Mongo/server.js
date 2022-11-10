@@ -65,7 +65,7 @@ io.on('connection', socket => {
 				GameState: getGameState(user, getRoomUserList(user.room), getGameUserList(user.room))
 			});	
 		} else {
-			userRejoin(socket.id, user);
+			userRejoin(socket.id, user, room);
 
 			//Add the connecting socket to the defined room			
 			socket.join(user.room);
@@ -304,11 +304,12 @@ io.on('connection', socket => {
 	});
 	
 	// Listen for rejoin event
-	socket.on('rejoinRoom', ({ username }) => {
+	socket.on('rejoinRoom', ({ username, room }) => {
 		var user = getCurrentUserByUsername(username);
+		//console.log("Rejoined Room From Server");
 		if(user) {
 			// set current user to active in user.js
-			userRejoin(socket.id, user);
+			userRejoin(socket.id, user, room);
 			socket.join(user.room);
 
 			// get updated current user and sent it to gamestate

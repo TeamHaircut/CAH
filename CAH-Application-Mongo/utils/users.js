@@ -43,9 +43,10 @@ function getCurrentUser(id) {
 }
 
 // Rejoin user to room
-function userRejoin(id, user) {
+function userRejoin(id, user, room) {
 	user.id = id;
 	user.status = 'active';
+	user.room = room;
 }
 
 // Get room users
