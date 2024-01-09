@@ -1,11 +1,24 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	<h1><i class="fas fa-blind"></i>  CAH-UI Update</h1>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
+<nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
+	<h3 class="title">Cards Against Humanity</h3>
+	<button class="title">BTN</button>
+	<button class="navbar-toggler collapsed d-flex d-lg-none flex-column justify-content-around" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="title"><b>Chat</b></span><i class="fas fa-angle-down fa-rotate-180 toggler-icon left-bar" style="color: white"></i>
+	</button>
+	<button class="navbar-toggler collapsed d-flex d-lg-none flex-column justify-content-around" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="title"><b>Scorecard</b></span><i class="fas fa-angle-down fa-rotate-180 toggler-icon left-bar" style="color: white"></i>
 	</button>
 	<div class="collapse navbar-collapse" id="navbarColor03">
 		<ul class="navbar-nav mr-auto">
 			<li class="nav-item active">
+				<span style="color: white">Chat</span>
+				<p class="nav-link"></p>
+			</li>
+		</ul>
+	</div>
+	<div class="collapse navbar-collapse" id="navbarColor03">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+				<span style="color: white">SCORECARD</span>
 				<p class="nav-link"></p>
 			</li>
 			<li class="nav-item active">
@@ -30,15 +43,26 @@
 		</form>
 	</div>
 </nav>
+<body style="padding-top:55px">
 <div class="buttoncontrolcontainer">
+	<div class="logoutbar">
+		<label>
+			<a id="logoutcontrol" href="/users/logout" ><input type="button" class="menuitem" style="width: 5rem;" value="Leave Room"></a>
+		</label>
+	</div>
 	<div class="optionbar">
 		<label>
-			<a id="logoutcontrol" href="/users/logout" ><input type="button" class="cahmenuitem" style="width: 6rem;" value="Leave Room"></a>
+			<input  onclick="displayOptions()" class="menuitem" style="width: 5rem;" type="button" value="Options">
+		</label>
+	</div>
+	<div class="chatbar">
+		<label>
+			<input  onclick="displayChat()" class="menuitem" style="width: 5rem;" type="button" value="Chat">
 		</label>
 	</div>
 	<div class="scorebar">
 		<label>
-			<input  onclick="displayScorecard()" class="cahmenuitem" style="width: 6rem;" type="button" value="Scorecard">
+			<input  onclick="displayScorecard()" class="menuitem" style="width: 5rem;" type="button" value="Scorecard">
 		</label>
 	</div>
 </div>
@@ -97,6 +121,7 @@
 		</form>
 	</div>
 </div>
+</body>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/DOM/dom.js"></script>
 	<script src="/DOM/utils.js"></script>
