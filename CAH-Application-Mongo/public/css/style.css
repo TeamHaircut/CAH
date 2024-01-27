@@ -18,15 +18,17 @@ body {
     background-color: rgb(0, 0, 0);
   }
 
+/*
 .logoutbar { grid-area: mylogout;}
 .optionbar { grid-area: myoption;}
 .chatbar { grid-area: mychat;}
 .scorebar { grid-area: myscore;}
+.line {height:3px; background:white;}
 .buttoncontrolcontainer {
   display: grid;
   grid-template-areas:
     'mylogout myoption mychat myscore';
-  grid-gap: 0rem;/*8*/
+  grid-gap: 0rem;
   height: 2rem;
 }
 
@@ -48,6 +50,7 @@ body {
     color: yellow;
     background-color:rgb(123,103,150);
   }
+  */
 
   .title {
     font-size: small;
@@ -146,7 +149,7 @@ body {
   }
 
   .navbar-toggler {
-    width:100px;
+    width: 80px;
     height: 10px;
     position: relative;
     transition: .5s ease-in-out;
@@ -166,7 +169,7 @@ body {
     padding: 0;
   }
 
-  .toggler-icon {
+  .toggler-icon3 {
     display: block;
     position: absolute;
     height: 0px;
@@ -174,7 +177,33 @@ body {
     background: #ffffff;
     border-radius: 1px;
     opacity: 1;
-    left: 48px;
+    left: 50px;
+    transform: rotate(-180deg);
+    transition: .2s ease-in-out;
+  }
+
+  .toggler-icon2 {
+    display: block;
+    position: absolute;
+    height: 0px;
+    width: 50%;
+    background: #ffffff;
+    border-radius: 1px;
+    opacity: 1;
+    left: 24px;
+    transform: rotate(-180deg);
+    transition: .2s ease-in-out;
+  }
+
+  .toggler-icon1 {
+    display: block;
+    position: absolute;
+    height: 0px;
+    width: 50%;
+    background: #ffffff;
+    border-radius: 1px;
+    opacity: 1;
+    left: 38px;
     transform: rotate(-180deg);
     transition: .2s ease-in-out;
   }
