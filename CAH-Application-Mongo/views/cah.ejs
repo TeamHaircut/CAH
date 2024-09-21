@@ -1,35 +1,102 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	<h1><i class="fas fa-blind"></i>  CAH</h1>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
+<nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
+	<h3 class="title">Cards Against Humanity</h3>
+	<button class="navbar-toggler collapsed d-flex d-lg-none flex-column justify-content-around" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="title"><b>Options</b></span><i class="fas fa-angle-down fa-rotate-180 toggler-icon1 left-bar" style="color: white"></i>
 	</button>
-	<div class="collapse navbar-collapse" id="navbarColor03">
+	<button class="navbar-toggler collapsed d-flex d-lg-none flex-column justify-content-around" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="title"><b>Chat</b></span><i class="fas fa-angle-down fa-rotate-180 toggler-icon2 left-bar" style="color: white"></i>
+	</button>
+	<button class="navbar-toggler collapsed d-flex d-lg-none flex-column justify-content-around" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="title"><b>Scorecard</b></span><i class="fas fa-angle-down fa-rotate-180 toggler-icon3 left-bar" style="color: white"></i>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarColor01">
 		<ul class="navbar-nav mr-auto">
 			<li class="nav-item active">
+				<span style="color: white">OPTIONS</span>
 				<p class="nav-link"></p>
 			</li>
 			<li class="nav-item active">
-				<p class="nav-link"><i class="fas fa-user"></i> <span id="client-username"><%= user.name %></span></p>
+				<p class="nav-link"><i class="fas fa-user"></i> <span id="client-username" style="color: white"><%= user.name %></span></p>
 			</li>
 			<li class="nav-item active">
-				<p class="nav-link"><i class="fas fa-home"></i> The <span id="client-room"><%= user.last_room %></span> room</p>
+				<p class="nav-link"><i class="fas fa-home"></i> The <span id="client-room" style="color: white"><%= user.last_room %></span> room</p>
 			</li>
 			<li class="nav-item active">
-				<a id="gamecontrol" href="#" class="nav-link"><i class="fas fa-play"></i> Launch Game</a>
+				<a id="gamecontrol" href="#" class="nav-link" style="color: white"><i class="fas fa-play"></i> Launch Game</a>
 			</li>
 			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">Game Options</a>
+				<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true" style="color: white">Game Options</a>
 				<div class="dropdown-menu">
 				  <a id="gamecontrol" class="dropdown-item" href="/users/rules"> House Rules</a>
 				  <a  id="gamecontrol" class="dropdown-item" href="/users/deck"> Deck</a>
 				</div>
-			  </li>
+			</li>
 		</ul>
 		<form class="form-inline my-2 my-lg-0">
 			<a id="logoutcontrol" href="/users/logout" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
 		</form>
+		<div class="line"></div>
+	</div>
+	<div class="collapse navbar-collapse" id="navbarColor02">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+				<span style="color: white">Chat</span>
+				<p class="nav-link"></p>
+			</li>
+			<header class="card card-body">
+				<h3><i class="fas fa-comments"></i> Boner-Chat</h3>
+			</header>
+			<main>
+				<div class="chat-messages" style="overflow-y:auto; width: auto; height:215px; padding: 20px; border: solid 1px #EEE;">
+			</main>
+			<div>
+				<form class="form-group" id="chat-form">
+					<input
+						class="form-control"
+						id="msg"
+						type="text"
+						placeholder="Enter Message"
+						required
+						autocomplete="off"
+					/>
+					<button class="btn btn-primary btn-block mb-2"><i class="fas fa-paper-plane"></i> Send</button>
+				</form>
+			</div>
+		</ul>
+		<div class="line"></div>
+	</div>
+	<div class="collapse navbar-collapse" id="navbarColor03"><br>
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+				<div class="rcorners">
+					<div class="pill" style="color: black; font-size: 12px;"><b>SCORECARD</b></div>
+					<div class="card card-body">
+						<table>
+						  <tbody class="userlist-table">
+						  </tbody>
+						</table> 
+					</div>
+				</div>
+				<p class="nav-link"></p>
+			</li>
+			<div class="card card-body">
+				<table class="table">
+				  <thead>
+					<tr>
+					  <th scope="col"><h3><i class="fas fa-users"></h3></th>
+					  <th scope="col"><h3>Player</h3></th>
+					  <th scope="col"><h3>Points</h3></th>
+					</tr>
+				  </thead>
+				  <tbody class="userlist-table">
+				  </tbody>
+				</table> 
+			</div>
+		</ul>
+		<div class="line"></div>
 	</div>
 </nav>
+<body style="padding-top:55px">
 <div>
 	<div class="card card-body">
 		<div class="info-div mb-1" style="font-size: small; color: red;"></div>
@@ -51,40 +118,9 @@
 			</div>
 			
 	</div>
-	<div class="card card-body">
-		<table class="table">
-		  <thead>
-			<tr>
-			  <th scope="col"><h3><i class="fas fa-users"></h3></th>
-			  <th scope="col"><h3>Users</h3></th>
-			  <th scope="col"><h3>Points</h3></th>
-			</tr>
-		  </thead>
-		  <tbody class="userlist-table">
-		  </tbody>
-		</table> 
-	</div>
 	<div class="mb-3"></div>
-	<header class="card card-body">
-		<h3><i class="fas fa-comments"></i> Boner-Chat</h3>
-	</header>
-	<main>
-		<div class="chat-messages" style="overflow-y:auto; width: auto; height:215px; padding: 20px; border: solid 1px #EEE;">
-	</main>
-	<div>
-		<form class="form-group" id="chat-form">
-			<input
-				class="form-control"
-				id="msg"
-				type="text"
-				placeholder="Enter Message"
-				required
-				autocomplete="off"
-			/>
-			<button class="btn btn-primary btn-block mb-2"><i class="fas fa-paper-plane"></i> Send</button>
-		</form>
-	</div>
 </div>
+</body>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/DOM/dom.js"></script>
 	<script src="/DOM/utils.js"></script>

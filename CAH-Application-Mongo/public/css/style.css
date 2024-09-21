@@ -15,9 +15,51 @@ body {
     display: flex ;
     flex-direction: column;
     align-items: center;
-    /*background-color: rgb(98, 56, 109);*/
+    background-color: rgb(0, 0, 0);
   }
-  
+
+  .line {height:3px; background:white;}
+/*
+.logoutbar { grid-area: mylogout;}
+.optionbar { grid-area: myoption;}
+.chatbar { grid-area: mychat;}
+.scorebar { grid-area: myscore;}
+.buttoncontrolcontainer {
+  display: grid;
+  grid-template-areas:
+    'mylogout myoption mychat myscore';
+  grid-gap: 0rem;
+  height: 2rem;
+}
+
+.buttoncontrolcontainer > div {
+  text-align: center;
+  margin-left:auto;
+  margin-right:auto;
+  font-size: x-small;
+}
+
+  .menuitem {
+    font-size: x-small;
+    color: white;
+    border: 1.25px solid white;
+    border-radius: .5em .5em .5em .5em;
+    background-color:rgb(0,0,0);
+  }
+  .menuitem:active {
+    color: yellow;
+    background-color:rgb(123,103,150);
+  }
+  */
+
+  .title {
+    font-size: small;
+    color: white;
+    border: 0px solid white;
+    border-radius: 0em 0em 0em 0em;
+    background-color:rgb(0,0,0);
+  }
+
   .messages {
     margin-top: 5px;
     margin-bottom: 5px;
@@ -105,3 +147,95 @@ body {
     background: white;
     border-bottom-left-radius: 10px;
   }
+
+  .navbar-toggler {
+    width: 80px;
+    height: 10px;
+    position: relative;
+    transition: 0.5s ease-in-out;
+  }
+
+  .navbar-togger,
+  .navbar-toggler:focus,
+  .navbar-toggler:active,
+  .navbar-toggler-icon:focus {
+    outline: none;
+    box-shadow: none;
+    border: 0;
+  }
+
+  .navbar-toggler span {
+    margin: 0;
+    padding: 0;
+  }
+
+  .toggler-icon3 {
+    display: block;
+    position: absolute;
+    height: 0px;
+    width: 50%;
+    background: #ffffff;
+    border-radius: 1px;
+    opacity: 1;
+    left: 50px;
+    transform: rotate(-180deg);
+    transition: .2s ease-in-out;
+  }
+
+  .toggler-icon2 {
+    display: block;
+    position: absolute;
+    height: 0px;
+    width: 50%;
+    background: #ffffff;
+    border-radius: 1px;
+    opacity: 1;
+    left: 24px;
+    transform: rotate(-180deg);
+    transition: .2s ease-in-out;
+  }
+
+  .toggler-icon1 {
+    display: block;
+    position: absolute;
+    height: 0px;
+    width: 50%;
+    background: #ffffff;
+    border-radius: 1px;
+    opacity: 1;
+    left: 38px;
+    transform: rotate(-180deg);
+    transition: .1s ease-in-out;
+  }
+
+  .navbar-toggler .left-bar {
+    margin-top: 23px;
+    transform: rotate(-180deg);
+  }
+
+  .navbar-toggler.collapsed .left-bar {
+    margin-top: -17px;
+    transform: rotate(0deg);
+  }
+
+  .pill {
+    background-color: white;
+    border: none;
+    color: black;
+    padding: 1px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 16px;
+  }
+
+  .rcorners {
+    border-radius: 25px;
+    border: 2px solid white;
+    padding: 20px;
+    width: 312.5px;
+    height: 437.5px;
+  }
+
