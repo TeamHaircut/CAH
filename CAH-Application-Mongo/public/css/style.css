@@ -18,12 +18,12 @@ body {
     background-color: rgb(0, 0, 0);
   }
 
+  .line {height:3px; background:white;}
 /*
 .logoutbar { grid-area: mylogout;}
 .optionbar { grid-area: myoption;}
 .chatbar { grid-area: mychat;}
 .scorebar { grid-area: myscore;}
-.line {height:3px; background:white;}
 .buttoncontrolcontainer {
   display: grid;
   grid-template-areas:
@@ -152,7 +152,7 @@ body {
     width: 80px;
     height: 10px;
     position: relative;
-    transition: .5s ease-in-out;
+    transition: 0.5s ease-in-out;
   }
 
   .navbar-togger,
@@ -205,7 +205,7 @@ body {
     opacity: 1;
     left: 38px;
     transform: rotate(-180deg);
-    transition: .2s ease-in-out;
+    transition: .1s ease-in-out;
   }
 
   .navbar-toggler .left-bar {
@@ -217,3 +217,25 @@ body {
     margin-top: -17px;
     transform: rotate(0deg);
   }
+
+  .pill {
+    background-color: white;
+    border: none;
+    color: black;
+    padding: 1px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 16px;
+  }
+
+  .rcorners {
+    border-radius: 25px;
+    border: 2px solid white;
+    padding: 20px;
+    width: 312.5px;
+    height: 437.5px;
+  }
+

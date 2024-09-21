@@ -145,7 +145,7 @@ function outputRoomUserTable(GameState) {
     // Build a table row for each user in the room
 	GameState.users.forEach(user=>{
 	const tr = document.createElement('tr');
-	tr.classList.add('table-light');
+	//tr.classList.add('table-dark');
     
     // Indicate who is the current card czar
 	const th = document.createElement('th');
