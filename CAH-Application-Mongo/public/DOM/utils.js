@@ -53,3 +53,4 @@ function setUserWaitList(users, czarHand, czar) {
 function getUserWaitList() {
     return userWaitList;
 }
+

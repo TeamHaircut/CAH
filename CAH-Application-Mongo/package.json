@@ -24,6 +24,7 @@
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
-    "nodemon": "^1.18.9"
+    "nodemon": "^1.18.9",
+    "ts-node": "^10.9.2"
   }
 }
