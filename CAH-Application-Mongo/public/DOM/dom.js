@@ -150,8 +150,22 @@ function outputRoomUserTable(GameState) {
     // Indicate who is the current card czar
 	const th = document.createElement('th');
 	th.setAttribute("scope","row");
+	//
+	th.setAttribute("id", "header");
+	//
 	if(user.username == GameState.cardCzar.username) {
-		th.innerHTML = `<i class="fas fa-gavel"></i>`;
+		th.style.border = "2px solid white";
+		th.style.color= "white";
+		th.style.padding= "1px 2px 4px 1px";
+		th.style.textAlign= "center";
+		th.style.textDecoration= "none";
+		th.style.display= "inline-block";
+		th.style.borderRadius= "3px";
+		th.style.color = "white";
+		th.style.lineHeight = "1";
+		th.style.maxWidth = "40px";
+		th.style.fontSize = "small";
+		th.innerHTML = `<b>CARD CZAR</b>`;
 	} else {
 		th.innerHTML = ``;
 	}
@@ -160,7 +174,7 @@ function outputRoomUserTable(GameState) {
 	//  Append username and point data to the table row
 	const tdName = document.createElement('td');
 	if(user.status == 'active') {
-		tdName.style.color = "black";
+		tdName.style.color = "white";
 		tdName.innerHTML = `${user.username}`;
 	} else if(user.status == 'idle'){
 		tdName.style.color = "red";
@@ -171,6 +185,7 @@ function outputRoomUserTable(GameState) {
 	}
 	tr.appendChild(tdName);
 	const tdPoints = document.createElement('td');
+	tdPoints.style.color = "white";
 	tdPoints.innerHTML = `${user.points}`;
 	tr.appendChild(tdPoints);
 
@@ -353,3 +368,4 @@ function outputWinner(winnerArray) {
 		});
 	});
 }
+
