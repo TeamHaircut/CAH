@@ -205,7 +205,7 @@ body {
     opacity: 1;
     left: 38px;
     transform: rotate(-180deg);
-    transition: .1s ease-in-out;
+    transition: .2s ease-in-out;
   }
 
   .navbar-toggler .left-bar {
@@ -238,6 +238,5 @@ body {
     width: 312.5px;
     height: 437.5px;
   }
-
 
 

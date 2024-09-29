@@ -1,12 +1,12 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
 	<h3 class="title">Cards Against Humanity</h3>
-	<button class="navbar-toggler collapsed d-flex d-lg-none flex-column justify-content-around" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+	<button onclick="resetMenuFunction('icon1')" id="icon1" class="navbar-toggler collapsed d-flex d-lg-none flex-column justify-content-around" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="title"><b>Options</b></span><i class="fas fa-angle-down fa-rotate-180 toggler-icon1 left-bar" style="color: white"></i>
 	</button>
-	<button class="navbar-toggler collapsed d-flex d-lg-none flex-column justify-content-around" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+	<button onclick="resetMenuFunction('icon2')"  id="icon2" class="navbar-toggler collapsed d-flex d-lg-none flex-column justify-content-around" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="title"><b>Chat</b></span><i class="fas fa-angle-down fa-rotate-180 toggler-icon2 left-bar" style="color: white"></i>
 	</button>
-	<button class="navbar-toggler collapsed d-flex d-lg-none flex-column justify-content-around" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+	<button onclick="resetMenuFunction('icon3')"  id="icon3" class="navbar-toggler collapsed d-flex d-lg-none flex-column justify-content-around" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="title"><b>Scorecard</b></span><i class="fas fa-angle-down fa-rotate-180 toggler-icon3 left-bar" style="color: white"></i>
 	</button>
 	<div class="collapse navbar-collapse" id="navbarColor01">
@@ -114,3 +114,29 @@
 	<script src="/DOM/card.js"></script>
 	<script src="/client.js"></script>
 	<link href="/css/style.css" rel="stylesheet" type="text/css">
+	<script>
+		function resetMenuFunction(menuItem) {
+		const menuItem01icon = document.getElementById("icon1");
+		const menuItem01menu = document.getElementById("navbarColor01");
+
+		const menuItem02icon = document.getElementById("icon2");
+		const menuItem02menu = document.getElementById("navbarColor02");
+
+		const menuItem03icon = document.getElementById("icon3");
+		const menuItem03menu = document.getElementById("navbarColor03");
+
+		if(menuItem != "icon1"){
+			menuItem01icon.className = "navbar-toggler collapsed d-flex d-lg-none flex-column justify-content-around";
+			menuItem01menu.className = "collapse navbar-collapse";
+		};
+		if(menuItem != "icon2"){
+			menuItem02icon.className = "navbar-toggler collapsed d-flex d-lg-none flex-column justify-content-around";
+			menuItem02menu.className = "collapse navbar-collapse";
+		};
+		if(menuItem != "icon3"){
+			menuItem03icon.className = "navbar-toggler collapsed d-flex d-lg-none flex-column justify-content-around";
+			menuItem03menu.className = "collapse navbar-collapse";
+		};
+
+		}
+		</script>
